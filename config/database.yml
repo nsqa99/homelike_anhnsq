@@ -1,0 +1,21 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+  socket: /var/run/mysqld/mysqld.sock
+
+development:
+  <<: *default
+  database: homelike_anhnsq_development
+
+test:
+  <<: *default
+  database: homelike_anhnsq_test
+
+production:
+  <<: *default
+  database: homelike_anhnsq_production
+  username: homelike_anhnsq
+  password: <%= ENV['HOMELIKE_ANHNSQ_DATABASE_PASSWORD'] %>
