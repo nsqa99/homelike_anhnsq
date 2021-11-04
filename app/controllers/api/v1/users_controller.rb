@@ -1,4 +1,6 @@
 class Api::V1::UsersController < ApplicationController
+  authorize_resource
+
   def index
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE

@@ -6,7 +6,9 @@ module ErrorHandler
     end
     rescue_from(JwtService::TokenExpired, with: :token_expired)
     rescue_from(JwtService::VerificationError, with: :verification_failed)
+    rescue_from(JwtService::DecodeError, with: :verification_failed)
     rescue_from(ActiveRecord::RecordNotFound, with: :not_found)
+    rescue_from(CanCan::AccessDenied, with: :forbidden)
   end
 
   private
@@ -21,6 +23,10 @@ module ErrorHandler
 
   def verification_failed
     error_response(:verification_failed.to_s.humanize, :bad_request)
+  end
+
+  def forbidden
+    error_response(:forbidden.to_s.humanize, :forbidden)
   end
 
   def internal_server_error(message)

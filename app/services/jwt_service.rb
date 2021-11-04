@@ -1,6 +1,7 @@
 class JwtService
   class TokenExpired < StandardError; end
   class VerificationError < StandardError; end
+  class DecodeError < StandardError; end
   SECRET = Rails.application.secrets.secret_key_base
 
   def self.encode(payload, expire_time = DEFAULT_EXPIRE_TIME)
@@ -15,5 +16,7 @@ class JwtService
     raise JwtService::TokenExpired
   rescue JWT::VerificationError
     raise JwtService::VerificationError
+  rescue JWT::DecodeError
+    raise JwtService::DecodeError
   end
 end

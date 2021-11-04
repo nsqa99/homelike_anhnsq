@@ -13,7 +13,9 @@ class ApplicationController < ActionController::API
   end
   
   def authenticate_request_token
-    unless User.find_by(id: auth_service.validate_token(request.headers))
+    @user_id = auth_service.validate_token(request.headers)
+
+    unless current_user
       json_response([], :unauthorized)
     end
   end
