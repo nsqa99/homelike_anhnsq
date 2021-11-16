@@ -5,8 +5,9 @@ class Ability
     return unless user.present?
 
     if user.admin?
-      can :manage, Address
-      can :read, User
+      can :manage, :all
+    elsif user.merchant?
+    elsif user.customer?
     end
   end
 end
