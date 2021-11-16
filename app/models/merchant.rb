@@ -1,5 +1,5 @@
 class Merchant < ApplicationRecord
-  has_many :items
-  has_many :apartments
+  has_many :items, dependent: :destroy
+  has_many :apartments, dependent: :destroy
   belongs_to :user
 end
