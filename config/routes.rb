@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "users/:username", to: "users#show"
       resources :users
-      post "users/auth", to: "authentication#sign_in"
+      post "/auth", to: "authentication#sign_in"
+      post "/auth/refresh", to: "authentication#refresh_tokens"
     end
   end
 end
