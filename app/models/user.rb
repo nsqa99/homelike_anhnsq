@@ -14,10 +14,11 @@ class User < ApplicationRecord
   has_many :being_followed_relationships, class_name: "Relationship",
     foreign_key: "followed_id", dependent: :destroy
 
-  DEFAULT_ROLES = %w(admin customer merchant)
+  accepts_nested_attributes_for :address, :customer, :merchant
+  validates_confirmation_of :password
 
   DEFAULT_ROLES.each do |role|
-    define_method :"#{role}?" do
+    define_method "#{role}?" do
       self.roles.pluck(:title).include?(role)
     end
   end

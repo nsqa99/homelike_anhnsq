@@ -1,9 +1,9 @@
 module ErrorHandler
   extend ActiveSupport::Concern
   included do
-    rescue_from StandardError do |ex|
-      internal_server_error(ex.message)
-    end
+    # rescue_from StandardError do |ex|
+    #   internal_server_error(ex.message)
+    # end
     rescue_from(JwtService::TokenExpired, with: :token_expired)
     rescue_from(JwtService::VerificationError, with: :verification_failed)
     rescue_from(JwtService::DecodeError, with: :verification_failed)

@@ -8,14 +8,18 @@ class ApplicationController < ActionController::API
 
   private
 
+  def current_ability
+    @current_ability ||= current_admin ? Ability.new(current_admin) : Ability.new(current_user)
+  end
+
   def auth_service
     @auth_service ||= AuthenticationService.new
   end
   
   def authenticate_request_token
-    @user_id = auth_service.validate_access_token(request.headers)
+    @request_id = auth_service.validate_access_token(request.headers)
 
-    unless current_user
+    unless current_user && current_admin
       json_response([], :unauthorized)
     end
   end

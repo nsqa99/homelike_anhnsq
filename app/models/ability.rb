@@ -1,13 +1,19 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
-    return unless user.present?
+  def initialize(actor)
+    return unless actor.present?
 
-    if user.admin?
-      can :manage, :all
-    elsif user.merchant?
-    elsif user.customer?
+    case actor.class
+    when Admin
+      if actor.role_admin?
+        can :manage, :all
+      end
+    when User
+      if actor.merchant?
+      elsif actor.customer?
+    else
+      return
     end
   end
 end
