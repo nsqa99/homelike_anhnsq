@@ -7,6 +7,12 @@ class User < ApplicationRecord
   has_one :customer, dependent: :destroy
   has_one :merchant, dependent: :destroy
   has_many :posts, dependent: :destroy
+  
+  has_many :following_relationships, class_name: "Relationship",
+    foreign_key: "follower_id", dependent: :destroy
+  
+  has_many :being_followed_relationships, class_name: "Relationship",
+    foreign_key: "followed_id", dependent: :destroy
 
   DEFAULT_ROLES = %w(admin customer merchant)
 

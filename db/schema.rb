@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_16_165819) do
+ActiveRecord::Schema.define(version: 2021_11_18_040647) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -116,6 +116,16 @@ ActiveRecord::Schema.define(version: 2021_11_16_165819) do
     t.bigint "user_id", null: false
     t.integer "status", default: 0, null: false
     t.index ["user_id"], name: "index_refresh_tokens_on_user_id"
+  end
+
+  create_table "relationships", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.bigint "followed_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["followed_id"], name: "index_relationships_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_relationships_on_follower_id"
   end
 
   create_table "rent_addresses", charset: "utf8mb4", force: :cascade do |t|
