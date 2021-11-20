@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_20_154729) do
+ActiveRecord::Schema.define(version: 2021_11_20_181356) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -204,6 +204,8 @@ ActiveRecord::Schema.define(version: 2021_11_20_154729) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "status", default: 0, null: false
+    t.integer "following_count", default: 0, null: false
+    t.integer "follower_count", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
