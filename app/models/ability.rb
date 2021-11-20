@@ -10,8 +10,11 @@ class Ability
         can :manage, :all
 
         cannot [:create, :update, :destroy], Item
+        cannot :follow, User
       end
     when User
+      can [:follow, :unfollow], User
+
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id
         can :manage, Item, merchant_id: actor.merchant.id

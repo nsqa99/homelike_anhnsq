@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # User
-      resources :users
+      resources :users do
+        member do
+          post "/follow/:followed", to: "users#follow"
+          post "/unfollow/:unfollowed", to: "users#unfollow"
+        end
+      end
       
       # Auth
       post "/auth", to: "authentication#sign_in"
