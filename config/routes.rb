@@ -11,11 +11,13 @@ Rails.application.routes.draw do
       post "/auth/refresh", to: "authentication#refresh_tokens"
       
       # Merchant
-      get "merchants/:username", to: "merchants#show"
-      resources :merchants
+      resources :merchants do
+        member do
+          resources :items
+        end
+      end
       
       # Customer
-      get "customers/:username", to: "customers#show"
       resources :customers
     end
   end

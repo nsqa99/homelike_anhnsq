@@ -1,8 +1,16 @@
 class User < ApplicationRecord
+  enum status: {
+    active: 0,
+    deleted: 1
+  }, _prefix: true
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_one :address, dependent: :destroy
   has_and_belongs_to_many :roles
+
+  before_destroy :delete_user_roles_association
+
   has_many :refresh_tokens, dependent: :destroy
   has_one :customer, dependent: :destroy
   has_one :merchant, dependent: :destroy
@@ -21,5 +29,11 @@ class User < ApplicationRecord
     define_method "#{role}?" do
       self.roles.pluck(:title).include?(role)
     end
+  end
+
+  private
+
+  def delete_user_roles_association
+    self.roles.delete_all
   end
 end

@@ -11,14 +11,14 @@ class Api::V1::CustomersController < ApplicationController
     if user.save
       json_response(json_decorator.user_json(user))
     else
-      json_response([], :bad_request)
+      json_response([], :bad_request, message: user.errors.full_messages.to_sentence)
     end
   end
 
   def show
-    customer = Customer.joins(:user).find_by!(user: {username: params[:username]})
+    customer = Customer.joins(:user).find_by!(user: {username: params[:id]})
 
-    json_response(json_decorator.customer_json(customer))
+    json_response(serialize(customer))
   end
 
   def update; end
@@ -30,9 +30,5 @@ class Api::V1::CustomersController < ApplicationController
       address_attributes: [:home_number, :street, :ward, :district, :city, :country],
       customer_attributes: [:all]
     )
-  end
-
-  def json_decorator
-    @json_decorator ||= JsonDecorator.new
   end
 end

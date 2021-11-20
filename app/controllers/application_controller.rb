@@ -2,6 +2,7 @@ class ApplicationController < ActionController::API
   include JsonResponse
   include ErrorHandler
   include ApplicationHelper
+  include JsonSerializer
   include ActionController::Serialization
 
   prepend_before_action :authenticate_request_token
