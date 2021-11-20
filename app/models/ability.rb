@@ -8,11 +8,18 @@ class Ability
     when Admin
       if actor.role_admin?
         can :manage, :all
+
+        cannot [:create, :update, :destroy], Item
       end
     when User
-      can [:update, :destroy], Merchant, user_id: actor.id if actor.merchant?
+      if actor.merchant?
+        can [:update, :destroy], Merchant, user_id: actor.id
+        can :manage, Item, merchant_id: actor.merchant.id
+      end
       
-      can [:update, :destroy], Customer, user_id: actor.id if actor.customer?
+      if actor.customer?
+        can [:update, :destroy], Customer, user_id: actor.id
+      end
     else
       return
     end

@@ -9,19 +9,17 @@ class Api::V1::MerchantsController < ApplicationController
     user.roles << Role.merchant
 
     if user.save
-      json_response(json_decorator.user_json(user))
+      json_response(serialize(user))
     else
-      json_response([], :bad_request)
+      json_response([], :bad_request, message: user.errors.full_messages.to_sentence)
     end
   end
 
   def show
-    merchant = Merchant.joins(:user).find_by!(user: {username: params[:username]})
+    merchant = Merchant.joins(:user).find_by!(user: {username: params[:id]})
 
-    json_response(json_decorator.merchant_json(merchant))
+    json_response(serialize(merchant))
   end
-
-  def update; end
 
   private
 
@@ -30,9 +28,5 @@ class Api::V1::MerchantsController < ApplicationController
       address_attributes: [:home_number, :street, :ward, :district, :city, :country],
       merchant_attributes: [:all]
     )
-  end
-
-  def json_decorator
-    @json_decorator ||= JsonDecorator.new
   end
 end

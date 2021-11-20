@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_18_113325) do
+ActiveRecord::Schema.define(version: 2021_11_20_154729) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -53,15 +53,15 @@ ActiveRecord::Schema.define(version: 2021_11_18_113325) do
   create_table "apartments", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.integer "size", null: false
-    t.float "price_per_day", null: false
     t.integer "initial_quantity", null: false
     t.integer "initial_allowance", null: false
     t.integer "max_allowance", null: false
     t.float "extra_fee_each_person", null: false
-    t.bigint "merchant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["merchant_id"], name: "index_apartments_on_merchant_id"
+    t.bigint "item_id"
+    t.index ["item_id"], name: "index_apartments_on_item_id"
+    t.index ["title"], name: "index_apartments_on_title"
   end
 
   create_table "apartments_facilities", id: false, charset: "utf8mb4", force: :cascade do |t|
@@ -93,17 +93,22 @@ ActiveRecord::Schema.define(version: 2021_11_18_113325) do
     t.index ["apartment_id"], name: "index_facilities_on_apartment_id"
   end
 
-  create_table "items", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "merchant_id", null: false
+  create_table "images", charset: "utf8mb4", force: :cascade do |t|
+    t.string "url"
     t.bigint "apartment_id", null: false
-    t.string "title", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["apartment_id"], name: "index_images_on_apartment_id"
+  end
+
+  create_table "items", charset: "utf8mb4", force: :cascade do |t|
     t.float "rate", default: 0.0, null: false
-    t.string "status", null: false
+    t.integer "status", default: 0, null: false
     t.float "min_price", default: 0.0, null: false
     t.float "max_price", default: 0.0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["apartment_id"], name: "index_items_on_apartment_id"
+    t.bigint "merchant_id"
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 
@@ -198,16 +203,17 @@ ActiveRecord::Schema.define(version: 2021_11_18_113325) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "admin_refresh_tokens", "admins"
+  add_foreign_key "apartments", "items"
   add_foreign_key "customers", "users"
   add_foreign_key "facilities", "apartments"
-  add_foreign_key "items", "apartments"
-  add_foreign_key "items", "merchants"
+  add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
