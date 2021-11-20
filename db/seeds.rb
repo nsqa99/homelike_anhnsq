@@ -1,27 +1,27 @@
-User::DEFAULT_ROLES.each do |role|
+DEFAULT_ROLES.each do |role|
   Role.create!(title: role)
 end
 
-dev_admin = User.create!({
+dev_admin = Admin.create!({
+  email: "dev_admin@nsqa.com",
   username: "dev_admin",
   password: "123123123",
-  email: "admin@nsqa.com"
+  secure_token: RandomService.hex_random
 })
 
 dev_user = User.create!({
   username: "dev_user",
   password: "123123123",
-  email: "user@nsqa.com"
+  email: "user@nsqa.com",
+  address_attributes: {
+    home_number: "501",
+    street: "Le Trong Tan",
+    ward: "La Khe",
+    district: "Ha Dong",
+    city: "Ha Noi"
+  },
+  customer_attributes: {},
+  merchant_attributes: {}
 })
 
-dev_admin.roles << Role.admin.first
-dev_user.roles.concat([Role.customer.first, Role.merchant.first])
-
-address = Address.create!({
-  user: dev_user,
-  home_number: "501",
-  street: "Le Trong Tan",
-  ward: "La Khe",
-  district: "Ha Dong",
-  city: "Ha Noi"
-})
+dev_user.roles.concat([Role.customer, Role.merchant])

@@ -5,17 +5,22 @@ class Api::V1::UsersController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
     users = User.page(page).per(page_size)
-    json_response(ActiveModel::SerializableResource.new(users).as_json,
-      pagination: {
-        page: page,
-        page_size: page_size,
-        total_pages: users.total_pages,
-        total_entries: users.total_count
-      })
+    json_response(
+      json_decorator.array_json(users),
+      pagination_decorator.paginate(page, page_size, users.total_pages, users.total_count)
+    )
   end
 
-  def show
-    user = User.find_by!(username: params[:username])
-    json_response(UserSerializer.new(user).as_json)
+  def update; end
+  def destroy; end
+
+  private
+
+  def json_decorator
+    @json_decorator ||= JsonDecorator.new
+  end
+
+  def pagination_decorator
+    @pagination_decorator ||= PaginationDecorator.new
   end
 end
