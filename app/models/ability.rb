@@ -14,7 +14,9 @@ class Ability
       end
     when User
       can [:follow, :unfollow], User
-
+      can [:read, :create], Post
+      can [:update, :destroy], Post, user_id: actor.id
+      
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id
         can :manage, Item, merchant_id: actor.merchant.id
