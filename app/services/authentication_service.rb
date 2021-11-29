@@ -95,9 +95,7 @@ class AuthenticationService
   end
 
   def invalidate_tokens(user)
-    user.refresh_tokens.each do |token|
-      token.status_expired!
-    end
+    user.refresh_tokens.destroy_all
   end
 
   private

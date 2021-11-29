@@ -17,13 +17,14 @@ Rails.application.routes.draw do
       
       # Merchant
       resources :merchants do
-        member do
-          resources :items
-        end
+        resources :items
+        resources :posts
       end
       
       # Customer
-      resources :customers
+      resources :customers do
+        resources :posts
+      end
     end
   end
 end

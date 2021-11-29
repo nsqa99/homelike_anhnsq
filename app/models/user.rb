@@ -23,7 +23,7 @@ class User < ApplicationRecord
     foreign_key: "followed_id", dependent: :destroy
   
   has_many :following, through: :following_relationships, source: :followed
-  has_many :followers, through: :followed_relationships, source: :follower
+  has_many :followers, through: :being_followed_relationships, source: :follower
 
   accepts_nested_attributes_for :address, :customer, :merchant
   validates_confirmation_of :password

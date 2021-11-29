@@ -4,10 +4,8 @@ class Api::V1::ItemsController < ApplicationController
   skip_before_action :authenticate_request_token, only: [:index, :show]
   skip_load_and_authorize_resource only: [:index, :show]
 
-  delegate :title, to: :apartment, prefix: true
-
   def create
-    merchant = Merchant.joins(:user).find_by!(user: {username: params[:id]})
+    merchant = Merchant.joins(:user).find_by!(user: {username: params[:merchant_id]})
     item = merchant.items.build(new_item_params)
 
     if item.save

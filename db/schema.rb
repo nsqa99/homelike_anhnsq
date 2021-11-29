@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_20_181356) do
+ActiveRecord::Schema.define(version: 2021_11_24_161003) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -131,6 +131,14 @@ ActiveRecord::Schema.define(version: 2021_11_20_181356) do
     t.index ["user_id"], name: "index_merchants_on_user_id"
   end
 
+  create_table "post_images", charset: "utf8mb4", force: :cascade do |t|
+    t.string "url", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_id"], name: "index_post_images_on_post_id"
+  end
+
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
     t.text "content", null: false
     t.bigint "user_id", null: false
@@ -187,6 +195,16 @@ ActiveRecord::Schema.define(version: 2021_11_20_181356) do
     t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
   end
 
+  create_table "sharings", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "child_id"
+    t.bigint "parent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["child_id", "parent_id"], name: "index_sharings_on_child_id_and_parent_id", unique: true
+    t.index ["child_id"], name: "index_sharings_on_child_id"
+    t.index ["parent_id"], name: "index_sharings_on_parent_id"
+  end
+
   create_table "tags", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.string "type", null: false
@@ -217,6 +235,7 @@ ActiveRecord::Schema.define(version: 2021_11_20_181356) do
   add_foreign_key "facilities", "apartments"
   add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"
+  add_foreign_key "post_images", "posts"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "rent_addresses", "apartments"
