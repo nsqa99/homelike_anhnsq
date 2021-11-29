@@ -9,7 +9,7 @@ class Ability
       if actor.role_admin?
         can :manage, :all
 
-        cannot [:create, :update, :destroy], Item
+        cannot :manage, Item
         cannot :follow, User
       end
     when User
@@ -19,11 +19,14 @@ class Ability
       
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id
-        can :manage, Item, merchant_id: actor.merchant.id
+        can :create, Item
+        can [:update, :destroy], Item, merchant_id: actor.merchant.id
       end
       
       if actor.customer?
         can [:update, :destroy], Customer, user_id: actor.id
+        
+        cannot :manage, Item
       end
     else
       return

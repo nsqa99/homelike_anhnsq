@@ -2,14 +2,12 @@ class Api::V1::PostsController < ApplicationController
   load_and_authorize_resource
 
   skip_before_action :authenticate_request_token, only: [:index, :show]
-  skip_load_and_authorize_resource only: [:create, :index, :show, :like_post, :share_post]
+  skip_load_and_authorize_resource only: [:create, :index, :show, :like_post]
+
+  before_action :validate_user, only: [:create]
 
   def create
-    user_id = params[:merchant_id] || params[:customer_id]
-    user = User.find_by!(username: user_id)
-    return json_response([], :forbidden) if user != current_user
-
-    post = user.posts.build(new_post_params)
+    post = @user.posts.build(new_post_params)
     
     # Attach Item to post
 
@@ -83,5 +81,12 @@ class Api::V1::PostsController < ApplicationController
   def error_json_response(post)
     json_response([], :bad_request,
       message: post.errors.full_messages.to_sentence)
+  end
+
+  def validate_user
+    user_id = params[:merchant_id] || params[:customer_id]
+    @user = User.find_by!(username: user_id)
+    
+    return json_response([], :forbidden) if @user != current_user
   end
 end
