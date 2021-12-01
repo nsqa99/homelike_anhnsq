@@ -17,6 +17,7 @@ class Item < ApplicationRecord
   before_destroy :delete_items_tags_association, :delete_items_posts_association
 
   scope :approved, -> { where(status: 1)}
+  scope :not_deleted, -> { where(status: [0, 1])}
 
   private
 

@@ -2,7 +2,9 @@ class Api::V1::ItemsController < ApplicationController
   load_and_authorize_resource
 
   skip_before_action :authenticate_request_token, only: [:index, :show]
-  skip_load_and_authorize_resource only: [:index, :show]
+  skip_load_and_authorize_resource only: [:create, :index, :show]
+
+  before_action :validate_user, only: [:create]
 
   def create
     merchant = Merchant.joins(:user).find_by!(user: {username: params[:merchant_id]})
@@ -32,7 +34,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    item = Item.find(params[:id])
+    item = Item.not_deleted.find(params[:id])
     item.update_attribute(:status, 2) # Deleted = 2
 
     json_response(serialize(item, with_children))
@@ -64,5 +66,11 @@ class Api::V1::ItemsController < ApplicationController
 
   def with_children
     ["apartment", "apartment.rent_address", "apartment.facilities", "apartment.images"]
+  end
+
+  def validate_user
+    user = User.find_by!(username: params[:merchant_id])
+    
+    return json_response([], :forbidden) if user != current_user
   end
 end

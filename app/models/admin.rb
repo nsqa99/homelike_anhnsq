@@ -1,4 +1,4 @@
-class Admin < ApplicationRecord
+class Admin < BaseModel
   devise :database_authenticatable, :recoverable, :validatable
   alias_attribute :refresh_tokens, :admin_refresh_tokens
 
@@ -8,5 +8,15 @@ class Admin < ApplicationRecord
     define_method "role_#{role}?" do
       self.role == role
     end
+  end
+
+  # Override
+  def role_titles
+    [] << self.role
+  end
+
+  # Override
+  def identity
+    self.secure_token
   end
 end

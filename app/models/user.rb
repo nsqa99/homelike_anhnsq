@@ -1,4 +1,4 @@
-class User < ApplicationRecord
+class User < BaseModel
   enum status: {
     active: 0,
     deleted: 1
@@ -32,6 +32,16 @@ class User < ApplicationRecord
     define_method "#{role}?" do
       self.roles.pluck(:title).include?(role)
     end
+  end
+
+  # Override
+  def role_titles
+    self.roles.pluck(:title)
+  end
+  
+  # Override
+  def identity
+    self.id
   end
 
   private
