@@ -11,6 +11,7 @@ class Item < ApplicationRecord
   has_one :apartment, dependent: :destroy
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :posts
+  has_many :orders
 
   accepts_nested_attributes_for :apartment
 
@@ -18,6 +19,15 @@ class Item < ApplicationRecord
 
   scope :approved, -> { where(status: 1)}
   scope :not_deleted, -> { where(status: [0, 1])}
+
+  def available_dates
+    availables = (initial_start_date.to_date..initial_end_date.to_date).to_a
+    orders.each do |order|
+      availables -= (order.start_rent_date.to_date..order.end_rent_date.to_date).to_a
+    end
+
+    availables
+  end
 
   private
 
