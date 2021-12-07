@@ -1,5 +1,5 @@
 class ItemSerializer < ActiveModel::Serializer
-  attributes :id, :rate, :status, :min_price, :max_price, :status
+  attributes :id, :rate, :price, :initial_start_date, :initial_end_date, :status
 
   has_one :apartment
 end

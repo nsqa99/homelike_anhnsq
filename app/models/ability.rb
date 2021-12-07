@@ -19,14 +19,13 @@ class Ability
       
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id
-        can :create, Item
-        can [:update, :destroy], Item, merchant_id: actor.merchant.id
+        can :manage, Item, merchant_id: actor.merchant.id
       end
       
       if actor.customer?
         can [:update, :destroy], Customer, user_id: actor.id
-        
-        cannot :manage, Item
+
+        can :manage, Order, customer_id: actor.customer.id
       end
     else
       return

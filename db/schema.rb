@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_24_161003) do
+ActiveRecord::Schema.define(version: 2021_12_06_171016) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -104,11 +104,12 @@ ActiveRecord::Schema.define(version: 2021_11_24_161003) do
   create_table "items", charset: "utf8mb4", force: :cascade do |t|
     t.float "rate", default: 0.0, null: false
     t.integer "status", default: 0, null: false
-    t.float "min_price", default: 0.0, null: false
-    t.float "max_price", default: 0.0, null: false
+    t.float "price", default: 0.0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "merchant_id"
+    t.datetime "initial_start_date", null: false
+    t.datetime "initial_end_date", null: false
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 
@@ -129,6 +130,22 @@ ActiveRecord::Schema.define(version: 2021_11_24_161003) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_merchants_on_user_id"
+  end
+
+  create_table "orders", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.float "total", default: 0.0, null: false
+    t.datetime "start_rent_date", null: false
+    t.datetime "end_rent_date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "item_id"
+    t.integer "customer_quantity", null: false
+    t.float "extra_price", default: 0.0
+    t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["item_id"], name: "index_orders_on_item_id"
+    t.index ["start_rent_date", "end_rent_date"], name: "index_orders_on_start_rent_date_and_end_rent_date", unique: true
   end
 
   create_table "post_images", charset: "utf8mb4", force: :cascade do |t|
@@ -235,6 +252,8 @@ ActiveRecord::Schema.define(version: 2021_11_24_161003) do
   add_foreign_key "facilities", "apartments"
   add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"
+  add_foreign_key "orders", "customers"
+  add_foreign_key "orders", "items"
   add_foreign_key "post_images", "posts"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"

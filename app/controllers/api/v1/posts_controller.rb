@@ -7,7 +7,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :validate_user, only: [:create]
 
   def create
-    post = @user.posts.build(new_post_params)
+    post = @current_user.posts.build(new_post_params)
     
     # Attach Item to post
 
@@ -85,8 +85,8 @@ class Api::V1::PostsController < ApplicationController
 
   def validate_user
     user_id = params[:merchant_id] || params[:customer_id]
-    @user = User.find_by!(username: user_id)
+    @current_user = User.find_by!(username: user_id)
     
-    return json_response([], :forbidden) if @user != current_user
+    return json_response([], :forbidden) if @current_user != current_user
   end
 end

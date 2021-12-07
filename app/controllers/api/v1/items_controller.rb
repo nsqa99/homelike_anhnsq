@@ -7,8 +7,7 @@ class Api::V1::ItemsController < ApplicationController
   before_action :validate_user, only: [:create]
 
   def create
-    merchant = Merchant.joins(:user).find_by!(user: {username: params[:merchant_id]})
-    item = merchant.items.build(new_item_params)
+    item = @current_user.merchant.items.build(new_item_params)
 
     if item.save
       json_response(serialize(item, with_children))
@@ -43,8 +42,8 @@ class Api::V1::ItemsController < ApplicationController
   private
 
   def new_item_params
-    params.require(:item).permit(:rate, :status, :min_price, :max_price,
-      apartment_attributes: [:title, :size, :initial_quantity,
+    params.require(:item).permit(:rate, :status, :min_price, :max_price, :initial_start_date,
+      :initial_end_date, apartment_attributes: [:title, :size, :initial_quantity,
         :initial_allowance, :max_allowance, :extra_fee_each_person,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], facilities_attributes: [:name, :quality, :quantity],
@@ -54,8 +53,8 @@ class Api::V1::ItemsController < ApplicationController
   end
   
   def update_item_params
-    params.require(:item).permit(:rate, :status, :min_price, :max_price,
-      apartment_attributes: [:id, :title, :size, :initial_quantity,
+    params.require(:item).permit(:rate, :status, :min_price, :max_price, :initial_start_date,
+      :initial_end_date, apartment_attributes: [:id, :title, :size, :initial_quantity,
         :initial_allowance, :max_allowance, :extra_fee_each_person, :item_id,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], facilities_attributes: [:id, :name, :quality, :quantity],
@@ -69,8 +68,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def validate_user
-    user = User.find_by!(username: params[:merchant_id])
+    @current_user = User.find_by!(username: params[:merchant_id])
     
-    return json_response([], :forbidden) if user != current_user
+    return json_response([], :forbidden) if @current_user != current_user
   end
 end

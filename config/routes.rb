@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       # Customer
       resources :customers do
         resources :posts
+        resources :orders
       end
     end
   end
