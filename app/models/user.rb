@@ -1,4 +1,6 @@
 class User < BaseModel
+  include Searchable
+
   enum status: {
     active: 0,
     deleted: 1
@@ -7,6 +9,7 @@ class User < BaseModel
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_one :address, dependent: :destroy
+  has_one :full_name, dependent: :destroy
   has_and_belongs_to_many :roles
 
   before_destroy :delete_user_roles_association
@@ -32,6 +35,22 @@ class User < BaseModel
     define_method "#{role}?" do
       self.roles.pluck(:title).include?(role)
     end
+  end
+
+  def as_indexed_json(options = {})
+    as_json(
+      only: [:username, :created_at, :cache_all_earned_commission, :status, :email, 
+        :following_count, :follower_count],
+      include: {
+        full_name: {
+          only: [:first_name, :last_name],
+          methods: [:full_name]
+        },
+        address: {
+          only: [:home_number, :street, :ward, :district, :city, :country]
+        }
+      }
+    )
   end
 
   # Override

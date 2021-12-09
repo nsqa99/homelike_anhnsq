@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_06_171016) do
+ActiveRecord::Schema.define(version: 2021_12_12_163334) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -91,6 +91,15 @@ ActiveRecord::Schema.define(version: 2021_12_06_171016) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["apartment_id"], name: "index_facilities_on_apartment_id"
+  end
+
+  create_table "full_names", charset: "utf8mb4", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_full_names_on_user_id"
   end
 
   create_table "images", charset: "utf8mb4", force: :cascade do |t|
@@ -250,6 +259,7 @@ ActiveRecord::Schema.define(version: 2021_12_06_171016) do
   add_foreign_key "apartments", "items"
   add_foreign_key "customers", "users"
   add_foreign_key "facilities", "apartments"
+  add_foreign_key "full_names", "users"
   add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"
   add_foreign_key "orders", "customers"

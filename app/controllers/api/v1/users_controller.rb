@@ -4,11 +4,11 @@ class Api::V1::UsersController < ApplicationController
   def index
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
-    users = User.page(page).per(page_size)
-    
+    users, total = User.build_search("", [], [], [], page, page_size)
+
     json_response(
-      serialize(users),
-      paginate(page, page_size, users.total_pages, users.total_count)
+      serialize(user_decorator.transform_list(users)),
+      paginate(page, page_size, (total / page_size.to_i).ceil, total)
     )
   end
 
@@ -37,9 +37,21 @@ class Api::V1::UsersController < ApplicationController
     json_response([], :ok)
   end
 
+  def search
+    page = params[:page] || DEFAULT_PAGE
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+    search_fields = ["username", "email", "full_name.first_name", "full_name.last_name", "full_name.full_name"]
+    users, total = User.build_search(params[:search_text], [], [], search_fields, page, page_size)
+
+    json_response(
+      serialize(user_decorator.transform_list(users)),
+      paginate(page, page_size, (total / page_size.to_i).ceil, total)
+    )
+  end
+
   private
 
-  def pagination_decorator
-    @pagination_decorator ||= PaginationDecorator.new
+  def user_decorator
+    @user_decorator ||= Elasticsearch::UserDecorator.new
   end
 end

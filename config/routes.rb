@@ -5,15 +5,19 @@ Rails.application.routes.draw do
     namespace :v1 do
       # User
       resources :users do
+        collection do
+          get "search"
+        end
+
         member do
-          post "/follow/:followed", to: "users#follow"
-          post "/unfollow/:unfollowed", to: "users#unfollow"
+          post "follow/:followed", to: "users#follow"
+          post "unfollow/:unfollowed", to: "users#unfollow"
         end
       end
       
       # Auth
-      post "/auth", to: "authentication#sign_in"
-      post "/auth/refresh", to: "authentication#refresh_tokens"
+      post "auth", to: "authentication#sign_in"
+      post "auth/refresh", to: "authentication#refresh_tokens"
       
       # Merchant
       resources :merchants do
