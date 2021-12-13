@@ -1,9 +1,12 @@
 class Item < ApplicationRecord
+  include Searchable
+
   enum status: {
     pending: 0,
     approved: 1,
     deleted: 2
   }, _prefix: true
+
 
   delegate :title, to: :apartment, prefix: true
 
@@ -19,6 +22,43 @@ class Item < ApplicationRecord
 
   scope :approved, -> { where(status: 1)}
   scope :not_deleted, -> { where(status: [0, 1])}
+
+  def as_indexed_json(options = {})
+    as_json(
+      only: [:rate, :status, :price, :initial_start_date, :initial_end_date],
+      include: {
+        merchant: {
+          include: {
+            user: {
+              only: [:username, :status],
+              methods: [:user_full_name]
+            }
+          }
+        },
+        tags: {
+          only: [:title, :type]
+        },
+        apartment: {
+          only: [:title, :size, :initial_quantity, :initial_allowance, :max_allowance,
+            :extra_fee_each_person],
+          include: {
+            rent_address: {
+              only: [:home_number, :street, :ward, :district, :city, :country]
+            },
+            facilities: {
+              only: [:name]
+            },
+            apartments_facilities: {
+              only: [:quality, :quantity]
+            },
+            images: {
+              only: [:url]
+            }
+          }
+        }
+      }
+    )
+  end
 
   def available_dates
     availables = (initial_start_date.to_date..initial_end_date.to_date).to_a
