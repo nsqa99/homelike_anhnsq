@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_12_163334) do
+ActiveRecord::Schema.define(version: 2021_12_13_154551) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -64,16 +64,16 @@ ActiveRecord::Schema.define(version: 2021_12_12_163334) do
     t.index ["title"], name: "index_apartments_on_title"
   end
 
-  create_table "apartments_facilities", id: false, charset: "utf8mb4", force: :cascade do |t|
+  create_table "apartments_facilities", charset: "utf8mb4", force: :cascade do |t|
+    t.string "quality"
+    t.integer "quantity"
     t.bigint "apartment_id", null: false
     t.bigint "facility_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["apartment_id", "facility_id"], name: "index_apartments_facilities_on_apartment_id_and_facility_id", unique: true
-  end
-
-  create_table "apartments_tags", id: false, charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "apartment_id", null: false
-    t.bigint "tag_id", null: false
-    t.index ["apartment_id", "tag_id"], name: "index_apartments_tags_on_apartment_id_and_tag_id", unique: true
+    t.index ["apartment_id"], name: "index_apartments_facilities_on_apartment_id"
+    t.index ["facility_id"], name: "index_apartments_facilities_on_facility_id"
   end
 
   create_table "customers", charset: "utf8mb4", force: :cascade do |t|
@@ -84,13 +84,9 @@ ActiveRecord::Schema.define(version: 2021_12_12_163334) do
   end
 
   create_table "facilities", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "apartment_id", null: false
     t.string "name", null: false
-    t.string "quality", null: false
-    t.integer "quantity", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["apartment_id"], name: "index_facilities_on_apartment_id"
   end
 
   create_table "full_names", charset: "utf8mb4", force: :cascade do |t|
@@ -257,8 +253,9 @@ ActiveRecord::Schema.define(version: 2021_12_12_163334) do
 
   add_foreign_key "admin_refresh_tokens", "admins"
   add_foreign_key "apartments", "items"
+  add_foreign_key "apartments_facilities", "apartments"
+  add_foreign_key "apartments_facilities", "facilities"
   add_foreign_key "customers", "users"
-  add_foreign_key "facilities", "apartments"
   add_foreign_key "full_names", "users"
   add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"

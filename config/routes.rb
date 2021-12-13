@@ -21,7 +21,11 @@ Rails.application.routes.draw do
       
       # Merchant
       resources :merchants do
-        resources :items
+        resources :items do
+          collection do
+            get "search"
+          end
+        end
         resources :posts
       end
       

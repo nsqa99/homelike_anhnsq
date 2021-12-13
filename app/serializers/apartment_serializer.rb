@@ -3,6 +3,6 @@ class ApartmentSerializer < ActiveModel::Serializer
     :initial_allowance, :max_allowance, :extra_fee_each_person
 
   has_one :rent_address
-  has_many :facilities
+  has_many :apartments_facilities
   has_many :images
 end
