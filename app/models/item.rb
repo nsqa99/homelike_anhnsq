@@ -23,6 +23,14 @@ class Item < ApplicationRecord
   scope :approved, -> { where(status: 1)}
   scope :not_deleted, -> { where(status: [0, 1])}
 
+  after_save {
+    unless status_deleted?
+      __elasticsearch__.index_document
+    else
+      __elasticsearch__.delete_document(refresh: true)
+    end
+  }
+
   def as_indexed_json(options = {})
     as_json(
       only: [:rate, :status, :price, :initial_start_date, :initial_end_date],
