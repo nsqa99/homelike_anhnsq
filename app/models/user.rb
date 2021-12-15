@@ -28,7 +28,7 @@ class User < BaseModel
   has_many :following, through: :following_relationships, source: :followed
   has_many :followers, through: :being_followed_relationships, source: :follower
 
-  accepts_nested_attributes_for :address, :customer, :merchant
+  accepts_nested_attributes_for :full_name, :address, :customer, :merchant
   validates_confirmation_of :password
 
   delegate :first_name, to: :full_name
@@ -39,6 +39,14 @@ class User < BaseModel
       self.roles.pluck(:title).include?(role)
     end
   end
+
+  after_save {
+    unless status_deleted?
+      __elasticsearch__.index_document
+    else
+      __elasticsearch__.delete_document(refresh: true)
+    end
+  }
 
   def as_indexed_json(options = {})
     as_json(

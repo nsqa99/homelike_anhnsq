@@ -26,7 +26,7 @@ class Api::V1::MerchantsController < ApplicationController
   def user_params
     params.require(:user).permit(:username, :password, :password_confirmation, :email,
       address_attributes: [:home_number, :street, :ward, :district, :city, :country],
-      merchant_attributes: [:all]
+      merchant_attributes: [:all], full_name_attributes: [:first_name, :last_name]
     )
   end
 end
