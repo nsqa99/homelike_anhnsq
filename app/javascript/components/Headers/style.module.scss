@@ -1,3 +1,5 @@
+@import '../../assets/styles/variables';
+
 .header {
   background-color: #131921;
   display: flex;
@@ -7,10 +9,8 @@
   z-index: 100;
 }
 .header__logo {
-  width: 100px;
-  margin: 0 20px;
-  margin-top: 18px;
-  object-fit: contain;
+  color: $theme_color;
+  font-size: 20px;
 }
 .header__optionBasket {
   display: flex;
@@ -53,4 +53,21 @@
   background-color: #cd9042;
   padding: 5px;
   height: 22px !important;
+}
+
+.dropdown-menu--right-align {
+  top: 120%;
+  right: 0;
+}
+
+.header__btnSwitch {
+  border-radius: $border-radius-hack;
+  margin-right: 20px;
+  background: #f8f9fa;
+  border: none;
+  color: #131921;
+}
+
+.header__btnSwitch:hover {
+  background: $theme_color;
 }

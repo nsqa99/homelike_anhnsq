@@ -4,11 +4,31 @@ import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import SearchIcon from "@material-ui/icons/Search";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import MenuIcon from "@material-ui/icons/Menu";
 import { useSelector } from "react-redux";
+import {
+  DropdownItem,
+  Dropdown,
+  DropdownMenu,
+  Nav,
+  Navbar,
+  Button,
+} from "reactstrap";
+import Avatar from "../Avatar";
+import { FlexCentered } from "../../common/styles";
+import styled from "styled-components";
 // import { auth } from "firebase";
 
+const AvatarDropdown = styled(FlexCentered)`
+  justify-content: space-between;
+  border: 1px solid grey;
+  width: 100px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+`;
+
 const Headers = () => {
-  const basket = useSelector(({ items: { basket } }) => basket);
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -17,62 +37,35 @@ const Headers = () => {
   //   }
   // };
 
-  const [openModal, toggleModal] = useState(false);
+  const [isOpen, setOpen] = useState(false);
+
+  const toggle = () => {
+    setOpen(!isOpen);
+  };
 
   return (
-    <nav styleName="header">
-      {openModal && (
-        <CartModal openModal={openModal} onClose={() => toggleModal(false)} />
-      )}
-      {/* logo on the left -> img */}
-      <Link to="/">
-        <img
-          styleName="header__logo"
-          src="http://pngimg.com/uploads/amazon/amazon_PNG11.png"
-          alt="amazon logo"
-        />
+    <Navbar color="light" expand={true} light className="sticky-top">
+      <Link to="/" className="navbar-brand">
+        Home Like
       </Link>
-      {/* search box */}
-      <div styleName="header__search">
-        <input type="text" styleName="header__searchInput" />
-        <SearchIcon styleName="header__searchIcon" />
-      </div>
-      {/* 3 links */}
-      <div styleName="header__nav">
-        {/* <Link to={!user && "/login"} styleName="header__link">
-            <div onClick={login} styleName="header__option">
-              <span styleName="header__optionLineOne">Hello {user?.email}</span>
-              <span styleName="header__optionLineTwo">
-                {user ? "Sign Out" : "Sign In"}
-              </span>
-            </div>
-          </Link> */}
-      </div>
-      <div styleName="header__nav">
-        <Link to="/order" styleName="header__link">
-          <div styleName="header__option">
-            <span styleName="header__optionLineOne">Returns</span>
-            <span styleName="header__optionLineTwo">& Orders</span>
-          </div>
-        </Link>
-      </div>
-      <div styleName="header__nav">
-        <Link to="/login" styleName="header__link">
-          <div styleName="header__option">
-            <span styleName="header__optionLineOne">Your</span>
-            <span styleName="header__optionLineTwo">Prime</span>
-          </div>
-        </Link>
-      </div>
-      <Link to="/checkout" styleName="header__link">
-        <div styleName="header__optionBasket">
-          <ShoppingBasketIcon />
-          <span styleName="header__optionLineTwo header__basketCount">
-            {basket.length}
-          </span>
-        </div>
-      </Link>
-    </nav>
+      <Nav className="ms-auto" navbar>
+        <Button color="danger" styleName="header__btnSwitch">
+          Switch to hosting
+        </Button>
+        <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
+          <AvatarDropdown onClick={toggle}>
+            <MenuIcon />
+            <Avatar />
+          </AvatarDropdown>
+          <DropdownMenu styleName="dropdown-menu--right-align">
+            <DropdownItem>Option 1</DropdownItem>
+            <DropdownItem>Option 2</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem>Reset</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Nav>
+    </Navbar>
   );
 };
 

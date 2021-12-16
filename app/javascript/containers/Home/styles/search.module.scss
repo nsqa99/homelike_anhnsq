@@ -1,0 +1,40 @@
+@import '../../../assets/styles/variables';
+
+.search-icon {
+  color: $theme_color;
+}
+
+.btn-danger_custom {
+  background: $theme_color;
+}
+
+.color--red {
+  color: $theme_color;
+}
+
+.text-small {
+  font-size: 15px !important;
+}
+
+.text-bold {
+  font-weight: $text-bold;
+}
+
+::-webkit-input-placeholder {
+  font-size: 16px!important;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  font-size: 16px!important;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+  font-size: 16px!important;
+}
+
+.search-section__wrapper {
+  margin: 0 auto;
+  margin-top: 100px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  width: 80%;
+}
