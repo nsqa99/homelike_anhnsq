@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import { Container } from "reactstrap";
 import styled from "styled-components";
 import SearchSection from "./components/SearchSection";
+import ItemSection from "./components/ItemSection";
 import background from "../../assets/images/background.jpeg";
 
-const Wrapper = styled.div`
+const TopBodyWrapper = styled.div`
   height: 30vh;
   background: linear-gradient(
       to right,
@@ -20,11 +21,14 @@ const Wrapper = styled.div`
 
 const index = () => {
   return (
-    <Container>
-      <Wrapper>
-        <SearchSection />
-      </Wrapper>
-    </Container>
+    <>
+      <Container>
+        <TopBodyWrapper>
+          <SearchSection />
+        </TopBodyWrapper>
+      </Container>
+      <ItemSection />
+    </>
   );
 };
 

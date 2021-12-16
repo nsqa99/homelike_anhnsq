@@ -1,6 +1,6 @@
 import React from "react";
 import CSSModules from "react-css-modules";
-import DEFAULT_AVATAR from "./avatar.png";
+import DEFAULT_AVATAR from "../../constants/images/DefaultAvatar.png";
 import styles from "./style.module.scss";
 
 const Avatar = () => {
