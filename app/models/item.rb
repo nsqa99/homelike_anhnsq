@@ -2,9 +2,8 @@ class Item < ApplicationRecord
   include Searchable
 
   enum status: {
-    pending: 0,
-    approved: 1,
-    deleted: 2
+    approved: 0,
+    deleted: 1
   }, _prefix: true
 
 
@@ -20,8 +19,7 @@ class Item < ApplicationRecord
 
   before_destroy :delete_items_tags_association, :delete_items_posts_association
 
-  scope :approved, -> { where(status: 1)}
-  scope :not_deleted, -> { where(status: [0, 1])}
+  scope :approved, -> { where(status: 0)}
 
   after_save {
     unless status_deleted?

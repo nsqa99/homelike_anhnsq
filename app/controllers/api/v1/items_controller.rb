@@ -33,8 +33,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    item = Item.not_deleted.find(params[:id])
-    item.update_attribute(:status, 2) # Deleted = 2
+    item = Item.approved.find(params[:id])
+    item.update_attribute(:status, 1) # Deleted = 1
 
     json_response(serialize(item, with_children))
   end
