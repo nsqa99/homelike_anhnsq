@@ -4,6 +4,7 @@ import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import PublicIcon from "@material-ui/icons/Public";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useSelector } from "react-redux";
 import {
@@ -30,7 +31,7 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const Headers = () => {
+const SocialHeaders = () => {
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -51,13 +52,13 @@ const Headers = () => {
         Home Like
       </Link>
       <Nav className="ms-auto" navbar>
-        <CustomNavLink tag={Link} to="/social">
-          <Button color="danger" styleName="header__btnSwitch">
-            <PublicIcon className="me-2" />
-            Connect with friends
+        <CustomNavLink tag={Link} to="/">
+          <Button color="danger" outline className="d-flex align-items-center">
+            <ArrowBackIosIcon className="" />
+            Back
           </Button>
         </CustomNavLink>
-          <CustomNavLink tag={Link} to="/host">
+        <CustomNavLink tag={Link} to="/host">
             <Button color="danger" styleName="header__btnSwitch">
               <SupervisedUserCircleIcon className="me-2" />
                 Switch to hosting
@@ -80,4 +81,4 @@ const Headers = () => {
   );
 };
 
-export default CSSModules(Headers, styles, { allowMultiple: true });
+export default CSSModules(SocialHeaders, styles, { allowMultiple: true });
