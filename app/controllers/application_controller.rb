@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include JsonSerializer
   include ActionController::Serialization
 
+  skip_before_action :verify_authenticity_token
   prepend_before_action :authenticate_request_token
 
   private

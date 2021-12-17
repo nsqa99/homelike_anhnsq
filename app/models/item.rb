@@ -51,11 +51,9 @@ class Item < ApplicationRecord
             rent_address: {
               only: [:home_number, :street, :ward, :district, :city, :country]
             },
-            facilities: {
-              only: [:name]
-            },
             apartments_facilities: {
-              only: [:quality, :quantity]
+              only: [:quality, :quantity],
+              methods: [:facility_name]
             },
             images: {
               only: [:url]

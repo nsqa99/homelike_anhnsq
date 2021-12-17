@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root "pages#index"
-  get "*path", to: "pages#index", via: :all
   
   devise_for :admins
   devise_for :users
@@ -41,4 +40,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "*path", to: "pages#index", via: :all
 end

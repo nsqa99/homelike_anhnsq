@@ -1,8 +1,8 @@
 import CommonLayout from "components/CommonLayout";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import CheckoutProduct from "./CheckoutProduct";
 import Home from "./Home";
+import ItemDetails from "./ItemDetails";
 import Login from "./Login";
 
 export default function index() {
@@ -18,9 +18,7 @@ export default function index() {
             <Route path="/user">
               <Users />
             </Route>
-            <Route path="/checkout">
-              <CheckoutProduct />
-            </Route>
+            <Route path="/items/:id" component={ItemDetails} />
             <Route path="/">
               <Home />
             </Route>

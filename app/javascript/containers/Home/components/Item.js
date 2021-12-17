@@ -5,12 +5,14 @@ import DefaultAvatar from "constants/images/DefaultAvatar.png";
 import StarIcon from "@material-ui/icons/Star";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from "@material-ui/icons/Person";
 import { useDispatch } from "react-redux";
 import { Col, Row, Tooltip } from "reactstrap";
 import { Link } from "react-router-dom";
+import CurrencyFormat from "react-currency-format";
+import { formatDate, shortAddress } from "../../../utils";
 
-const Item = ({ item }) => {
+const Item = ({ item, style }) => {
   const dispatch = useDispatch();
   const [displayStart, toggleDisplayStart] = useState(false);
   const [displayEnd, toggleDisplayEnd] = useState(false);
@@ -22,22 +24,18 @@ const Item = ({ item }) => {
     });
   };
   const toggleTooltip = (type) => {
-    if (type === 'start') {
+    if (type === "start") {
       toggleDisplayStart(!displayStart);
     } else {
       toggleDisplayEnd(!displayEnd);
     }
-  }
-  const formatDate = (date) => {
-    let elems = date.split("-");
-    return elems.slice(0).reverse().join(".")
-  }
+  };
+  
   const detailPath = `/items/${item.id}`;
   const merchantPath = `/merchants/${item.merchant.user.username}`;
-  const locationPath = `/items?fields=[country, city]+search_text=${item.rent_address.city} ${item.rent_address.country}`;
 
   return (
-    <div styleName="item">
+    <div styleName={style ? `item ${style}` : "item"}>
       <div styleName="img-wrapper">
         <img
           src={item.apartment.images[0] || DefaultAvatar}
@@ -45,15 +43,22 @@ const Item = ({ item }) => {
         />
       </div>
       <p styleName="item__price">
-        <strong>${item.price}</strong>
+        <strong>
+          <CurrencyFormat
+            value={item.price}
+            displayType={"text"}
+            thousandSeparator={true}
+            prefix={"$"}
+          />
+        </strong>
       </p>
 
       <Link to={detailPath} styleName="item__title">
         {item.apartment.title}
       </Link>
-      <Link to={locationPath} styleName="item__location">
+      <Link to="" styleName="item__location">
         <LocationOnIcon styleName="icon__location" />
-        {`${item.rent_address.city}, ${item.rent_address.country}`}
+        {shortAddress(item.apartment.rent_address)}
       </Link>
 
       <Row styleName="item__time-info">
@@ -88,7 +93,6 @@ const Item = ({ item }) => {
       </Link>
       <div styleName="item__info">
         <p>{item.description}</p>
-        
 
         <div styleName="item__rating">
           {Array(item.rate)
@@ -105,4 +109,4 @@ const Item = ({ item }) => {
   );
 };
 
-export default CSSModules(Item, style);
+export default CSSModules(Item, style, {allowMultiple: true});
