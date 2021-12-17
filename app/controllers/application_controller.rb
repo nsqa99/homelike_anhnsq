@@ -1,10 +1,11 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   include JsonResponse
   include ErrorHandler
   include ApplicationHelper
   include JsonSerializer
   include ActionController::Serialization
 
+  skip_before_action :verify_authenticity_token
   prepend_before_action :authenticate_request_token
 
   private

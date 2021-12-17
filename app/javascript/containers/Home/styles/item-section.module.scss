@@ -1,0 +1,14 @@
+@import '../../../assets/styles/variables';
+
+.filter-select {
+  option {
+    &:first-child {
+      color: grey;
+    }
+  }
+}
+
+.item__container {
+  background: #f8f9fa;
+  padding: 10px;
+}

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root "pages#index"
+  
   devise_for :admins
   devise_for :users
   namespace :api do
@@ -28,6 +30,8 @@ Rails.application.routes.draw do
         end
         resources :posts
       end
+
+      get "items/search", to: "items#search"
       
       # Customer
       resources :customers do
@@ -36,4 +40,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "*path", to: "pages#index", via: :all
 end

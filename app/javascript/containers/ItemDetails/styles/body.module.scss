@@ -1,0 +1,60 @@
+@import '../../../assets/styles/variables';
+$section-margin-top: 30px;
+
+.body {
+  &__description {
+    width: 100%;
+
+    &--content {
+      margin-top: $section-margin-top;
+      color: black;
+      font-size: $text-base;
+    }
+  }
+
+  &__icon {
+    &--star {
+      color: #f0c14b;
+    }
+  }
+ 
+  &__title {
+    color: black;
+    font-size: $text-larger;
+  }
+
+  &__table {
+    margin-top: $section-margin-top;
+    font-size: $text-small;
+    th {
+      padding-left: 0 !important;
+    }
+    td {
+      text-align: end;
+    }
+  }
+
+  &__merchant {
+    margin: $section-margin-top 0;
+
+    &--avatar {
+      border-radius: $border-radius-hack;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &__comment {
+    margin: $section-margin-top 0;
+    font-size: $text-small;
+
+    &--avatar {
+      border-radius: $border-radius-hack;
+      width: 30px;
+      height: 30px;
+    }
+    &--content {
+      padding: 10px;
+    }
+  }
+}
