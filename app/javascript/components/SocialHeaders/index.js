@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
-import PublicIcon from "@material-ui/icons/Public";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import DescriptionIcon from "@material-ui/icons/Description";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useSelector } from "react-redux";
 import {
@@ -15,6 +15,9 @@ import {
   Navbar,
   Button,
   NavLink,
+  Input,
+  InputGroup,
+  InputGroupText,
 } from "reactstrap";
 import Avatar from "../Avatar";
 import { FlexCentered } from "../../common/styles";
@@ -51,19 +54,30 @@ const SocialHeaders = () => {
       <Link to="/" className="navbar-brand">
         Home Like
       </Link>
+      <InputGroup>
+        <Input
+          type="text"
+          placeholder="Find friends around"
+          styleName="header__search"
+        />
+
+        <InputGroupText>
+          <SearchIcon />
+        </InputGroupText>
+      </InputGroup>
+
       <Nav className="ms-auto" navbar>
-        <CustomNavLink tag={Link} to="/">
-          <Button color="danger" outline className="d-flex align-items-center">
-            <ArrowBackIosIcon className="" />
-            Back
+        <CustomNavLink tag={Link} to="/social">
+          <Button
+            color="danger"
+            outline
+            className="d-flex align-items-center"
+            style={{ borderRadius: 999 }}
+          >
+            <DescriptionIcon className="" />
+            Newsfeed
           </Button>
         </CustomNavLink>
-        <CustomNavLink tag={Link} to="/host">
-            <Button color="danger" styleName="header__btnSwitch">
-              <SupervisedUserCircleIcon className="me-2" />
-                Switch to hosting
-            </Button>
-          </CustomNavLink>
         <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
           <AvatarDropdown onClick={toggle}>
             <MenuIcon />

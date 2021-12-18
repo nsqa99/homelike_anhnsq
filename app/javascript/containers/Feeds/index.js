@@ -1,10 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Container } from "reactstrap";
 import styled from "styled-components";
-import SearchSection from "./components/SearchSection";
-import ItemSection from "./components/ItemSection";
+import PostSection from "./components/PostSection";
 import background from "../../assets/images/background.jpeg";
+import { Route } from "react-router-dom";
 
 const TopBodyWrapper = styled.div`
   height: 30vh;
@@ -23,11 +22,8 @@ const index = () => {
   return (
     <>
       <Container>
-        <TopBodyWrapper>
-          <SearchSection />
-        </TopBodyWrapper>
+        <PostSection />
       </Container>
-      <ItemSection />
     </>
   );
 };

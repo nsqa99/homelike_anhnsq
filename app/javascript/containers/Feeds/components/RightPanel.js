@@ -1,29 +1,44 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../styles/right-panel.module.scss";
-import Product from "./Product";
+import { useSelector } from "react-redux";
+import Post from "./Post";
+import styled from "styled-components";
 
-const bannerImg =
-  "https://images-eu.ssl-images-amazon.com/images/G/02/digital/video/merch2016/Hero/Covid19/Generic/GWBleedingHero_ENG_COVIDUPDATE__XSite_1500x600_PV_en-GB._CB428684220_.jpg";
+const PostWrapper = styled.div`
+  margin-top: 30px;
+`;
 
 const RightPanel = () => {
-  const { content: items, pageable } = useSelector(
-    ({ items: { data } }) => data
-  );
+  const posts = [
+    {
+      id: 1,
+      content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis`,
+      likes: 100,
+      shares: 12,
+      user: {
+        username: "nsqa99",
+        user_full_name: "Anh Nguyen Sy Quang",
+      },
+      images: [],
+      created_at: "2021-12-21",
+    },
+  ];
 
   return (
-    <div styleName="home">
-      <img styleName="home__image" src={bannerImg} alt="" />
-
-      {/*product id, title, price, rating */}
-      <div styleName="home__row">
-        {items?.length > 0 &&
-          items.map((product) => {
-            return <Product product={product} />;
-          })}
+    <PostWrapper>
+      <div styleName="post__title" className="mb-5">
+        Popular Posts
       </div>
-    </div>
+      {posts.map((post) => (
+        <Post key={post.id} post={post} rightPanel={true} />
+      ))}
+    </PostWrapper>
   );
 };
 
