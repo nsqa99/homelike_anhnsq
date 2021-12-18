@@ -7,6 +7,7 @@ import ItemDetails from "./ItemDetails";
 import Login from "./Login";
 import Feed from './Feeds'
 import PostDetails from "./PostDetails";
+import Profile from './Profile'
 
 export default function index() {
   return (
@@ -20,6 +21,7 @@ export default function index() {
           <CommonSocialLayout>
             <Switch>
               <Route path="/social/posts/:id" component={PostDetails} />
+              <Route path="/social/profile/:username" component={Profile} />
               <Route path="/social" component={Feed} />
             </Switch>
           </CommonSocialLayout>

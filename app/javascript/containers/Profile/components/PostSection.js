@@ -10,6 +10,7 @@ import styled from "styled-components";
 import RightPanel from "./RightPanel";
 import { RouterLink } from "../../../components/custom/RouterLink";
 import Post from "../../../components/Post";
+import User from "../../../components/User";
 
 const FilterWrapper = styled(FlexCentered)`
   justify-content: space-between;
@@ -68,6 +69,17 @@ const posts = [
   },
 ];
 
+const user = {
+  id: 1,
+  username: "nsqa99",
+  user_full_name: "Anh Nguyen Sy Quang",
+  created_at: "2021-12-12",
+  email: "test@example.com",
+  address: "HN, VN",
+  follower_count: 100,
+  following_count: 1000
+};
+
 const PostSection = () => {
   const [isOpen, setOpen] = useState(false);
 
@@ -78,31 +90,22 @@ const PostSection = () => {
   return (
     <Container fluid styleName="post__container">
       <Container>
+        <User user={user} />
         
         <Row className="mt-5">
-          <Col sm="12" md="7" lg="8" className="d-flex flex-column align-items-center mt-4">
-            <RouterLink to="posts/new">
-              <Button
-                color="danger"
-                outline
-                className="m-auto mb-5"
-              >
-                <AddIcon />
-                Add new post
-              </Button>
-            </RouterLink>
-            
+          <Col xs="12" md="7" lg="8" className="d-flex flex-column align-items-center mt-4">
             {posts.map((post) => {
               return (
                 <Post
                   key={post.id}
                   post={post}
+                  detail={true}
                   style={{ width: "80%", margin: "0 auto 30px" }}
                 />
               );
             })}
           </Col>
-          <Col sm="6" md="5" lg="4">
+          <Col xs="6" md="5" lg="4">
             <RightPanel />
           </Col>
         </Row>

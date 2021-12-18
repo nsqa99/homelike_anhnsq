@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import CSSModules from "react-css-modules";
-import style from "../styles/post.module.scss";
+import style from "./style.module.scss";
 import DefaultAvatar from "constants/images/DefaultAvatar.png";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import ShareIcon from "@material-ui/icons/Share";
 import PersonIcon from "@material-ui/icons/Person";
 import { useDispatch } from "react-redux";
-import { Link, Route, Switch } from "react-router-dom";
-import { RouterLink } from "../../../components/custom/RouterLink";
-import { formatDate } from "../../../utils";
-import { Col, Row } from "reactstrap";
-import PostDetails from "../../PostDetails";
+import { RouterLink } from "../custom/RouterLink";
+import { formatDate } from "../../utils";
 
 const Post = ({ post, rightPanel, style, slider, detail }) => {
   const dispatch = useDispatch();
@@ -26,7 +23,10 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
   return (
     <div styleName="post" style={{ ...style }}>
       <div styleName="img-wrapper">
-        <RouterLink to={detailPath} className="w-100">
+        <RouterLink
+          to={{ pathname: detailPath, state: { prevPath: location.pathname } }}
+          className="w-100"
+        >
           {slider || (
             <img src={post.images[0] || DefaultAvatar} alt={post.id} />
           )}
@@ -39,7 +39,9 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
       </RouterLink>
 
       <div styleName="post__info">
-        <RouterLink to={detailPath}>
+        <RouterLink
+          to={{ pathname: detailPath, state: { prevPath: location.pathname } }}
+        >
           <div styleName={displayLong || detail ? "" : "post__content"}>
             {post.content}
           </div>

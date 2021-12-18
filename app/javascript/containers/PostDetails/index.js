@@ -1,10 +1,10 @@
 import React from "react";
 import { Container } from "reactstrap";
-import DetailHeader from "./components/DetailHeader.js";
 import DetailBody from "./components/body";
-import { shortAddress } from "../../utils/index.js";
+import { goBack, shortAddress } from "../../utils/index.js";
+import { useHistory } from "react-router-dom";
 
-const PostDetails = ({ match: { params } }) => {
+const PostDetails = ({ match: { params }, location }) => {
   const postId = params?.id;
   const post = {
     id: 1,
@@ -28,7 +28,7 @@ const PostDetails = ({ match: { params } }) => {
       {/* <DetailHeader
         id={postId}
       /> */}
-      <DetailBody post={post} />
+      <DetailBody post={post} location={location} />
     </Container>
   );
 };

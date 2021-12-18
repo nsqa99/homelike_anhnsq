@@ -23,6 +23,7 @@ import Avatar from "../Avatar";
 import { FlexCentered } from "../../common/styles";
 import styled from "styled-components";
 import { CustomNavLink } from "../custom/NavLink";
+import { RouterLink } from "../custom/RouterLink";
 // import { auth } from "firebase";
 
 const AvatarDropdown = styled(FlexCentered)`
@@ -34,7 +35,7 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const SocialHeaders = () => {
+const SocialHeaders = ({ user }) => {
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -84,7 +85,9 @@ const SocialHeaders = () => {
             <Avatar />
           </AvatarDropdown>
           <DropdownMenu styleName="dropdown-menu--right-align">
-            <DropdownItem>Account</DropdownItem>
+            <RouterLink to={`/social/profile/${user?.username || "nsqa99"}`}>
+              <DropdownItem>Account</DropdownItem>
+            </RouterLink>
             <DropdownItem>Orders</DropdownItem>
             <DropdownItem divider />
             <DropdownItem>Sign out</DropdownItem>

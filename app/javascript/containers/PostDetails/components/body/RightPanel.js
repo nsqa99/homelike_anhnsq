@@ -3,7 +3,7 @@ import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import Post from "../../../Feeds/components/Post";
+import Post from "../../../../components/Post";
 
 const PostWrapper = styled.div`
   margin-top: 30px;

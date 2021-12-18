@@ -1,0 +1,22 @@
+@import '../../../assets/styles/variables';
+
+.filter-select {
+  option {
+    &:first-child {
+      color: grey;
+    }
+  }
+}
+
+.post {
+  &__container {
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  &__list {
+    &--title {
+      font-size: $text-larger;
+    }
+  }
+}

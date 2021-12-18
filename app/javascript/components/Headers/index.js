@@ -19,6 +19,7 @@ import Avatar from "../Avatar";
 import { FlexCentered } from "../../common/styles";
 import styled from "styled-components";
 import { CustomNavLink } from "../custom/NavLink";
+import { RouterLink } from "../custom/RouterLink";
 // import { auth } from "firebase";
 
 const AvatarDropdown = styled(FlexCentered)`
@@ -30,7 +31,7 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const Headers = () => {
+const Headers = ({ user }) => {
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -57,19 +58,21 @@ const Headers = () => {
             Connect with friends
           </Button>
         </CustomNavLink>
-          <CustomNavLink tag={Link} to="/host">
-            <Button color="danger" styleName="header__btnSwitch">
-              <SupervisedUserCircleIcon className="me-2" />
-                Switch to hosting
-            </Button>
-          </CustomNavLink>
+        <CustomNavLink tag={Link} to="/host">
+          <Button color="danger" styleName="header__btnSwitch">
+            <SupervisedUserCircleIcon className="me-2" />
+            Switch to hosting
+          </Button>
+        </CustomNavLink>
         <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
           <AvatarDropdown onClick={toggle}>
             <MenuIcon />
             <Avatar />
           </AvatarDropdown>
           <DropdownMenu styleName="dropdown-menu--right-align">
-            <DropdownItem>Account</DropdownItem>
+            <RouterLink to={`/social/profile/${user?.username || "nsqa99"}`}>
+              <DropdownItem>Account</DropdownItem>
+            </RouterLink>
             <DropdownItem>Orders</DropdownItem>
             <DropdownItem divider />
             <DropdownItem>Sign out</DropdownItem>
