@@ -23,10 +23,13 @@
   &__btnSwitch:hover {
     background: $theme_color;
   }
+
+  &__search {
+    max-width: 500px;
+  }
 }
 
 .dropdown-menu--right-align {
   top: 120%;
   right: 0;
 }
-

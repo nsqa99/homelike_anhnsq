@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { Button, Col, Row } from "reactstrap";
-import ReserveModal from "./ReserveModal";
 
 
 const DetailHeader = ({ id, price, title, address }) => {

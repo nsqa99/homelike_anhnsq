@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
-import PublicIcon from "@material-ui/icons/Public";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import DescriptionIcon from "@material-ui/icons/Description";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useSelector } from "react-redux";
 import {
@@ -14,6 +15,9 @@ import {
   Navbar,
   Button,
   NavLink,
+  Input,
+  InputGroup,
+  InputGroupText,
 } from "reactstrap";
 import Avatar from "../Avatar";
 import { FlexCentered } from "../../common/styles";
@@ -31,7 +35,7 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const Headers = ({ user }) => {
+const SocialHeaders = ({ user }) => {
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -51,17 +55,28 @@ const Headers = ({ user }) => {
       <Link to="/" className="navbar-brand">
         Home Like
       </Link>
+      <InputGroup>
+        <Input
+          type="text"
+          placeholder="Find friends around"
+          styleName="header__search"
+        />
+
+        <InputGroupText>
+          <SearchIcon />
+        </InputGroupText>
+      </InputGroup>
+
       <Nav className="ms-auto" navbar>
         <CustomNavLink tag={Link} to="/social">
-          <Button color="danger" styleName="header__btnSwitch">
-            <PublicIcon className="me-2" />
-            Connect with friends
-          </Button>
-        </CustomNavLink>
-        <CustomNavLink tag={Link} to="/host">
-          <Button color="danger" styleName="header__btnSwitch">
-            <SupervisedUserCircleIcon className="me-2" />
-            Switch to hosting
+          <Button
+            color="danger"
+            outline
+            className="d-flex align-items-center"
+            style={{ borderRadius: 999 }}
+          >
+            <DescriptionIcon className="" />
+            Newsfeed
           </Button>
         </CustomNavLink>
         <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
@@ -83,4 +98,4 @@ const Headers = ({ user }) => {
   );
 };
 
-export default CSSModules(Headers, styles, { allowMultiple: true });
+export default CSSModules(SocialHeaders, styles, { allowMultiple: true });

@@ -34,3 +34,7 @@ export const fullAddress = ({
     countryDisplay
   );
 };
+
+export const goBack = (history) => {
+  history.goBack();
+}

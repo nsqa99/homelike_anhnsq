@@ -91,7 +91,7 @@ const ItemSection = () => {
     <Container fluid styleName="item__container">
       <Container>
         <FilterWrapper>
-          <p>Recent Listings</p>
+          <div styleName="item__list--title">Recent Listings</div>
           <FormGroup>
             <Input
               id="filter"

@@ -1,18 +1,17 @@
 import React from "react";
-import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
-import style from "../../styles/body.module.scss"
+import style from "./style.module.scss"
 import { useSelector } from "react-redux";
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Input } from "reactstrap";
-import DefaultAvatar from "../../../../constants/images/DefaultAvatar.png";
+import DefaultAvatar from "../../constants/images/DefaultAvatar.png";
 
-const Comments = ({ comment }) => {
+const Comment = ({ comment }) => {
 
   return (
-    <Card styleName="body__comment">
+    <Card styleName="comment">
       <CardBody>
         <div className="d-flex align-items-center mb-2">
-          <img src={DefaultAvatar} styleName="body__comment--avatar" />
+          <img src={DefaultAvatar} styleName="comment__avatar" />
           <CardTitle className="ms-2 mb-0" styleName="">
             {"Anh Nguyen Sy Quang"}
           </CardTitle>
@@ -25,7 +24,7 @@ const Comments = ({ comment }) => {
 
         <hr />
 
-        <div styleName="body__comment--content">
+        <div styleName="comment__content">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
           Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -35,4 +34,4 @@ const Comments = ({ comment }) => {
     </Card>
   );
 };
-export default CSSModules(Comments, style);
+export default CSSModules(Comment, style);

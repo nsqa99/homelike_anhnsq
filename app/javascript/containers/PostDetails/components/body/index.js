@@ -3,6 +3,8 @@ import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
 import { useSelector } from "react-redux";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import RightPanel from "./RightPanel";
 import {
   Button,
@@ -17,12 +19,12 @@ import {
 import DefaultImage from "../../../../constants/images/DefaultImage.png";
 import DefaultAvatar from "../../../../constants/images/DefaultAvatar.png";
 import styled from "styled-components";
-import TableDetails from "./TableDetails";
-import StarIcon from "@material-ui/icons/Star";
 import Comment from "../../../../components/Comment";
 import CustomPagination from "../../../../components/Pagination";
-import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
+import { formatDate } from "../../../../utils";
+import Post from "../../../../components/Post";
+import { RouterLink } from "../../../../components/custom/RouterLink";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -36,9 +38,17 @@ const CustomSlider = styled.div`
   }
 `;
 
-const DetailBody = ({ item }) => {
-  const carouselImages = item.apartment.images?.length
-    ? item.apartment.images.map((image) => {
+const Slider = ({ images }) => {
+  return (
+    <CustomSlider>
+      <MySlider items={images} />
+    </CustomSlider>
+  );
+};
+
+const DetailBody = ({ post, location }) => {
+  const carouselImages = post.images?.length
+    ? post.images.map((image) => {
         return { key: image.url, altText: "Image", src: image.url };
       })
     : [
@@ -64,50 +74,25 @@ const DetailBody = ({ item }) => {
 
   return (
     <Row>
-      <Col md="12" lg="9" className="mt-4">
-        <div styleName="body__title" className="mb-5">
-          Gallery
+      <Col md="12" lg="9" className="mt-4 d-flex flex-column align-items-center">
+        <div styleName="body__title" className="mb-5 align-self-start">
+          <RouterLink
+            to={location.state?.prevPath || "/social"}
+            className="d-flex align-items-center w-100 justify-content-start"
+            styleName="post__create"
+          >
+            <ArrowBackIosIcon styleName="icon__back" />
+            Back
+          </RouterLink>
         </div>
-        <CustomSlider>
-          <MySlider items={carouselImages} />
-        </CustomSlider>
-        <div styleName="body__description" className="mt-5">
-          <div styleName="body__title">Description</div>
-          <div styleName="body__description--content">{item.description}</div>
-        </div>
-        <Row styleName="body__table">
-          <Col sm="12" md="5">
-            <TableDetails item={item} />
-            <ReserveModal />
-          </Col>
-          <Col sm="12" md="7">
-            <div styleName="body__title">Location</div>
-          </Col>
-        </Row>
+        <Post
+          post={post}
+          slider={<Slider images={carouselImages}/>}
+          detail={true}
+          style={{maxWidth: "80%"}}
+        />
         <Card styleName="body__merchant">
           <CardBody>
-            <div className="d-flex align-items-center mb-2">
-              <img src={DefaultAvatar} styleName="body__merchant--avatar" />
-              <CardTitle tag="h5" className="ms-2 mb-0">
-                {item.merchant.user.user_full_name}
-              </CardTitle>
-              <div className="ms-auto">
-                {Array(item.rate)
-                  .fill()
-                  .map((index) => (
-                    <StarIcon
-                      key={index}
-                      styleName="body__icon--star"
-                    ></StarIcon>
-                  ))}
-              </div>
-            </div>
-            <CardSubtitle className="mb-2 ms-1 text-muted" tag="h6">
-              Host
-            </CardSubtitle>
-
-            <hr />
-
             {"Comments"}
 
             <Input
@@ -118,7 +103,7 @@ const DetailBody = ({ item }) => {
               className="mt-3"
               rows="5"
             />
-            <Button color="danger" className="mt-3 mb-5">
+            <Button color="danger" className="mt-3 mb-3">
               Post
             </Button>
 
@@ -126,7 +111,7 @@ const DetailBody = ({ item }) => {
 
             <Comment />
             <CustomPagination
-              url={`/items/${item.id}/comments`}
+              url={`/posts/${post.id}/comments`}
               totalPages={4}
               currentPage={1}
             />
