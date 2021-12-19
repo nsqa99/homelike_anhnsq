@@ -7,6 +7,7 @@ class Order < ApplicationRecord
 
   belongs_to :customer
   belongs_to :item
+  has_one :payment
   
   scope :not_postponed, -> { where(status: [0, 1])}
   scope :pending, -> { where(status: 0)}

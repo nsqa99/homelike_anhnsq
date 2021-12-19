@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_19_064752) do
+ActiveRecord::Schema.define(version: 2021_12_19_070448) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -163,6 +163,16 @@ ActiveRecord::Schema.define(version: 2021_12_19_064752) do
     t.index ["start_rent_date", "end_rent_date"], name: "index_orders_on_start_rent_date_and_end_rent_date", unique: true
   end
 
+  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
+    t.boolean "paid"
+    t.string "token"
+    t.float "price"
+    t.bigint "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_payments_on_order_id"
+  end
+
   create_table "post_images", charset: "utf8mb4", force: :cascade do |t|
     t.string "url", null: false
     t.bigint "post_id", null: false
@@ -272,6 +282,7 @@ ActiveRecord::Schema.define(version: 2021_12_19_064752) do
   add_foreign_key "merchants", "users"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "items"
+  add_foreign_key "payments", "orders"
   add_foreign_key "post_images", "posts"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
