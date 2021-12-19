@@ -27,6 +27,7 @@ class User < BaseModel
   
   has_many :following, through: :following_relationships, source: :followed
   has_many :followers, through: :being_followed_relationships, source: :follower
+  has_one :contact, dependent: :destroy
 
   accepts_nested_attributes_for :full_name, :address, :customer, :merchant
   validates_confirmation_of :password
@@ -58,6 +59,9 @@ class User < BaseModel
         },
         address: {
           only: [:home_number, :street, :ward, :district, :city, :country]
+        },
+        contact: {
+          only: [:phone_number, :facebook_url, :twitter_url]
         }
       }
     )

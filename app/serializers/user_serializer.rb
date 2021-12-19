@@ -4,4 +4,5 @@ class UserSerializer < ActiveModel::Serializer
   has_one :address
   has_one :customer
   has_one :merchant
+  has_one :contact
 end

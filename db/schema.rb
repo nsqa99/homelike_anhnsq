@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_13_154551) do
+ActiveRecord::Schema.define(version: 2021_12_19_064752) do
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -74,6 +74,16 @@ ActiveRecord::Schema.define(version: 2021_12_13_154551) do
     t.index ["apartment_id", "facility_id"], name: "index_apartments_facilities_on_apartment_id_and_facility_id", unique: true
     t.index ["apartment_id"], name: "index_apartments_facilities_on_apartment_id"
     t.index ["facility_id"], name: "index_apartments_facilities_on_facility_id"
+  end
+
+  create_table "contacts", charset: "utf8mb4", force: :cascade do |t|
+    t.string "phone_number"
+    t.string "facebook_url"
+    t.string "twitter_url"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
   create_table "customers", charset: "utf8mb4", force: :cascade do |t|
@@ -255,6 +265,7 @@ ActiveRecord::Schema.define(version: 2021_12_13_154551) do
   add_foreign_key "apartments", "items"
   add_foreign_key "apartments_facilities", "apartments"
   add_foreign_key "apartments_facilities", "facilities"
+  add_foreign_key "contacts", "users"
   add_foreign_key "customers", "users"
   add_foreign_key "full_names", "users"
   add_foreign_key "images", "apartments"
