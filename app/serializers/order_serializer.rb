@@ -4,4 +4,5 @@ class OrderSerializer < ActiveModel::Serializer
 
   belongs_to :item
   belongs_to :customer
+  has_one :payment
 end

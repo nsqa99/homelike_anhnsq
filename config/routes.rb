@@ -36,7 +36,10 @@ Rails.application.routes.draw do
       # Customer
       resources :customers do
         resources :posts
-        resources :orders
+        resources :orders do
+          post "payments/complete", to: "payments#complete"
+          resources :payments, only: [:create]
+        end
       end
     end
   end

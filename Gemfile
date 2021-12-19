@@ -18,6 +18,7 @@ gem "kaminari"
 gem "cancancan"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
+gem "paypal-checkout-sdk"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
