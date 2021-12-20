@@ -10,7 +10,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import { useDispatch } from "react-redux";
 import { RouterLink } from "../custom/RouterLink";
 import { formatDate } from "../../utils";
-import { Table } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 
 const User = ({ user, rightPanel }) => {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const User = ({ user, rightPanel }) => {
         <div styleName="user__info">
           <div styleName="user__full-name">
             {`${user.user_full_name}`}
-            <div className="d-flex flex-wrap">
+            <div className="d-flex flex-wrap" styleName="user__follow-block">
               <div styleName="user__follow">
                 <span>{user.follower_count}</span>
                 Followers
@@ -39,6 +39,7 @@ const User = ({ user, rightPanel }) => {
                 Following
               </div>
             </div>
+            <Button color="danger" styleName="user__full-name--btn">Follow</Button>
           </div>
           <RouterLink to="" styleName="user__location">
             <LocationOnIcon styleName="icon__location" />

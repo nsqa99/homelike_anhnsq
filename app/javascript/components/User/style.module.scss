@@ -26,6 +26,23 @@ $left-margin: 20px;
     font-size: $text-large;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    @media screen and (max-width: $breakpoint-sm) {
+      flex-direction: column;
+      justify-content: center;
+      
+      &--btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  
+  &__follow-block {
+    @media screen and (max-width: $breakpoint-sm) {
+      padding: 10px 0;
+    }
   }
 
   .img-wrapper {
@@ -75,7 +92,7 @@ $left-margin: 20px;
   }
 
   &__contact {
-    width: 70%;
+    width: 100%;
     background: #fff;
     padding: 10px;
     border-radius: $border-radius-base;
@@ -83,10 +100,6 @@ $left-margin: 20px;
 
     th, td {
       word-wrap: break-word;
-    }
-
-    @media screen and (max-width: $breakpoint-md) {
-      width: 100%;
     }
   }
   &__follow {
@@ -112,7 +125,7 @@ $left-margin: 20px;
   
   &__info {
     width: 100%;
-    padding: 20px;
+    padding: 0 20px;
   }
 
   &__content {

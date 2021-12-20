@@ -49,9 +49,11 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
       </div>
       {!rightPanel && (
         <div className="d-flex mb-3 align-items-center justify-content-between w-100">
-          <div className="ms-3">
+          <div className="ms-3 d-flex align-items-center">
             <FavoriteBorderIcon styleName="icon" />
+            <span styleName="post__likeShare">{post.likes}</span>
             <ShareIcon className="ms-2" styleName="icon" />
+            <span styleName="post__likeShare">{post.shares}</span>
           </div>
           <div
             styleName="post__details"
