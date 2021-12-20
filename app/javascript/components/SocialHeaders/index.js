@@ -85,7 +85,7 @@ const SocialHeaders = ({ user }) => {
             <Avatar />
           </AvatarDropdown>
           <DropdownMenu styleName="dropdown-menu--right-align">
-            <RouterLink to={`/social/profile/${user?.username || "nsqa99"}`}>
+            <RouterLink to={`/social/users/${user?.username || "nsqa99"}`}>
               <DropdownItem>Account</DropdownItem>
             </RouterLink>
             <DropdownItem>Orders</DropdownItem>

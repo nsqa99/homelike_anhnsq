@@ -1,0 +1,11 @@
+@import "../../../assets/styles/variables";
+$img-width: 80%;
+$img-height: 230px;
+$left-margin: 20px;
+
+.post {
+  &__title {
+    color: black;
+    font-size: $text-larger;
+  }
+}
