@@ -8,9 +8,7 @@ import { Route } from "react-router-dom";
 const index = () => {
   return (
     <>
-      <Container>
-        <PostSection />
-      </Container>
+      <PostSection />
     </>
   );
 };

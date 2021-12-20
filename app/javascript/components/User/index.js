@@ -13,18 +13,9 @@ import { formatDate } from "../../utils";
 import { Button, Table } from 'reactstrap';
 
 const User = ({ user, rightPanel }) => {
-  const dispatch = useDispatch();
-  const [displayLong, toggleDisplayLong] = useState(false);
-  const handleReadMore = () => {
-    toggleDisplayLong(!displayLong);
-  };
-
-  // const detailPath = `/social/users/${user.id}`;
-  // const ownerPath = `/social/profile/${user.username}`;
-
   return (
     <div styleName="user" style={{ ...style }}>
-      <div styleName="img-wrapper" className="flex-column flex-lg-row py-sm-4 py-0">
+      <div styleName="img-wrapper" className="flex-column flex-lg-row py-3">
         <img src={user.avatar || DefaultAvatar} alt={user.id} className="mb-sm-3 mb-0" />
         <div styleName="user__info">
           <div styleName="user__full-name">

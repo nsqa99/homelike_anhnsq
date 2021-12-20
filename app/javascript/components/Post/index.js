@@ -18,7 +18,7 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
   };
 
   const detailPath = `/social/posts/${post.id}`;
-  const ownerPath = `/social/profile/${post.user.username}`;
+  const ownerPath = `/social/users/${post.user.username}`;
 
   return (
     <div styleName="post" style={{ ...style }}>
