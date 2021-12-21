@@ -61,13 +61,6 @@ const posts = [
 const PostSection = () => {
   return (
     <>
-      <RouterLink to="posts/new">
-        <Button color="danger" outline className="m-auto mb-5">
-          <AddIcon />
-          Add new post
-        </Button>
-      </RouterLink>
-
       {posts.map((post) => {
         return (
           <Post
