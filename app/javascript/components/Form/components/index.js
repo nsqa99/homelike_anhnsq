@@ -3,20 +3,28 @@ import { useField } from "formik";
 import { FormFeedback, Input, Label } from "reactstrap";
 import Select from "react-select";
 
-const CustomInput = ({ label, ...props }) => {
+const CustomInput = ({ label, imageValidator, ...props }) => {
   const [field, meta] = useField(props);
   const [errorDisplay, setDisplay] = useState(false);
 
   useEffect(() => {
     setDisplay(!!(meta.touched && meta.error));
-  }, [meta]);
+  }, [meta.error]);
+
+  useEffect(() => {
+    if (imageValidator) {
+      setDisplay(imageValidator.invalid);
+    }
+  }, [imageValidator]);
 
   return (
     <>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <Input invalid={errorDisplay} {...field} {...props} />
 
-      {errorDisplay ? <FormFeedback>{meta.error}</FormFeedback> : null}
+      {errorDisplay ? (
+        <FormFeedback>{imageValidator?.message || meta.error}</FormFeedback>
+      ) : null}
     </>
   );
 };

@@ -42,7 +42,7 @@ export const goBack = (history) => {
   history.goBack();
 };
 
-export const getBlobURl = async (files, setImages) => {
+export const getBlobUrl = async (files, setImages) => {
   const urls = await Promise.all(
     files.map((file, index) => {
       const reader = new FileReader();
@@ -56,4 +56,13 @@ export const getBlobURl = async (files, setImages) => {
   );
 
   setImages(urls);
+};
+
+export const isValidImageSize = (images) => {
+  return images.every((image) => image.size <= 1024 * 1024 * 2); // <= 2MB
+};
+
+export const isValidImageType = (images) => {
+  const allowedExtension = /image\/(jpe*g|png)/;
+  return images.every((image) => allowedExtension.test(image.type)); // <= 2MB
 };

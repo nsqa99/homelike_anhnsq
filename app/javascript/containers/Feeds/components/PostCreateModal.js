@@ -5,7 +5,7 @@ import CustomForm from "../../../components/Form";
 import * as Yup from "yup";
 import { CustomInput } from "../../../components/Form/components";
 import styled from "styled-components";
-import { getBlobURl } from "../../../utils";
+import { getBlobUrl, isValidImageSize, isValidImageType } from "../../../utils";
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -20,19 +20,59 @@ const CustomModal = styled(Modal)`
 `;
 
 const CustomImagePreview = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  overflow-x: auto;
+
   img {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
+    margin: 15px 15px 15px 0;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `;
 
 const PostCreateModal = () => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
+  const [imageError, setImageError] = useState({});
   const toggleModal = () => {
     setOpen(!open);
     setImages([]);
+    setImageError({});
+  };
+  const handleImageChange = (e) => {
+    const imgArr = Array.from(e.target.files);
+    if (!isValidImageType(imgArr)) {
+      setImageError({
+        ...{
+          invalid: true,
+          message: "Image type must be jpg/jpeg/png",
+        },
+      });
+    } else if (!isValidImageSize(imgArr)) {
+      setImageError({
+        ...{
+          invalid: true,
+          message: "Image size must be less than 2MB",
+        },
+      });
+    } else {
+      getBlobUrl(imgArr, setImages);
+      setImageError({
+        ...{
+          invalid: false,
+          message: "",
+        },
+      });
+    }
   };
   const fields = {
     initValues: {
@@ -40,7 +80,7 @@ const PostCreateModal = () => {
     },
     validations: {
       content: Yup.string()
-        .max(15, "Must be at most 300 characters")
+        .max(300, "Must be at most 300 characters")
         .required("Required"),
     },
   };
@@ -73,9 +113,8 @@ const PostCreateModal = () => {
               id="images"
               type="file"
               multiple
-              onChange={(e) =>
-                getBlobURl(Array.from(e.target.files), setImages)
-              }
+              onChange={(e) => handleImageChange(e)}
+              imageValidator={imageError}
             />
             {images.length > 0 && (
               <CustomImagePreview>
