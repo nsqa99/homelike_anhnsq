@@ -3,6 +3,7 @@ $img-width: 80%;
 $img-height: 230px;
 $left-margin: 20px;
 $img-size: 100px;
+$img-size-small: 40px;
 
 .user {
   display: flex;
@@ -12,7 +13,7 @@ $img-size: 100px;
   width: 100%;
   min-width: 100px;
   background-color: white;
-  margin: 10px;
+  margin: 10px 0;
   z-index: 1;
   border-radius: $border-radius-base;
   position: relative;
@@ -31,6 +32,14 @@ $img-size: 100px;
         width: 100%;
         margin-top: 20px;
       }
+
+      &--small {
+        font-size: $text-small;
+      }
+    }
+
+    &--small {
+      font-size: $text-small;
     }
   }
 
@@ -47,6 +56,26 @@ $img-size: 100px;
       border-radius: $border-radius-hack;
       object-fit: cover;
       margin-left: 30px;
+    }
+
+    &--small {
+      width: 100%;
+      background: $bg--dark-light;
+      display: flex;
+      border-radius: $border-radius-base $border-radius-base 0 0;
+      align-items: center;
+
+      img {
+        width: $img-size-small;
+        height: $img-size-small;
+        border-radius: $border-radius-hack;
+        object-fit: cover;
+        margin-left: 20px;
+
+        @media screen and (max-width: $breakpoint-sm) {
+          margin-left: 10px;
+        }
+      }
     }
   }
 
