@@ -3,12 +3,12 @@ import { useField } from "formik";
 import { FormFeedback, Input, Label } from "reactstrap";
 import Select from "react-select";
 
-const CustomTextInput = ({ label, ...props }) => {
+const CustomInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const [errorDisplay, setDisplay] = useState(false);
 
   useEffect(() => {
-    setDisplay(meta.touched && meta.error);
+    setDisplay(!!(meta.touched && meta.error));
   }, [meta]);
 
   return (
@@ -26,7 +26,7 @@ const CustomSelect = ({ label, ...props }) => {
   const [errorDisplay, setDisplay] = useState(false);
 
   useEffect(() => {
-    setDisplay(meta.touched && meta.error);
+    setDisplay(!!(meta.touched && meta.error));
   }, [meta]);
 
   return (
@@ -39,4 +39,4 @@ const CustomSelect = ({ label, ...props }) => {
   );
 };
 
-export { CustomTextInput, CustomSelect };
+export { CustomInput, CustomSelect };

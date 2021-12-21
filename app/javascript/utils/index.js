@@ -1,3 +1,6 @@
+import * as Yup from "yup";
+import index from "../containers/Feeds";
+
 export const formatDate = (date) => {
   let elems = date.split("-");
   return elems.slice(0).reverse().join(".");
@@ -37,4 +40,20 @@ export const fullAddress = ({
 
 export const goBack = (history) => {
   history.goBack();
-}
+};
+
+export const getBlobURl = async (files, setImages) => {
+  const urls = await Promise.all(
+    files.map((file, index) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      return new Promise((resolve, _) => {
+        reader.onloadend = () => {
+          resolve({ key: index + reader.result, url: reader.result });
+        };
+      });
+    })
+  );
+
+  setImages(urls);
+};
