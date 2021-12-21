@@ -1,30 +1,25 @@
 import React from "react";
-import { Container } from "reactstrap";
-import styled from "styled-components";
+import { Col, Container, Row } from "reactstrap";
 import PostSection from "./components/PostSection";
-import background from "../../assets/images/background.jpeg";
-import { Route } from "react-router-dom";
-
-const TopBodyWrapper = styled.div`
-  height: 30vh;
-  background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0.95),
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.95),
-      rgba(255, 255, 255, 1)
-    ),
-    url(${background});
-`;
+import RightPanel from "./components/RightPanel";
 
 const index = () => {
   return (
-    <>
-      <Container>
-        <PostSection />
-      </Container>
-    </>
+    <Container className="p-3">
+      <Row className="mt-5">
+        <Col
+          sm="12"
+          md="7"
+          lg="8"
+          className="d-flex flex-column align-items-center mt-4"
+        >
+          <PostSection />
+        </Col>
+        <Col sm="6" md="5" lg="4">
+          <RightPanel />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
