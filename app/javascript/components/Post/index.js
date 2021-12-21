@@ -9,8 +9,22 @@ import PersonIcon from "@material-ui/icons/Person";
 import { useDispatch } from "react-redux";
 import { RouterLink } from "../custom/RouterLink";
 import { formatDate } from "../../utils";
+import styled from "styled-components";
+import { MySlider } from "../Slider";
 
-const Post = ({ post, rightPanel, style, slider, detail }) => {
+const CustomSlider = styled.div`
+  .slick-list {
+    height: ${props => props.imageSize || "300px"};
+    border-radius: 3px;
+
+    img {
+      object-fit: cover;
+      min-height: ${props => props.imageSize || "300px"};
+    }
+  }
+`;
+
+const Post = ({ post, rightPanel, style, detail, imageSize }) => {
   const dispatch = useDispatch();
   const [displayLong, toggleDisplayLong] = useState(false);
   const handleReadMore = () => {
@@ -20,23 +34,29 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
   const detailPath = `/social/posts/${post.id}`;
   const ownerPath = `/social/users/${post.user.username}`;
 
+  const carouselImages =
+    post.images?.length > 0 &&
+    post.images.map((image) => {
+      return { key: image.url, altText: "Image", src: image.url };
+    });
+
   return (
     <div styleName="post" style={{ ...style }}>
-      <div styleName="img-wrapper">
-        <RouterLink
-          to={{ pathname: detailPath, state: { prevPath: location.pathname } }}
-          className="w-100"
-        >
-          {slider || (
-            <img src={post.images[0] || DefaultAvatar} alt={post.id} />
-          )}
-        </RouterLink>
-      </div>
-
-      <RouterLink to={ownerPath} styleName="post__user">
-        <PersonIcon styleName="icon__user" />
-        {`${post.user.user_full_name}`}
-      </RouterLink>
+      {carouselImages?.length > 0 && (
+        <div styleName="img-wrapper">
+          <RouterLink
+            to={{
+              pathname: detailPath,
+              state: { prevPath: location.pathname },
+            }}
+            className="w-100"
+          >
+            <CustomSlider imageSize={imageSize}>
+              <MySlider items={carouselImages} />
+            </CustomSlider>
+          </RouterLink>
+        </div>
+      )}
 
       <div styleName="post__info">
         <RouterLink
@@ -65,11 +85,15 @@ const Post = ({ post, rightPanel, style, slider, detail }) => {
         </div>
       )}
       <div
-        className="d-flex align-items-center w-100 justify-content-start"
+        className="d-flex align-items-center w-100 justify-content-start flex-wrap"
         styleName="post__create"
       >
-        <CalendarTodayIcon styleName="icon__calendar" />
+        <CalendarTodayIcon styleName="icon__calendar" className="mb-2" />
         {formatDate(post.created_at)}
+        <RouterLink to={ownerPath} styleName="post__user">
+          <PersonIcon styleName="icon__user" />
+          {`${post.user.user_full_name}`}
+        </RouterLink>
       </div>
     </div>
   );

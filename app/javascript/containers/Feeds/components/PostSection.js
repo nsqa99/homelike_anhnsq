@@ -6,6 +6,7 @@ import { Button } from "reactstrap";
 import styles from "../styles/post-section.module.scss";
 import { RouterLink } from "../../../components/custom/RouterLink";
 import Post from "../../../components/Post";
+import DefaultAvatar from "../../../constants/images/DefaultAvatar.png";
 
 const posts = [
   {
@@ -21,7 +22,11 @@ const posts = [
       username: "nsqa99",
       user_full_name: "Anh Nguyen Sy Quang",
     },
-    images: [],
+    images: [
+      DefaultAvatar,
+      DefaultAvatar,
+      DefaultAvatar,
+    ],
     created_at: "2021-12-21",
   },
   {

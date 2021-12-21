@@ -27,9 +27,9 @@ $left-margin: 20px;
     min-height: $img-height;
     background: $bg--dark-light;
     padding: 5px;
+    padding-bottom: 30px;
     display: flex;
     border-radius: $border-radius-base $border-radius-base 0 0;
-
 
     img {
       width: 100%;
@@ -46,7 +46,7 @@ $left-margin: 20px;
     &:hover {
       color: $theme_color;
     }
-    
+
     &__user {
       font-size: 15px;
       margin-left: $left-margin;
@@ -63,7 +63,7 @@ $left-margin: 20px;
     font-size: 13px;
     margin-left: 5px;
   }
-  
+
   &__info {
     margin-bottom: 15px;
     align-self: flex-start;
@@ -78,22 +78,9 @@ $left-margin: 20px;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
-  
-  &__user {
-    display: flex;
-    align-items: center;
-    color: $theme_color;
-    text-decoration: none;
-    font-size: 12px;
-    background: $bg--dark-light;
-    width: 100%;
-    align-items: center;
-    padding: 0 0 10px 0;
-    padding-top: 12px;
 
-    &:hover {
-      color: $theme_color !important;
-    }
+  &__user:hover {
+    color: $theme_color !important;
   }
 
   &__time-info {
@@ -104,7 +91,7 @@ $left-margin: 20px;
     font-size: $text-small;
     cursor: pointer;
   }
-  
+
   &__details {
     text-transform: uppercase;
     cursor: pointer;

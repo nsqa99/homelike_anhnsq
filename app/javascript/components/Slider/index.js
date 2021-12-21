@@ -5,8 +5,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 
+const CustomSlider = styled(Slider)`
+  .slick-arrow {
+    display: none !important;
+  }
+`
+
 export const MySlider = ({ items, settings }) => {
-  const sliderSetting = settings || {
+  const sliderSetting = {
     dots: true,
     lazyLoad: true,
     infinite: true,
@@ -17,10 +23,11 @@ export const MySlider = ({ items, settings }) => {
     autoplay: true,
     autoplaySpeed: 5000,
     initialSlide: 0,
+    ...settings
   };
 
   return (
-    <Slider {...sliderSetting}>
+    <CustomSlider {...sliderSetting}>
       {items.map((item, indx) => (
         <img
           key={indx}
@@ -28,7 +35,7 @@ export const MySlider = ({ items, settings }) => {
           alt={item.alt || "Default"}
         />
       ))}
-    </Slider>
+    </CustomSlider>
   );
 };
 
