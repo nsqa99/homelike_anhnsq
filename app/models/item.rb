@@ -47,6 +47,7 @@ class Item < ApplicationRecord
         apartment: {
           only: [:title, :size, :initial_quantity, :initial_allowance, :max_allowance,
             :extra_fee_each_person],
+          methods: [:image_urls],
           include: {
             rent_address: {
               only: [:home_number, :street, :ward, :district, :city, :country]
@@ -54,9 +55,6 @@ class Item < ApplicationRecord
             apartments_facilities: {
               only: [:quality, :quantity],
               methods: [:facility_name]
-            },
-            images: {
-              only: [:url]
             }
           }
         }

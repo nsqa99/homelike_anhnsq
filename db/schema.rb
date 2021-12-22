@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_19_070448) do
+ActiveRecord::Schema.define(version: 2021_12_22_162243) do
+
+  create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", charset: "utf8mb4", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "addresses", charset: "utf8mb4", force: :cascade do |t|
     t.string "home_number"
@@ -108,14 +136,6 @@ ActiveRecord::Schema.define(version: 2021_12_19_070448) do
     t.index ["user_id"], name: "index_full_names_on_user_id"
   end
 
-  create_table "images", charset: "utf8mb4", force: :cascade do |t|
-    t.string "url"
-    t.bigint "apartment_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["apartment_id"], name: "index_images_on_apartment_id"
-  end
-
   create_table "items", charset: "utf8mb4", force: :cascade do |t|
     t.float "rate", default: 0.0, null: false
     t.integer "status", default: 0, null: false
@@ -171,14 +191,6 @@ ActiveRecord::Schema.define(version: 2021_12_19_070448) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["order_id"], name: "index_payments_on_order_id"
-  end
-
-  create_table "post_images", charset: "utf8mb4", force: :cascade do |t|
-    t.string "url", null: false
-    t.bigint "post_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_post_images_on_post_id"
   end
 
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
@@ -271,6 +283,8 @@ ActiveRecord::Schema.define(version: 2021_12_19_070448) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admin_refresh_tokens", "admins"
   add_foreign_key "apartments", "items"
   add_foreign_key "apartments_facilities", "apartments"
@@ -278,12 +292,10 @@ ActiveRecord::Schema.define(version: 2021_12_19_070448) do
   add_foreign_key "contacts", "users"
   add_foreign_key "customers", "users"
   add_foreign_key "full_names", "users"
-  add_foreign_key "images", "apartments"
   add_foreign_key "merchants", "users"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "items"
   add_foreign_key "payments", "orders"
-  add_foreign_key "post_images", "posts"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "rent_addresses", "apartments"

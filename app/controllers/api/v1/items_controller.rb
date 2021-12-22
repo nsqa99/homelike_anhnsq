@@ -4,8 +4,6 @@ class Api::V1::ItemsController < ApplicationController
   skip_before_action :authenticate_request_token, only: [:index, :show, :search]
   skip_load_and_authorize_resource only: [:create, :index, :show, :search]
 
-  before_action :validate_user, only: [:create]
-
   def create
     item = @current_user.merchant.items.build(new_item_params)
 
@@ -58,12 +56,12 @@ class Api::V1::ItemsController < ApplicationController
   private
 
   def new_item_params
-    params.require(:item).permit(:rate, :status, :price, :initial_start_date,
+    params.require(:item).permit(:price, :initial_start_date,
       :initial_end_date, apartment_attributes: [:title, :size, :initial_quantity,
         :initial_allowance, :max_allowance, :extra_fee_each_person,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], apartments_facilities_attributes: [:quality, :quantity, :facility_id],
-        images_attributes: [:url]
+        apartment_images: []
       ]
     )
   end
@@ -74,24 +72,18 @@ class Api::V1::ItemsController < ApplicationController
         :initial_allowance, :max_allowance, :extra_fee_each_person, :item_id,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], apartments_facilities_attributes: [:id, :quality, :quantity, :facility_id],
-        images_attributes: [:id, :url]
+          apartment_images: []
       ]
     )
   end
 
   def with_children
-    ["apartment", "apartment.rent_address", "apartment.facilities", "apartment.apartments_facilities", "apartment.images"]
+    ["apartment", "apartment.rent_address", "apartment.facilities", "apartment.apartments_facilities"]
   end
 
   def all_search_fields
     ["status", "initial_start_date", "initial_end_date",
       "merchant.user.username", "merchant.user.user_full_name", "tags.title", "apartment.title"]
-  end
-
-  def validate_user
-    @current_user = User.find_by!(username: params[:merchant_id])
-    
-    return json_response([], :forbidden) if @current_user != current_user
   end
 
   def item_decorator

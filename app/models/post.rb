@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
+  include Searchable
   belongs_to :user
-  has_many :post_images, dependent: :destroy
   
   has_one :active_share, class_name: "Sharing",
     foreign_key: "parent_id", dependent: :destroy, inverse_of: :parent
@@ -13,9 +13,60 @@ class Post < ApplicationRecord
 
   has_and_belongs_to_many :items
 
-  accepts_nested_attributes_for :post_images
-
   before_destroy :delete_posts_items_association
+
+  has_many_attached :images
+
+  def image_urls
+    self.images.map(&:url)
+  end
+
+  after_save {
+    __elasticsearch__.index_document
+  }
+
+  def as_indexed_json(options = {})
+    as_json(
+      only: [:content, :likes, :shares],
+      methods: [:image_urls],
+      include: {
+        child: {
+          only: [:id, :content, :likes, :shares],
+          methods: [:image_urls]
+        },
+        items: {
+          only: [:rate, :status, :price, :initial_start_date, :initial_end_date],
+          include: {
+            merchant: {
+              include: {
+                user: {
+                  only: [:username, :status],
+                  methods: [:user_full_name]
+                }
+              }
+            },
+            tags: {
+              only: [:title, :type]
+            },
+            apartment: {
+              only: [:title, :size, :initial_quantity, :initial_allowance, :max_allowance,
+                :extra_fee_each_person],
+              methods: [:image_urls],
+              include: {
+                rent_address: {
+                  only: [:home_number, :street, :ward, :district, :city, :country]
+                },
+                apartments_facilities: {
+                  only: [:quality, :quantity],
+                  methods: [:facility_name]
+                }
+              }
+            }
+          }
+        }
+      }
+    )
+  end
 
   private
 

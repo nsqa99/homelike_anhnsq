@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
   
   def authenticate_request_token
     @request_id = auth_service.validate_access_token(request.headers)
-
-    unless current_user || current_admin
+    
+    unless (current = current_user || current_admin)
       json_response([], :unauthorized)
     end
   end

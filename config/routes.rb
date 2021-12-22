@@ -11,6 +11,10 @@ Rails.application.routes.draw do
           get "search"
         end
 
+        resources :posts do
+          post "like_post"
+        end
+
         member do
           post "follow/:followed", to: "users#follow"
           post "unfollow/:unfollowed", to: "users#unfollow"
@@ -28,14 +32,12 @@ Rails.application.routes.draw do
             get "search"
           end
         end
-        resources :posts
       end
 
       get "items/search", to: "items#search"
       
       # Customer
       resources :customers do
-        resources :posts
         resources :orders do
           post "payments/complete", to: "payments#complete"
           resources :payments, only: [:create]
