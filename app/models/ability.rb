@@ -9,13 +9,15 @@ class Ability
       if actor.role_admin?
         can :manage, :all
 
-        cannot :manage, Item
+        cannot [:create, :like_post], Post
+        cannot [:create], Item
+        cannot :manage, Order
         cannot :follow, User
       end
     when User
       can [:follow, :unfollow], User
-      can [:read, :create], Post
-      can [:update, :destroy], Post, user_id: actor.id
+      can [:read, :like_post], Post
+      can [:create, :update, :destroy], Post, user_id: actor.id
       
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id

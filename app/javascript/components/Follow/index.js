@@ -26,6 +26,7 @@ const CustomModal = styled(Modal)`
 
 const Follow = ({ user, follower }) => {
   const [open, setOpen] = useState(false);
+  const toggleModal = () => setOpen(!open);
   const followList = [
     {
       id: 1,
@@ -90,7 +91,6 @@ const Follow = ({ user, follower }) => {
       following_count: 1000,
     },
   ];
-  const toggleModal = () => setOpen(!open);
 
   return (
     <>

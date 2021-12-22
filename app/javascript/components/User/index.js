@@ -22,14 +22,6 @@ const User = ({ user, rightPanel }) => {
           <div styleName="user__full-name">
             {`${user.user_full_name}`}
             <div className="d-flex flex-wrap" styleName="user__follow-block">
-              {/* <div styleName="user__follow">
-                <span>{user.follower_count}</span>
-                Followers
-              </div>
-              <div styleName="user__follow" className="me-2">
-                <span>{user.following_count}</span>
-                Following
-              </div> */}
               <Follow follower={true} user={user} />
               <Follow user={user} />
             </div>

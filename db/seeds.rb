@@ -63,7 +63,7 @@ dev_merchant = User.create!({
     district: "Ha Dong",
     city: "Ha Noi"
   },
-  customer_attributes: {},
+  merchant_attributes: {},
   full_name_attributes: {
     first_name: "Anh merchant",
     last_name: "NSQ"

@@ -3,12 +3,13 @@ class Api::V1::PostsController < ApplicationController
 
   skip_before_action :authenticate_request_token, only: [:index, :show]
   skip_load_and_authorize_resource only: [:create, :index, :show, :like_post]
+  authorize_resource only: [:create]
 
-  before_action :validate_user, only: [:create]
+  # before_action :validate_user, only: [:create]
 
   def create
     post = @current_user.posts.build(new_post_params)
-    
+
     # Attach Item to post
 
     if (item_ids = params[:item_ids])
@@ -25,13 +26,16 @@ class Api::V1::PostsController < ApplicationController
 
     if (shared_id = params[:shared_id])
       shared = Post.find(shared_id)
-      post.child << shared
+      post.child = shared
     end
 
     if post.save
-      shared.try(:increment!, :shares)
-
-      json_response(serialize(post))
+      if shared.present?
+        shared.try(:increment!, :shares)
+        shared.__elasticsearch__.update_document
+      end
+      
+      json_response(serialize(post, with_children))
     else
       error_json_response(post)
     end
@@ -40,14 +44,14 @@ class Api::V1::PostsController < ApplicationController
   def show
     post = Post.find(params[:id])
 
-    json_response(serialize(post))
+    json_response(serialize(post, with_children))
   end
 
   def update
     post = Post.find(params[:id])
 
     if post.update(new_post_params)
-      json_response(serialize(post))
+      json_response(serialize(post, with_children))
     else
       error_json_response(post)
     end
@@ -64,8 +68,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def like_post
-    post = Post.find(params[:id])
+    post = Post.find(params[:post_id])
     post.increment!(:likes)
+    post.__elasticsearch__.update_document
 
     json_response([], :ok)
   end
@@ -73,20 +78,16 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def new_post_params
-    params.require(:post).permit(:content, post_images_attributes: [:url])
+    params.require(:post).permit(:content, images: [])
   end
 
-  def with_children; end
+  def with_children
+    ["items", "items.apartment", "items.apartment.rent_address", 
+      "items.apartment.facilities", "items.apartment.apartments_facilities"]
+  end
 
   def error_json_response(post)
     json_response([], :bad_request,
       message: post.errors.full_messages.to_sentence)
-  end
-
-  def validate_user
-    user_id = params[:merchant_id] || params[:customer_id]
-    @current_user = User.find_by!(username: user_id)
-    
-    return json_response([], :forbidden) if @current_user != current_user
   end
 end
