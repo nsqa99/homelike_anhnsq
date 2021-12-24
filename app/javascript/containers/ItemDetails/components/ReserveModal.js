@@ -21,7 +21,6 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 
 const DatePickerWrapper = styled.div`
@@ -56,31 +55,6 @@ const ReserveModal = ({ item }) => {
   const toggleModal = () => setOpen(!open);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-  const initialOptions = {
-    "client-id": "AcPcDz8mG79azD4dWAg2sRfjYRDI8AICrWvmaU8NOug9SEiSgWtPogZiE17Cutx8fX_h6Ed3jlymOYRK",
-    currency: "USD",
-    locale: "en_US"
-  };
-
-  const createOrder = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: "0.01",
-          },
-        },
-      ],
-    });
-  };
-
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then(orderData => {
-      console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-      const transaction = orderData.purchase_units[0].payments.captures[0];
-      alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-    });
-  };
 
   return (
     <>
@@ -162,25 +136,12 @@ const ReserveModal = ({ item }) => {
           </div>
           <Button
             color="primary"
-            className="w-100 mt-4"
+            className="w-100 mt-5"
             size="lg"
             onClick={function noRefCheck() {}}
           >
             Proceed
           </Button>
-          <div className="w-100 mt-4">
-            <PayPalScriptProvider options={initialOptions}>
-              <PayPalButtons
-                createOrder={(data, actions) => createOrder(data, actions)}
-                onApprove={(data, actions) => onApprove(data, actions)}
-                style={{
-                  layout: "vertical",
-                  shape: "rect",
-                  label: "pay",
-                }}
-              />
-            </PayPalScriptProvider>
-          </div>
         </CustomFooter>
       </Modal>
     </>
