@@ -78,7 +78,7 @@ const DetailBody = ({ item }) => {
         <Row styleName="body__table">
           <Col sm="12" md="5">
             <TableDetails item={item} />
-            <ReserveModal />
+            <ReserveModal item={item} />
           </Col>
           <Col sm="12" md="7">
             <div styleName="body__title">Location</div>

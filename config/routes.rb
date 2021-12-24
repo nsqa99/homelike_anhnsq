@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       resources :customers do
         resources :orders do
           post "payments/complete", to: "payments#complete"
+          post "payments/payout", to: "payments#payout"
           resources :payments, only: [:create]
         end
       end

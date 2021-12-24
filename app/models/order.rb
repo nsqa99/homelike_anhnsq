@@ -6,6 +6,7 @@ class Order < ApplicationRecord
   }, _prefix: true
 
   belongs_to :customer
+  belongs_to :merchant
   belongs_to :item
   has_one :payment
   

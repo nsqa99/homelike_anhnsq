@@ -12,6 +12,7 @@ class Api::V1::OrdersController < ApplicationController
     return json_response([], :bad_request, message: "Item must be approved") unless item
 
     order.item = item
+    order.merchant = item.merchant
 
     if order.save
       json_response(serialize(order, with_children))

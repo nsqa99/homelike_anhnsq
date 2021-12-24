@@ -28,6 +28,8 @@ class Ability
         can [:update, :destroy], Customer, user_id: actor.id
 
         can :manage, Order, customer_id: actor.customer.id
+        # can [:create], Payment, order: { customer_id: actor.customer.id }
+        # can [:complete], Payment, customer_id: actor.customer.id
       end
     else
       return

@@ -5,4 +5,5 @@ DEFAULT_REFRESH_EXPIRE_TIME= Rails.env.development? ? 100.days : 1.days
 DEFAULT_ROLES = %w(customer merchant)
 ADMIN_ROLES = %w(admin super_admin)
 ACTOR_TYPE = %w(user admin)
-
+DEFAULT_PLATFORM_AFFILIATE_RATE = 0.01
+PAYPAL_RETURN_URL = Rails.env.production? ? "localhost:8080" : "https://www.sandbox.paypal.com"
