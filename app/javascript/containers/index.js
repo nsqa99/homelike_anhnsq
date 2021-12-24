@@ -9,6 +9,7 @@ import Feed from './Feeds'
 import SocialSearchList from './SocialSearchList'
 import PostDetails from "./PostDetails";
 import Profile from './Profile'
+import OrderDetails from "./OrderDetails";
 
 export default function index() {
   return (
@@ -34,6 +35,7 @@ export default function index() {
             <Route path="/user">
               <Users />
             </Route>
+            <Route path="/users/:username/orders/:id" component={OrderDetails} />
             <Route path="/items/:id" component={ItemDetails} />
             <Route path="/">
               <Home />
