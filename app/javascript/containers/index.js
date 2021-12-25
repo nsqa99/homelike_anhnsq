@@ -5,11 +5,15 @@ import CommonSocialLayout from "../components/CommonSocialLayout";
 import Home from "./Home";
 import ItemDetails from "./ItemDetails";
 import Login from "./Login";
-import Feed from './Feeds'
-import SocialSearchList from './SocialSearchList'
+import Feed from "./Feeds";
+import SocialSearchList from "./SocialSearchList";
 import PostDetails from "./PostDetails";
-import Profile from './Profile'
+import Profile from "./Profile";
 import OrderDetails from "./OrderDetails";
+import AdminContainer from "./admin";
+import { createHashHistory } from "history";
+
+const history = createHashHistory();
 
 export default function index() {
   return (
@@ -18,7 +22,10 @@ export default function index() {
         <Route path="/login">
           <Login />
         </Route>
-        
+        <Route path="/host">
+          <AdminContainer history={history} />
+        </Route>
+
         <Route path="/social">
           <CommonSocialLayout>
             <Switch>
@@ -35,15 +42,16 @@ export default function index() {
             <Route path="/user">
               <Users />
             </Route>
-            <Route path="/users/:username/orders/:id" component={OrderDetails} />
+            <Route
+              path="/users/:username/orders/:id"
+              component={OrderDetails}
+            />
             <Route path="/items/:id" component={ItemDetails} />
             <Route path="/">
               <Home />
             </Route>
           </Switch>
         </CommonLayout>
-
-        
       </Switch>
     </Router>
   );
