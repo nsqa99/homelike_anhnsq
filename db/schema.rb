@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_24_084235) do
+ActiveRecord::Schema.define(version: 2021_12_25_131751) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2021_12_24_084235) do
   create_table "apartments", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.integer "size", null: false
-    t.integer "initial_quantity", null: false
+    t.integer "initial_quantity", default: 1, null: false
     t.integer "initial_allowance", null: false
     t.integer "max_allowance", null: false
     t.float "extra_fee_each_person", null: false
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 2021_12_24_084235) do
     t.bigint "merchant_id"
     t.datetime "initial_start_date", null: false
     t.datetime "initial_end_date", null: false
+    t.string "description", limit: 500, null: false
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 
