@@ -18,6 +18,7 @@ gem "cancancan"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
 gem "paypal-checkout-sdk"
+gem "paypal-payouts-sdk"
 gem "cloudinary"
 
 group :development, :test do

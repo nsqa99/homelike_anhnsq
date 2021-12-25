@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_22_162243) do
+ActiveRecord::Schema.define(version: 2021_12_24_084235) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -178,19 +178,33 @@ ActiveRecord::Schema.define(version: 2021_12_22_162243) do
     t.bigint "item_id"
     t.integer "customer_quantity", null: false
     t.float "extra_price", default: 0.0
+    t.bigint "merchant_id", null: false
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["item_id"], name: "index_orders_on_item_id"
+    t.index ["merchant_id"], name: "index_orders_on_merchant_id"
     t.index ["start_rent_date", "end_rent_date"], name: "index_orders_on_start_rent_date_and_end_rent_date", unique: true
   end
 
   create_table "payments", charset: "utf8mb4", force: :cascade do |t|
-    t.boolean "paid"
+    t.boolean "paid", default: false, null: false
     t.string "token"
     t.float "price"
     t.bigint "order_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "customer_id", null: false
+    t.index ["customer_id"], name: "index_payments_on_customer_id"
     t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["order_id"], name: "unique", unique: true
+  end
+
+  create_table "payouts", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "payment_id", null: false
+    t.float "total", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["payment_id"], name: "index_payouts_on_payment_id"
   end
 
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
@@ -295,7 +309,10 @@ ActiveRecord::Schema.define(version: 2021_12_22_162243) do
   add_foreign_key "merchants", "users"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "items"
+  add_foreign_key "orders", "merchants"
+  add_foreign_key "payments", "customers"
   add_foreign_key "payments", "orders"
+  add_foreign_key "payouts", "payments"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "rent_addresses", "apartments"
