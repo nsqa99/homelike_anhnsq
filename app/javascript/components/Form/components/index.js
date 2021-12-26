@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 import { FormFeedback, Input, Label } from "reactstrap";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomInput = ({ label, imageValidator, ...props }) => {
   const [field, meta] = useField(props);
@@ -9,7 +11,7 @@ const CustomInput = ({ label, imageValidator, ...props }) => {
 
   useEffect(() => {
     setDisplay(!!(meta.touched && meta.error));
-  }, [meta.error]);
+  }, [meta]);
 
   useEffect(() => {
     if (imageValidator) {
@@ -19,7 +21,9 @@ const CustomInput = ({ label, imageValidator, ...props }) => {
 
   return (
     <>
-      <Label htmlFor={props.id || props.name}>{label}</Label>
+      <Label htmlFor={props.id || props.name} className="mt-2">
+        {label}
+      </Label>
       <Input invalid={errorDisplay} {...field} {...props} />
 
       {errorDisplay ? (
@@ -47,4 +51,22 @@ const CustomSelect = ({ label, ...props }) => {
   );
 };
 
-export { CustomInput, CustomSelect };
+const CustomDatePicker = ({ ...props }) => {
+  const { setFieldValue, setFieldTouched } = useFormikContext();
+  const [field] = useField(props);
+  return (
+    <DatePicker
+      {...field}
+      {...props}
+      selected={(field.value && new Date(field.value)) || null}
+      onChange={(val) => {
+        setFieldValue(field.name, val);
+      }}
+      onChangeRaw={(e) => {
+        setFieldTouched(field.name, true, true);
+      }}
+    />
+  );
+};
+
+export { CustomInput, CustomSelect, CustomDatePicker };

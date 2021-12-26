@@ -2,7 +2,12 @@ import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-const CustomForm = ({ children, fields: { initValues, validations } }) => {
+const CustomForm = ({
+  children,
+  fields: { initValues, validations },
+  action,
+  images,
+}) => {
   /*---------- Example for fields props ---------------*/
   // const fields = {
   //   initValues: {
@@ -31,6 +36,7 @@ const CustomForm = ({ children, fields: { initValues, validations } }) => {
       })}
       onSubmit={(values) => {
         console.log(values);
+        console.log(images);
       }}
     >
       <Form>{children}</Form>

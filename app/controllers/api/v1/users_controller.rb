@@ -1,5 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   authorize_resource
+  skip_before_action :authenticate_request_token, only: [:show, :search]
+  skip_authorize_resource only: [:show]
 
   def index
     page = params[:page] || DEFAULT_PAGE
@@ -10,6 +12,13 @@ class Api::V1::UsersController < ApplicationController
       serialize(user_decorator.transform_list(users)),
       paginate(page, page_size, (total / page_size.to_i).ceil, total)
     )
+  end
+
+  def show
+    username = params[:id]
+    user = User.find_by(username: username)
+
+    json_response(serialize(user), :ok)
   end
 
   def follow

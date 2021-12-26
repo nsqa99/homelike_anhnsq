@@ -22,7 +22,8 @@ const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware];
 
 let enhancers = [
-  applyMiddleware(...middlewares)
+  applyMiddleware(...middlewares),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 ];
 
 const store = createStore(persistedReducer, compose(...enhancers));

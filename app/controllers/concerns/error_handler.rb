@@ -5,12 +5,12 @@ module ErrorHandler
       rescue_from StandardError do |ex|
         internal_server_error(ex.message)
       end
-      rescue_from(JwtService::TokenExpired, with: :token_expired)
       rescue_from(JwtService::VerificationError, with: :verification_failed)
       rescue_from(JwtService::DecodeError, with: :verification_failed)
       rescue_from(ActiveRecord::RecordNotFound, with: :not_found)
       rescue_from(CanCan::AccessDenied, with: :forbidden)
     end
+    rescue_from(JwtService::TokenExpired, with: :token_expired)
   end
 
   private
@@ -20,7 +20,7 @@ module ErrorHandler
   end
 
   def token_expired
-    error_response(:token_expired.to_s.humanize, :bad_request)
+    error_response(:token_expired.to_s.upcase, :bad_request)
   end
 
   def verification_failed
