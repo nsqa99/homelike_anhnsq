@@ -82,7 +82,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def all_search_fields
-    ["description", "status", "merchant.user.username", "merchant.user.user_full_name", "tags.title", "apartment.title"]
+    ["description", "status", "merchant.user.username", "apartment.rent_address.city", "apartment.rent_address.country",
+      "apartment.rent_address.district", "merchant.user.user_full_name", "tags.title", "apartment.title"]
   end
 
   def item_decorator

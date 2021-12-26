@@ -76,7 +76,7 @@ const ItemSection = () => {
                   </Col>
                 );
               })
-            : "No items found"}
+            : <span className="fs-5 fw-bold">No apartments found</span>}
         </Row>
       </Container>
     </Container>

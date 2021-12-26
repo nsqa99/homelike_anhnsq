@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   scope :paid, -> { where(status: 1)}
 
   before_save :check_rent_date, if: ->{start_rent_date_changed? && end_rent_date_changed?}
-  before_save :check_quantity, :calculate_total, if: :customer_quantity_changed?
+  before_save :check_quantity, if: :customer_quantity_changed?
 
   private
 

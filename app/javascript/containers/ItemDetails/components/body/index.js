@@ -40,8 +40,8 @@ const CustomSlider = styled.div`
 `;
 
 const DetailBody = ({ item }) => {
+  console.log(item)
   const user = useSelector((state) => state.users);
-  console.log(user);
   const dispatch = useDispatch();
   useEffect(() => {
     if (item) {
@@ -150,7 +150,7 @@ const DetailBody = ({ item }) => {
             </Card>
           </Col>
           <Col md="12" lg="3" className="pl-3">
-            <RightPanel />
+            <RightPanel items={item.similar_items} />
           </Col>
         </Row>
       ) : null}

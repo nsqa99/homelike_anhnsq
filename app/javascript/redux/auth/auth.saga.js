@@ -7,6 +7,7 @@ function* loginSaga(props) {
   const { data } = props.payload;
   try {
     const res = yield call(loginApi, data);
+    console.log(res)
     if (res.status === 200) {
       const response = res.data?.data;
       localStorage.setItem("access_token", response.access_token);
