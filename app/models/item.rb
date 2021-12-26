@@ -31,7 +31,7 @@ class Item < ApplicationRecord
 
   def as_indexed_json(options = {})
     as_json(
-      only: [:rate, :status, :price, :initial_start_date, :initial_end_date],
+      only: [:id, :rate, :status, :price, :initial_start_date, :initial_end_date, :description],
       include: {
         merchant: {
           include: {

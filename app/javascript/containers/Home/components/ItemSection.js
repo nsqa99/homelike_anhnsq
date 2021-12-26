@@ -6,8 +6,8 @@ import styles from "../styles/item-section.module.scss";
 import { FlexCentered } from "../../../common/styles";
 import styled from "styled-components";
 import Item from "./Item";
-import { dispatch } from "react-hot-toast";
-import { getAllItems } from "../../../redux/item/item.action";
+import { getAllItems, searchItem } from "../../../redux/item/item.action";
+import _ from "lodash";
 
 const FilterWrapper = styled(FlexCentered)`
   justify-content: space-between;
@@ -16,12 +16,36 @@ const FilterWrapper = styled(FlexCentered)`
 `;
 
 const ItemSection = () => {
-  const [isOpen, setOpen] = useState(false);
+  const [select, setSelect] = useState("none")
+  const [filter, setFilter] = useState({
+    sort: [],
+  });
   const items = useSelector((state) => state.items.list);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllItems());
   }, []);
+
+  const handleSelect = (e) => {
+    if (e.target.value !== 'none') {
+      setFilter({
+        ...filter,
+        sort: [["price", e.target.value]],
+      });
+    } else {
+      setFilter({
+        ...filter,
+        sort: [],
+      });
+    }
+
+    setSelect(e.target.value);
+  }
+
+  useEffect(() => {
+    dispatch(searchItem(filter));
+  }, [select])
 
   return (
     <Container fluid styleName="item__container">
@@ -34,17 +58,17 @@ const ItemSection = () => {
               name="filter"
               type="select"
               styleName="filter-select"
+              value={select}
+              onChange={handleSelect}
             >
-              <option>Sorting</option>
-              <option>Newest</option>
-              <option>Oldest</option>
-              <option>Lowest Price</option>
-              <option>Highest Price</option>
+              <option value="none">Filter by</option>
+              <option value="asc">Lowest Price</option>
+              <option value="desc">Highest Price</option>
             </Input>
           </FormGroup>
         </FilterWrapper>
         <Row>
-          {items
+          {!_.isEmpty(items)
             ? items.map((item) => {
                 return (
                   <Col key={item.id} xl="3" lg="4" md="6" sm="12">

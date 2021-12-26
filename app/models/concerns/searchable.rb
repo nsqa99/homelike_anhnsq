@@ -132,14 +132,17 @@ module Searchable
           and_query.concat([range: {f["field"] => {
             f["order"]=> f["value"]
           }}])
+        elsif f["op"] == "range"
+          and_query.concat([range: {f["field"] => {
+            "gte" => f["value_low"],
+            "lte" => f["value_high"]
+          }}])
         elsif f["op"] == "array" && f["not"]
           not_query.concat([{terms: { f["field"] => f["value"]}}])
         elsif f["op"] == "array"
           and_query.concat([{terms: { f["field"] => f["value"]}}])
         elsif f["op"] == "mul"
           and_query.concat([multi_match: {query: f["value"], fields: f["field"], lenient: true}])
-        elsif f["field"].include?("token")
-          and_query.concat([{wildcard: { f["field"] => "*#{f["value"]}*"}}])
         elsif f["op"] == "or"
           should_query = root_query[:bool][:should]
           query = {

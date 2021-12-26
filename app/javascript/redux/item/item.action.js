@@ -7,19 +7,27 @@ export const getAllItems = () => ({
 
 export const getOneItem = (data) => ({
   type: types.GET_ONE_ITEM,
-  payload: { data }
+  payload: { data },
+});
+
+export const searchItem = (params) => ({
+  type: types.SEARCH_ITEM,
+  payload: params,
 });
 
 export const getAllItemsResult = (payload, isSuccess = true) => ({
-  type: isSuccess
-    ? types.GET_ALL_ITEM_SUCCESS
-    : types.GET_ALL_ITEM_FAILED,
+  type: isSuccess ? types.GET_ALL_ITEM_SUCCESS : types.GET_ALL_ITEM_FAILED,
   payload,
 });
 
 export const getOneItemResult = (payload, isSuccess = true) => ({
-  type: isSuccess
-    ? types.GET_ONE_ITEM_SUCCESS
-    : types.GET_ONE_ITEM_FAILED,
+  type: isSuccess ? types.GET_ONE_ITEM_SUCCESS : types.GET_ONE_ITEM_FAILED,
   payload,
 });
+
+export const searchItemResult = (payload) => {
+  return {
+    type: types.SEARCH_ITEM_SUCCESS,
+    payload,
+  };
+};

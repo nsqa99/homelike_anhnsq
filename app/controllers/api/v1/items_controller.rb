@@ -43,8 +43,8 @@ class Api::V1::ItemsController < ApplicationController
     
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]
-    filters = params[:filters]
-    sort = params[:sort]
+    filters = params[:filters] ? params[:filters].map{|item| JSON.parse(item)} : []
+    sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : []
     items, total = Item.build_search(search_text, filters, sort, search_fields, page, page_size)
 
     json_response(
@@ -82,8 +82,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def all_search_fields
-    ["status", "initial_start_date", "initial_end_date",
-      "merchant.user.username", "merchant.user.user_full_name", "tags.title", "apartment.title"]
+    ["description", "status", "merchant.user.username", "merchant.user.user_full_name", "tags.title", "apartment.title"]
   end
 
   def item_decorator
