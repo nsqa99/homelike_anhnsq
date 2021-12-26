@@ -5,11 +5,13 @@ import CommonSocialLayout from "../components/CommonSocialLayout";
 import Home from "./Home";
 import ItemDetails from "./ItemDetails";
 import Login from "./Login";
-import Feed from './Feeds'
-import SocialSearchList from './SocialSearchList'
+import Feed from "./Feeds";
+import SocialSearchList from "./SocialSearchList";
 import PostDetails from "./PostDetails";
-import Profile from './Profile'
+import Profile from "./Profile";
 import OrderDetails from "./OrderDetails";
+import HostLayout from "../components/HostLayout";
+import Item from "./Host/components/item";
 
 export default function index() {
   return (
@@ -18,7 +20,7 @@ export default function index() {
         <Route path="/login">
           <Login />
         </Route>
-        
+
         <Route path="/social">
           <CommonSocialLayout>
             <Switch>
@@ -30,20 +32,30 @@ export default function index() {
           </CommonSocialLayout>
         </Route>
 
+        <Route path="/host">
+          <HostLayout>
+            <Switch>
+              <Route path="/host/items/:id" component={PostDetails} />
+              <Route path="/host" component={Item} />
+            </Switch>
+          </HostLayout>
+        </Route>
+
         <CommonLayout>
           <Switch>
             <Route path="/user">
               <Users />
             </Route>
-            <Route path="/users/:username/orders/:id" component={OrderDetails} />
+            <Route
+              path="/users/:username/orders/:id"
+              component={OrderDetails}
+            />
             <Route path="/items/:id" component={ItemDetails} />
             <Route path="/">
               <Home />
             </Route>
           </Switch>
         </CommonLayout>
-
-        
       </Switch>
     </Router>
   );

@@ -1,12 +1,12 @@
 import React from "react";
 import CSSModules from "react-css-modules";
-import DEFAULT_AVATAR from "../../constants/images/DefaultAvatar.png";
+import DefaultAvatar from "../../constants/images/Avatar.png";
 import styles from "./style.module.scss";
 
-const Avatar = () => {
+const Avatar = ({ src }) => {
   return (
     <div styleName="wrapper">
-      <img src={DEFAULT_AVATAR} alt="avatar" />
+      <img src={src || DefaultAvatar} alt="avatar" />
     </div>
   );
 };

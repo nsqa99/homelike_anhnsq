@@ -1,32 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import CSSModules from "react-css-modules";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import AddIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
-import {
-  DropdownItem,
-  Dropdown,
-  DropdownMenu,
-  Nav,
-  Navbar,
-  Button,
-  Col,
-  Row,
-  FormGroup,
-  Label,
-  Input,
-  InputGroup,
-  InputGroupText,
-  UncontrolledCollapse,
-  Card,
-  CardBody,
-  Container,
-} from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { Col, Row, FormGroup, Input, Container } from "reactstrap";
 import styles from "../styles/item-section.module.scss";
 import { FlexCentered } from "../../../common/styles";
 import styled from "styled-components";
 import Item from "./Item";
+import { getAllItems, searchItem } from "../../../redux/item/item.action";
+import _ from "lodash";
 
 const FilterWrapper = styled(FlexCentered)`
   justify-content: space-between;
@@ -34,58 +15,37 @@ const FilterWrapper = styled(FlexCentered)`
   margin-bottom: 10px;
 `;
 
-const items = [
-  {
-    id: 1,
-    description:
-      `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis`,
-    price: 10000,
-    rate: 3,
-    initial_start_date: "2021-01-01",
-    initial_end_date: "2021-12-01",
-    apartment: {
-      title: "Lorem ipsum",
-      images: [],
-      rent_address: {
-        city: "Hanoi",
-        country: "Vietnam",
-      },
-      size: 70,
-      initial_allowance: 2,
-      max_allowance: 4,
-      extra_fee_each_person: 30
-    },
-    merchant: {
-      user: {
-        username: "nsqa99",
-        user_full_name: "Anh Nguyen Sy Quang",
-      },
-    },
-    apartment_facilities: [
-      {
-        id: 1,
-        quality: 2,
-        quantity: "Nice",
-        facility_name: "Bedroom"
-      },
-      {
-        id: 2,
-        quality: 1,
-        quantity: "Clean",
-        facility_name: "Toilet"
-      }
-    ]
-  },
-];
-
 const ItemSection = () => {
-  const [isOpen, setOpen] = useState(false);
+  const [select, setSelect] = useState("none")
+  const [filter, setFilter] = useState({
+    sort: [],
+  });
+  const items = useSelector((state) => state.items.list);
+  const dispatch = useDispatch();
 
-  const toggle = () => {
-    setOpen(!isOpen);
-  };
+  useEffect(() => {
+    dispatch(getAllItems());
+  }, []);
+
+  const handleSelect = (e) => {
+    if (e.target.value !== 'none') {
+      setFilter({
+        ...filter,
+        sort: [["price", e.target.value]],
+      });
+    } else {
+      setFilter({
+        ...filter,
+        sort: [],
+      });
+    }
+
+    setSelect(e.target.value);
+  }
+
+  useEffect(() => {
+    dispatch(searchItem(filter));
+  }, [select])
 
   return (
     <Container fluid styleName="item__container">
@@ -98,25 +58,25 @@ const ItemSection = () => {
               name="filter"
               type="select"
               styleName="filter-select"
+              value={select}
+              onChange={handleSelect}
             >
-              <option>Sorting</option>
-              <option>Newest</option>
-              <option>Oldest</option>
-              <option>Lowest Price</option>
-              <option>Highest Price</option>
+              <option value="none">Filter by</option>
+              <option value="asc">Lowest Price</option>
+              <option value="desc">Highest Price</option>
             </Input>
           </FormGroup>
         </FilterWrapper>
         <Row>
-          {
-            items.map((item) => {
-              return (
-                <Col key={item.id} xl="3" lg="4" md="6" sm="12">
-                  <Item item={item} />
-                </Col>
-              )
-            })
-          }
+          {!_.isEmpty(items)
+            ? items.map((item) => {
+                return (
+                  <Col key={item.id} xl="3" lg="4" md="6" sm="12">
+                    <Item item={item} />
+                  </Col>
+                );
+              })
+            : <span className="fs-5 fw-bold">No apartments found</span>}
         </Row>
       </Container>
     </Container>

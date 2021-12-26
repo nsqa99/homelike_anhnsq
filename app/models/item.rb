@@ -31,7 +31,7 @@ class Item < ApplicationRecord
 
   def as_indexed_json(options = {})
     as_json(
-      only: [:rate, :status, :price, :initial_start_date, :initial_end_date],
+      only: [:id, :rate, :status, :price, :initial_start_date, :initial_end_date, :description],
       include: {
         merchant: {
           include: {
@@ -69,6 +69,19 @@ class Item < ApplicationRecord
     end
 
     availables
+  end
+
+  def similar_items
+    page = 1
+    page_size = 3
+    search_fields = ["apartment.rent_address.city", "apartment.rent_address.country",
+      "apartment.rent_address.district"]
+    search_text = "#{self.apartment.rent_address.district} #{self.apartment.rent_address.city} #{self.apartment.rent_address.country}"
+    sort = [["rate", "desc"]]
+    filter = [{"op" => "not", "field" => "id", "value" => self.id}]
+    items, total = Item.build_search(search_text, filter, sort, search_fields, page, page_size)
+
+    items.map{|item| item["_source"]}
   end
 
   private

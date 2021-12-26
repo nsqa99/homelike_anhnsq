@@ -1,75 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import CSSModules from "react-css-modules";
-// import { auth } from "../../firebase";
 import style from "./style.module.scss";
+import { Button, Col, Container, FormGroup, Input, Label } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/auth/auth.action";
 
 const Login = () => {
   const history = useHistory();
-  const [email, setEmail] = useState("");
+  const [usernameForm, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const signIn = (event) => {
-    event.preventDefault();
-    // auth
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then((auth) => {
-    //     //redirect to home page
-    //     history.push("/");
-    //   })
-    //   .catch((err) => {
-    //     alert(err.message);
-    //   });
+  const { isAuthenticated, username } = useSelector((state) => state.auth.data);
+  const dispatch = useDispatch();
+  const loginData = {
+    type: "user",
+    user: {
+      username: usernameForm,
+      password,
+    },
   };
-  const register = (event) => {
-    event.preventDefault();
-    // auth
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then((auth) => {
-    //     //create a user, login and redirect to homepage
-    //     history.push("/");
-    //   })
-    //   .catch((err) => {
-    //     alert(err.message);
-    //   });
+
+  const handleLogin = () => {
+    dispatch(login(loginData));
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setTimeout(() => {
+        history.push("/");
+      }, 1000);
+    }
+  }, [isAuthenticated, history, username]);
+
   return (
-    <div styleName="login">
-      <Link to="/">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png"
-          alt=""
-          styleName="login__logo"
-        />
-      </Link>
-      <div styleName="login__container">
-        <h1>Sign in</h1>
-        <form>
-          <h5>Email:</h5>
-          <input
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+    <Container styleName="login__container">
+      <FormGroup row>
+        <Label for="exampleEmail" sm={2}>
+          Username
+        </Label>
+        <Col sm={10}>
+          <Input
+            id="exampleEmail"
+            name="email"
+            placeholder="username"
             type="email"
+            onChange={(e) => setUsername(e.target.value)}
           />
-          <h5>Password:</h5>
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+        </Col>
+      </FormGroup>
+      <FormGroup row>
+        <Label for="examplePassword" sm={2}>
+          Password
+        </Label>
+        <Col sm={10}>
+          <Input
+            id="examplePassword"
+            name="password"
+            placeholder="password"
             type="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit" onClick={signIn} styleName="login__signInBtn">
-            sign in
-          </button>
-          <p>
-            by signing in you agree to amazon condition of use and sale.Please
-            see our privacy notice, our cookies notice and our interest based ad
-            notice.
-          </p>
-          <button onClick={register} styleName="login__registerBtn">
-            create your amazon account
-          </button>
-        </form>
-      </div>
-    </div>
+        </Col>
+        <Button color="danger" className="mt-5" onClick={handleLogin}>
+          Sign in
+        </Button>
+      </FormGroup>
+    </Container>
   );
 };
 export default CSSModules(Login, style);

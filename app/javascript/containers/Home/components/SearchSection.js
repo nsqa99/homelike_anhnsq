@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import CSSModules from "react-css-modules";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  DropdownItem,
-  Dropdown,
-  DropdownMenu,
-  Nav,
-  Navbar,
   Button,
   Col,
   Row,
@@ -25,6 +20,7 @@ import {
 import styles from "../styles/search-section.module.scss";
 import { FlexCentered } from "../../../common/styles";
 import styled from "styled-components";
+import { searchItem } from "../../../redux/item/item.action";
 
 const OptionWrapper = styled(FlexCentered)`
   justify-content: flex-start;
@@ -36,11 +32,122 @@ const OptionWrapper = styled(FlexCentered)`
 `;
 
 const SearchSection = () => {
-  const [isOpen, setOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [sorts, setSorts] = useState({
+    newest: false,
+    highest: false,
+  });
+  const [priceRange, setPriceRange] = useState({
+    low: "",
+    high: "",
+  });
+  const [filters, setFilters] = useState({
+    search_text: "",
+    sort: [],
+    filters: {
+      price: {
+        op: "range",
+        field: "price",
+      },
+    },
+  });
+  const dispatch = useDispatch();
 
-  const toggle = () => {
-    setOpen(!isOpen);
+  const handleSearch = () => {
+    const data = { ...filters, filters: Object.values(filters.filters) };
+    dispatch(searchItem(data));
   };
+
+  const handleClear = () => {
+    const data = {
+      search_text: "",
+      sort: [],
+      filters: {
+        price: {
+          op: "range",
+          field: "price",
+        },
+      },
+    };
+    setSearchText("");
+    setSorts({ ...sorts, newest: false, highest: false });
+    setPriceRange({ ...priceRange, low: "", high: "" });
+    setFilters({ ...filters, ...data });
+  };
+
+  const handleSearchTextChange = (e) => {
+    setSearchText(e.target.value);
+    setFilters({ ...filters, search_text: e.target.value });
+  };
+
+  const handleNewestFilter = (e) => {
+    setSorts({ ...sorts, newest: e.target.checked });
+    if (e.target.checked) {
+      setFilters({
+        ...filters,
+        sort: [...filters.sort, ["id", "desc"]],
+      });
+    } else {
+      setFilters({
+        ...filters,
+        sort: filters.sort.filter((data) => !_.isEqual(data, ["id", "desc"])),
+      });
+    }
+  };
+  const handleHighestRateFilter = (e) => {
+    setSorts({ ...sorts, highest: e.target.checked });
+    if (e.target.checked) {
+      setFilters({
+        ...filters,
+        sort: [...filters.sort, ["rate", "desc"]],
+      });
+    } else {
+      setFilters({
+        ...filters,
+        sort: filters.sort.filter((data) => !_.isEqual(data, ["rate", "desc"])),
+      });
+    }
+  };
+  const handleMinPriceFilter = (e) => {
+    setPriceRange({ ...priceRange, low: e.target.value });
+
+    setFilters({
+      ...filters,
+      filters: {
+        ...filters.filters,
+        price: {
+          ...filters.filters.price,
+          value_low: e.target.value,
+        },
+      },
+    });
+  };
+
+  const handleMaxPriceFilter = (e) => {
+    setPriceRange({ ...priceRange, high: e.target.value });
+
+    setFilters({
+      ...filters,
+      filters: {
+        ...filters.filters,
+        price: {
+          ...filters.filters.price,
+          value_high: e.target.value,
+        },
+      },
+    });
+  };
+  // console.log(filters)
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [filters.sort]);
 
   return (
     <Row className="mt-5" styleName="search-section__wrapper">
@@ -54,6 +161,9 @@ const SearchSection = () => {
             name="search_text"
             placeholder="Start your search"
             type="text"
+            value={searchText}
+            onChange={handleSearchTextChange}
+            onKeyDown={handleKeyDown}
           />
           <InputGroupText>
             <LocationOnIcon styleName="search-icon" />
@@ -61,9 +171,23 @@ const SearchSection = () => {
         </InputGroup>
       </Col>
 
-      <Col md="2" className="">
-        <Button color="danger" styleName="btn-danger_custom">
+      <Col md="4" className="d-flex">
+        <Button
+          color="danger"
+          onClick={handleSearch}
+          styleName="btn-danger_custom"
+          className="me-2"
+        >
           Search
+        </Button>
+
+        <Button
+          color="primary"
+          className="d-flex align-items-center"
+          onClick={handleClear}
+        >
+          <ClearIcon />
+          Clear
         </Button>
       </Col>
 
@@ -72,28 +196,48 @@ const SearchSection = () => {
           <AddIcon className="me-2" styleName="color--red text-small" />
           More options
         </OptionWrapper>
-        
+
         <UncontrolledCollapse toggler="#toggler">
           <Card>
             <CardBody>
               <Row className="align-items-center">
                 <Col md="3">
                   <FormGroup check inline>
-                    <Input type="checkbox" />
+                    <Input
+                      type="checkbox"
+                      onChange={handleNewestFilter}
+                      checked={sorts.newest}
+                    />
                     <Label check>Newest</Label>
                   </FormGroup>
                 </Col>
                 <Col md="3">
                   <FormGroup check inline>
-                    <Input type="checkbox" />
+                    <Input
+                      type="checkbox"
+                      onChange={handleHighestRateFilter}
+                      checked={sorts.highest}
+                    />
                     <Label check>Highest rate</Label>
                   </FormGroup>
                 </Col>
                 <Col md="3">
-                  <Input type="number" min="10000" placeholder="Min price" />
+                  <Input
+                    type="number"
+                    min="1"
+                    placeholder="Min price"
+                    onChange={handleMinPriceFilter}
+                    value={priceRange.low}
+                  />
                 </Col>
                 <Col md="3">
-                  <Input type="number" min="10000" placeholder="Max price" />
+                  <Input
+                    type="number"
+                    min="1"
+                    placeholder="Max price"
+                    onChange={handleMaxPriceFilter}
+                    value={priceRange.high}
+                  />
                 </Col>
               </Row>
             </CardBody>

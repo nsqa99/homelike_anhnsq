@@ -5,9 +5,29 @@ export const getAllItems = () => ({
   type: types.GET_ALL_ITEM,
 });
 
-export const getAllItemsResult = (result, isSuccess = true) => ({
-  type: isSuccess
-    ? types.GET_ALL_ITEM_SUCCESS
-    : types.GET_ALL_ITEM_FAILED,
-  result: result,
+export const getOneItem = (data) => ({
+  type: types.GET_ONE_ITEM,
+  payload: { data },
 });
+
+export const searchItem = (params) => ({
+  type: types.SEARCH_ITEM,
+  payload: params,
+});
+
+export const getAllItemsResult = (payload, isSuccess = true) => ({
+  type: isSuccess ? types.GET_ALL_ITEM_SUCCESS : types.GET_ALL_ITEM_FAILED,
+  payload,
+});
+
+export const getOneItemResult = (payload, isSuccess = true) => ({
+  type: isSuccess ? types.GET_ONE_ITEM_SUCCESS : types.GET_ONE_ITEM_FAILED,
+  payload,
+});
+
+export const searchItemResult = (payload) => {
+  return {
+    type: types.SEARCH_ITEM_SUCCESS,
+    payload,
+  };
+};

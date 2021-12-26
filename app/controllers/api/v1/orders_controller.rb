@@ -47,7 +47,7 @@ class Api::V1::OrdersController < ApplicationController
   private
 
   def new_order_params
-    params.require(:order).permit(:customer_quantity, :start_rent_date, :end_rent_date, :item_id)
+    params.require(:order).permit(:total, :customer_quantity, :start_rent_date, :end_rent_date, :item_id)
   end
   
   def update_order_params

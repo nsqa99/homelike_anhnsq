@@ -1,8 +1,6 @@
-import * as Yup from "yup";
-import index from "../containers/Feeds";
 
 export const formatDate = (date) => {
-  let elems = date.split("-");
+  let elems = date.split("T")[0].split("-");
   return elems.slice(0).reverse().join(".");
 };
 

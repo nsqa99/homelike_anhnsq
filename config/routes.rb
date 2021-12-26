@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       end
 
       get "items/search", to: "items#search"
+      get "items/:id", to: "items#show"
       
       # Customer
       resources :customers do

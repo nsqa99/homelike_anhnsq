@@ -21,14 +21,14 @@ const TopBodyWrapper = styled.div`
 
 const index = () => {
   return (
-    <>
-      <Container>
+    <div style={{background: '#f8f9fa', height: '100vh'}}>
+      <Container fluid className="p-0">
         <TopBodyWrapper>
           <SearchSection />
         </TopBodyWrapper>
       </Container>
       <ItemSection />
-    </>
+    </div>
   );
 };
 

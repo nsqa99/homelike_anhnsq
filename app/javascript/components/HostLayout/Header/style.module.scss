@@ -1,0 +1,35 @@
+@import '../../../assets/styles/variables';
+
+.header {
+  background-color: #131921;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  &__btnSwitch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-hack;
+    margin-right: 20px;
+    background: #f8f9fa;
+    border: none;
+    color: #131921;
+    padding: 5px 10px;
+  }
+
+  &__btnSwitch:hover {
+    background: $theme_color;
+  }
+
+  &__search {
+    max-width: 500px;
+  }
+}
+
+.dropdown-menu--right-align {
+  top: 120%;
+  right: 0;
+}
