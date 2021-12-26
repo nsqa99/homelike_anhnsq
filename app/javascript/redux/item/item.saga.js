@@ -45,36 +45,36 @@ function* searchItemSaga(props) {
   }
 }
 
-function* createReviewSaga(props) {
-  const data = props.payload;
-  try {
-    const res = yield call(createItemReviewApi, data);
-    if (res.status === 200) {
-      const response = res.data?.data;
-      yield all([put(createReviewResult(response))]);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
+// function* createReviewSaga(props) {
+//   const data = props.payload;
+//   try {
+//     const res = yield call(createItemReviewApi, data);
+//     if (res.status === 200) {
+//       const response = res.data?.data;
+//       yield all([put(createReviewResult(response))]);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
-function* destroyReviewSaga(props) {
-  const data = props.payload;
-  try {
-    const res = yield call(destroyItemReviewApi, data);
-    if (res.status === 200) {
-      const response = res.data?.data;
-      yield all([put(destroyReviewResult(response))]);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
+// function* destroyReviewSaga(props) {
+//   const data = props.payload;
+//   try {
+//     const res = yield call(destroyItemReviewApi, data);
+//     if (res.status === 200) {
+//       const response = res.data?.data;
+//       yield all([put(destroyReviewResult(response))]);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ITEM, getAllItemsSaga)]);
   yield all([takeEvery(types.GET_ONE_ITEM, getOneItemSaga)]);
   yield all([takeEvery(types.SEARCH_ITEM, searchItemSaga)]);
-  yield all([takeEvery(types.CREATE_REVIEW, createReviewSaga)]);
-  yield all([takeEvery(types.DESTROY_REVIEW, destroyReviewSaga)]);
+  // yield all([takeEvery(types.CREATE_REVIEW, createReviewSaga)]);
+  // yield all([takeEvery(types.DESTROY_REVIEW, destroyReviewSaga)]);
 }

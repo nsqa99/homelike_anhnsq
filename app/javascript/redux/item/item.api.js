@@ -18,16 +18,16 @@ export const getOneItemsApi = async (itemId) => {
   return await axios.get(`${ITEM_ENDPOINT}/${itemId}`);
 };
 
-export const createItemReviewApi = async (data) => {
-  return await AuthorizedAxios.post(
-    `${ITEM_ENDPOINT}/${data.itemId}/reviews`,
-    data
-  );
-};
+// export const createItemReviewApi = async (data) => {
+//   return await AuthorizedAxios.post(
+//     `${ITEM_ENDPOINT}/${data.itemId}/reviews`,
+//     data
+//   );
+// };
 
-export const destroyItemReviewApi = async (data) => {
-  return await AuthorizedAxios.delete(
-    `${ITEM_ENDPOINT}/${data.itemId}/reviews/${data.reviewId}`,
-    data
-  );
-};
+// export const destroyItemReviewApi = async (data) => {
+//   return await AuthorizedAxios.delete(
+//     `${ITEM_ENDPOINT}/${data.itemId}/reviews/${data.reviewId}`,
+//     data
+//   );
+// };

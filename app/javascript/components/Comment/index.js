@@ -14,7 +14,7 @@ import Avatar from "../../constants/images/Avatar.png";
 import DeleteIcon from "@material-ui/icons/Delete";
 import StarIcon from "@material-ui/icons/Star";
 import { formatDateTime } from "../../utils";
-import { destroyReview } from '../../redux/item/item.action'
+import { destroyReview } from '../../redux/review/review.action'
 
 const Comment = ({ review, isOwner }) => {
   const dispatch = useDispatch();

@@ -26,7 +26,7 @@ import CustomPagination from "../../../../components/Pagination";
 import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
 import { getOneUser } from "../../../../redux/user/user.action";
-import { createReview } from "../../../../redux/item/item.action";
+import { createReview } from "../../../../redux/review/review.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -42,11 +42,14 @@ const CustomSlider = styled.div`
 
 const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   const user = useSelector((state) => state.users);
+  const listReviews = useSelector((state) => state.reviews.list);
   const [review, setReview] = useState({
     itemId: item.id,
     content: "",
     rate: 0,
   });
+  const [content, setContent] = useState("");
+  const [rate, setRate] = useState(0);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -55,15 +58,21 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
     }
   }, []);
 
-  const handleReview = () => {
+  const handleReview = (e) => {
     dispatch(createReview(review));
+    setContent("");
+    setRate(0);
   };
 
   const handleContentChange = (e) => {
+    setContent(e.target.value);
+
     setReview({ ...review, content: e.target.value });
   };
 
   const handleRateChange = (e) => {
+    setRate(e.target.value);
+
     setReview({ ...review, rate: parseInt(e.target.value) });
   };
 
@@ -142,61 +151,66 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
 
                 <hr />
 
-                {"Comments"}
-                <Row>
-                  {isAuthenticated ? (
+                {isAuthenticated ? (
+                  currentUser !== item.owner.username ? (
                     <>
-                      <Col xs="12" md="9">
-                        <Input
-                          id="comment"
-                          name="comment"
-                          type="textarea"
-                          placeholder="Write down your comment"
-                          className="mt-3"
-                          rows="5"
-                          onChange={handleContentChange}
-                        />
-                        <Button
-                          color="danger"
-                          className="mt-3 mb-5"
-                          onClick={handleReview}
-                        >
-                          Post
-                        </Button>{" "}
-                      </Col>
-                      <Col xs="12" md="3">
-                        <Label for="rate">Rate this apartment</Label>
-                        <Input
-                          id="rate"
-                          name="rate"
-                          type="select"
-                          value={review.rate}
-                          onChange={handleRateChange}
-                        >
-                          <option value="0">None</option>
-                          <option value="1">Awful</option>
-                          <option value="2">Suffuring</option>
-                          <option value="3">Nothing special</option>
-                          <option value="4">Great</option>
-                          <option value="5">Awesome</option>
-                        </Input>
-                      </Col>
+                      {"Comments"}
+                      <Row>
+                        <Col xs="12" md="9">
+                          <Input
+                            id="comment"
+                            name="comment"
+                            type="textarea"
+                            placeholder="Write down your comment"
+                            className="mt-3"
+                            rows="5"
+                            onChange={handleContentChange}
+                            value={content}
+                          />
+                          <Button
+                            color="danger"
+                            className="mt-3 mb-5"
+                            onClick={handleReview}
+                          >
+                            Post
+                          </Button>{" "}
+                        </Col>
+                        <Col xs="12" md="3">
+                          <Label for="rate">Rate this apartment</Label>
+                          <Input
+                            id="rate"
+                            name="rate"
+                            type="select"
+                            value={rate}
+                            onChange={handleRateChange}
+                          >
+                            <option value="0">None</option>
+                            <option value="1">Awful</option>
+                            <option value="2">Suffuring</option>
+                            <option value="3">Nothing special</option>
+                            <option value="4">Great</option>
+                            <option value="5">Awesome</option>
+                          </Input>
+                        </Col>
+                      </Row>
+                      <hr />
                     </>
-                  ) : (
-                    <div className="fs-6 mt-2 fw-bold fst-italic">
-                      Sign in to say something about this apartment
-                    </div>
-                  )}
-                </Row>
+                  ) : null
+                ) : (
+                  <div className="fs-6 mt-2 fw-bold fst-italic">
+                    Sign in to say something about this apartment
+                  </div>
+                )}
 
-                <hr />
-                {item.reviews?.length > 0 ? (
+                {listReviews?.length > 0 ? (
                   <>
-                    {item.reviews
+                    {listReviews
                       .slice(0)
                       .reverse()
                       .map((review) => {
-                        const isOwner = isAuthenticated && review.owner.username === currentUser;
+                        const isOwner =
+                          isAuthenticated &&
+                          review.owner.username === currentUser;
                         return (
                           <Comment
                             key={review.id}

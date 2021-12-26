@@ -28,27 +28,27 @@ export default function itemReducer(state = initState, action) {
       return { ...state, list: action.payload };
     }
 
-    case types.CREATE_REVIEW_SUCCESS: {
-      return {
-        ...state,
-        item: {
-          ...state.item,
-          reviews: [...state.item.reviews, action.payload],
-        },
-      };
-    }
+    // case types.CREATE_REVIEW_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     item: {
+    //       ...state.item,
+    //       reviews: [...state.item.reviews, action.payload],
+    //     },
+    //   };
+    // }
 
-    case types.DESTROY_REVIEW_SUCCESS: {
-      return {
-        ...state,
-        item: {
-          ...state.item,
-          reviews: state.item.reviews.filter(
-            (review) => !_.isEqual(review, action.payload)
-          ),
-        },
-      };
-    }
+    // case types.DESTROY_REVIEW_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     item: {
+    //       ...state.item,
+    //       reviews: state.item.reviews.filter(
+    //         (review) => !_.isEqual(review, action.payload)
+    //       ),
+    //     },
+    //   };
+    // }
 
     default:
       return state;
