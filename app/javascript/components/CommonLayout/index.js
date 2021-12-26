@@ -12,8 +12,6 @@ const CommonLayout = ({ children }) => {
     dispatch(getOneUser(authData?.username));
   }, []);
 
-  console.log(authData.isAuthenticated)
-
   return (
     <div className="">
       <Headers

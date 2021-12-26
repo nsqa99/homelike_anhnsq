@@ -5,12 +5,17 @@ export const Axios = async (method, url, data, ...props) => {
     method,
     url,
     data,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    },
     ...props,
   });
 
   axiosInstance.interceptors.request.use((req) => {
     const accessToken = localStorage.getItem("access_token");
-    if (accessToken) req.headers = `Bearer: ${accessToken}`;
+    if (accessToken) req.headers.Authorization = `Bearer: ${accessToken}`;
+    
     return req;
   });
 

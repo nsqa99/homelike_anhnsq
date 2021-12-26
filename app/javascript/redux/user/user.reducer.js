@@ -3,24 +3,7 @@ import Avatar from "../../constants/images/Avatar.png";
 import _ from 'lodash'
 
 const initState = {
-  username: "",
   avatar: Avatar,
-  fullName: "",
-  address: "",
-  email: "",
-  following_count: 0,
-  follower_count: 0,
-  status: "",
-  address: {
-    home_number: "",
-    street: "",
-    ward: "",
-    district: "",
-    city: "",
-    country: "",
-  },
-  isCustomer: false,
-  isMerchant: false,
 };
 
 export default function userReducer(state = initState, action) {

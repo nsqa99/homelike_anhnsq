@@ -23,7 +23,7 @@ const RightPanel = () => {
       initial_end_date: "2021-12-01",
       apartment: {
         title: "Lorem ipsum",
-        images: [],
+        image_urls: [],
         rent_address: {
           city: "Hanoi",
           country: "Vietnam",
@@ -65,7 +65,7 @@ const RightPanel = () => {
       initial_end_date: "2021-12-01",
       apartment: {
         title: "Lorem ipsum",
-        images: [],
+        image_urls: [],
         rent_address: {
           city: "Hanoi",
           country: "Vietnam",
@@ -107,7 +107,7 @@ const RightPanel = () => {
       initial_end_date: "2021-12-01",
       apartment: {
         title: "Lorem ipsum",
-        images: [],
+        image_urls: [],
         rent_address: {
           city: "Hanoi",
           country: "Vietnam",

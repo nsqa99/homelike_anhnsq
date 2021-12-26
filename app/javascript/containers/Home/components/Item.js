@@ -13,16 +13,9 @@ import CurrencyFormat from "react-currency-format";
 import { formatDate, shortAddress } from "../../../utils";
 
 const Item = ({ item, style }) => {
-  const dispatch = useDispatch();
   const [displayStart, toggleDisplayStart] = useState(false);
   const [displayEnd, toggleDisplayEnd] = useState(false);
-
-  const addToBasket = () => {
-    dispatch({
-      type: "ADD_TO_BASKET",
-      item,
-    });
-  };
+  
   const toggleTooltip = (type) => {
     if (type === "start") {
       toggleDisplayStart(!displayStart);
@@ -38,7 +31,7 @@ const Item = ({ item, style }) => {
     <div styleName={style ? `item ${style}` : "item"}>
       <div styleName="img-wrapper">
         <img
-          src={item.apartment.images[0] || DefaultAvatar}
+          src={item.apartment.image_urls[0] || DefaultAvatar}
           alt={item.description}
         />
       </div>
