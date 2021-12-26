@@ -14,6 +14,7 @@ class Item < ApplicationRecord
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :posts
   has_many :orders
+  has_many :reviews, dependent: :destroy
 
   accepts_nested_attributes_for :apartment
 

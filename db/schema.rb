@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_25_131751) do
+ActiveRecord::Schema.define(version: 2021_12_26_185118) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -251,6 +251,17 @@ ActiveRecord::Schema.define(version: 2021_12_25_131751) do
     t.index ["apartment_id"], name: "index_rent_addresses_on_apartment_id"
   end
 
+  create_table "reviews", charset: "utf8mb4", force: :cascade do |t|
+    t.string "content", limit: 200, null: false
+    t.integer "rate", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.index ["item_id"], name: "index_reviews_on_item_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "roles", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -317,4 +328,6 @@ ActiveRecord::Schema.define(version: 2021_12_25_131751) do
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "rent_addresses", "apartments"
+  add_foreign_key "reviews", "items"
+  add_foreign_key "reviews", "users"
 end

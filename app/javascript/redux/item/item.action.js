@@ -15,6 +15,16 @@ export const searchItem = (params) => ({
   payload: params,
 });
 
+export const createReview = (data) => ({
+  type: types.CREATE_REVIEW,
+  payload: data,
+});
+
+export const destroyReview = (data) => ({
+  type: types.DESTROY_REVIEW,
+  payload: data,
+});
+
 export const getAllItemsResult = (payload, isSuccess = true) => ({
   type: isSuccess ? types.GET_ALL_ITEM_SUCCESS : types.GET_ALL_ITEM_FAILED,
   payload,
@@ -31,3 +41,13 @@ export const searchItemResult = (payload) => {
     payload,
   };
 };
+
+export const createReviewResult = (payload) => ({
+  type: types.CREATE_REVIEW_SUCCESS,
+  payload,
+});
+
+export const destroyReviewResult = (payload) => ({
+  type: types.DESTROY_REVIEW_SUCCESS,
+  payload,
+});

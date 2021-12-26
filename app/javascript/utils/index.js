@@ -1,7 +1,13 @@
-
 export const formatDate = (date) => {
   let elems = date.split("T")[0].split("-");
   return elems.slice(0).reverse().join(".");
+};
+
+export const formatDateTime = (datetime) => {
+  const parts = datetime.split("T");
+  let date = parts[0].split("-");
+  let time = parts[1].split(".")[0];
+  return `${date.slice(0).reverse().join(".")}, ${time}`;
 };
 
 export const shortAddress = ({ city, country }) => {

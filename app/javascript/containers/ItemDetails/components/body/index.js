@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
@@ -14,9 +14,9 @@ import {
   CardTitle,
   Col,
   Input,
+  Label,
   Row,
 } from "reactstrap";
-import DefaultImage from "../../../../constants/images/DefaultImage.png";
 import DefaultAvatar from "../../../../constants/images/DefaultAvatar.png";
 import styled from "styled-components";
 import TableDetails from "./TableDetails";
@@ -26,6 +26,7 @@ import CustomPagination from "../../../../components/Pagination";
 import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
 import { getOneUser } from "../../../../redux/user/user.action";
+import { createReview } from "../../../../redux/item/item.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -39,15 +40,32 @@ const CustomSlider = styled.div`
   }
 `;
 
-const DetailBody = ({ item }) => {
-  console.log(item)
+const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   const user = useSelector((state) => state.users);
+  const [review, setReview] = useState({
+    itemId: item.id,
+    content: "",
+    rate: 0,
+  });
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (item) {
       dispatch(getOneUser(item.owner.username));
     }
   }, []);
+
+  const handleReview = () => {
+    dispatch(createReview(review));
+  };
+
+  const handleContentChange = (e) => {
+    setReview({ ...review, content: e.target.value });
+  };
+
+  const handleRateChange = (e) => {
+    setReview({ ...review, rate: parseInt(e.target.value) });
+  };
 
   const carouselImages = item.apartment.image_urls?.length
     ? item.apartment.image_urls.map((image) => {
@@ -125,27 +143,79 @@ const DetailBody = ({ item }) => {
                 <hr />
 
                 {"Comments"}
-
-                <Input
-                  id="comment"
-                  name="comment"
-                  type="textarea"
-                  placeholder="Write down your comment"
-                  className="mt-3"
-                  rows="5"
-                />
-                <Button color="danger" className="mt-3 mb-5">
-                  Post
-                </Button>
+                <Row>
+                  {isAuthenticated ? (
+                    <>
+                      <Col xs="12" md="9">
+                        <Input
+                          id="comment"
+                          name="comment"
+                          type="textarea"
+                          placeholder="Write down your comment"
+                          className="mt-3"
+                          rows="5"
+                          onChange={handleContentChange}
+                        />
+                        <Button
+                          color="danger"
+                          className="mt-3 mb-5"
+                          onClick={handleReview}
+                        >
+                          Post
+                        </Button>{" "}
+                      </Col>
+                      <Col xs="12" md="3">
+                        <Label for="rate">Rate this apartment</Label>
+                        <Input
+                          id="rate"
+                          name="rate"
+                          type="select"
+                          value={review.rate}
+                          onChange={handleRateChange}
+                        >
+                          <option value="0">None</option>
+                          <option value="1">Awful</option>
+                          <option value="2">Suffuring</option>
+                          <option value="3">Nothing special</option>
+                          <option value="4">Great</option>
+                          <option value="5">Awesome</option>
+                        </Input>
+                      </Col>
+                    </>
+                  ) : (
+                    <div className="fs-6 mt-2 fw-bold fst-italic">
+                      Sign in to say something about this apartment
+                    </div>
+                  )}
+                </Row>
 
                 <hr />
-
-                <Comment />
-                <CustomPagination
-                  url={`/items/${item.id}/comments`}
-                  totalPages={4}
-                  currentPage={1}
-                />
+                {item.reviews?.length > 0 ? (
+                  <>
+                    {item.reviews
+                      .slice(0)
+                      .reverse()
+                      .map((review) => {
+                        const isOwner = isAuthenticated && review.owner.username === currentUser;
+                        return (
+                          <Comment
+                            key={review.id}
+                            review={review}
+                            isOwner={isOwner}
+                          />
+                        );
+                      })}
+                    <CustomPagination
+                      url={`/items/${item.id}/comments`}
+                      totalPages={4}
+                      currentPage={1}
+                    />
+                  </>
+                ) : (
+                  <div className="fs-6 mt-2 fw-bold fst-italic mt-5 mb-4 w-100 text-center">
+                    No review
+                  </div>
+                )}
               </CardBody>
             </Card>
           </Col>

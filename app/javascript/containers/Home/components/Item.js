@@ -90,7 +90,7 @@ const Item = ({ item, style }) => {
         <div styleName="item__rating">
           {Array(item.rate)
             .fill()
-            .map((index) => (
+            .map((_, index) => (
               <StarIcon key={index} styleName="icon__fa"></StarIcon>
             ))}
         </div>

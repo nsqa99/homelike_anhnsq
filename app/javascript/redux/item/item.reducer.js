@@ -1,8 +1,9 @@
 import types from "./item.type";
+import _ from "lodash";
 
 const initState = {
   list: [],
-  item: {}
+  item: {},
 };
 
 export default function itemReducer(state = initState, action) {
@@ -25,6 +26,28 @@ export default function itemReducer(state = initState, action) {
 
     case types.SEARCH_ITEM_SUCCESS: {
       return { ...state, list: action.payload };
+    }
+
+    case types.CREATE_REVIEW_SUCCESS: {
+      return {
+        ...state,
+        item: {
+          ...state.item,
+          reviews: [...state.item.reviews, action.payload],
+        },
+      };
+    }
+
+    case types.DESTROY_REVIEW_SUCCESS: {
+      return {
+        ...state,
+        item: {
+          ...state.item,
+          reviews: state.item.reviews.filter(
+            (review) => !_.isEqual(review, action.payload)
+          ),
+        },
+      };
     }
 
     default:
