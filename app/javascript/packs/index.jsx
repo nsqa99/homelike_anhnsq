@@ -9,8 +9,6 @@ import { getAllItems } from "../redux/item/item.action";
 import { PersistGate } from "redux-persist/integration/react";
 
 document.addEventListener("DOMContentLoaded", () => {
-  store.dispatch(getAllItems());
-
   ReactDOM.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

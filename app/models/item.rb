@@ -33,6 +33,7 @@ class Item < ApplicationRecord
   def as_indexed_json(options = {})
     as_json(
       only: [:id, :rate, :status, :price, :initial_start_date, :initial_end_date, :description],
+      methods: [:disabled_dates],
       include: {
         merchant: {
           include: {
@@ -70,6 +71,10 @@ class Item < ApplicationRecord
     end
 
     availables
+  end
+
+  def disabled_dates
+    (initial_start_date.to_date..initial_end_date.to_date).to_a - available_dates
   end
 
   def similar_items
