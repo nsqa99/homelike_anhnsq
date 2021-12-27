@@ -23,11 +23,7 @@ class Item < ApplicationRecord
   scope :approved, -> { where(status: 0)}
 
   after_save {
-    unless status_deleted?
-      __elasticsearch__.index_document
-    else
-      __elasticsearch__.delete_document(refresh: true)
-    end
+    __elasticsearch__.index_document
   }
 
   def as_indexed_json(options = {})

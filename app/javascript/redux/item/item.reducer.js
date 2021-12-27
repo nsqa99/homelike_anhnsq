@@ -46,7 +46,7 @@ export default function itemReducer(state = initState, action) {
         ...state,
         listNotES: {
           ...state.listNotES,
-          data: [...state.listNotES.data, action.payload],
+          data: [action.payload, ...state.listNotES.data],
         },
       };
     }
@@ -55,17 +55,42 @@ export default function itemReducer(state = initState, action) {
       return state;
     }
 
-    // case types.DESTROY_REVIEW_SUCCESS: {
-    //   return {
-    //     ...state,
-    //     item: {
-    //       ...state.item,
-    //       reviews: state.item.reviews.filter(
-    //         (review) => !_.isEqual(review, action.payload)
-    //       ),
-    //     },
-    //   };
-    // }
+    case types.DESTROY_ITEM_SUCCESS: {
+      const { data, isSearch } = action.payload;
+      const pagination = isSearch
+        ? state.list.pagination
+        : state.listNotES.pagination;
+      const newPagin = {
+        total_entries: pagination.total_entries - 1,
+        total_pages: Math.ceil(
+          parseFloat(pagination.total_entries - 1) /
+            parseFloat(pagination.page_size)
+        ),
+      };
+      const newData = {
+        list: {
+          ...state.list,
+          data: state.list.data.filter((item) => item.id !== data.id),
+          pagination: { ...state.list.pagination, ...newPagin },
+        },
+
+        listNotES: {
+          ...state.listNotES,
+          data: state.listNotES.data.filter((item) => item.id !== data.id),
+          pagination: { ...state.listNotES.pagination, ...newPagin },
+        },
+        isSearch: isSearch
+      };
+
+      return {
+        ...state,
+        ...newData,
+      };
+    }
+
+    case types.DESTROY_ITEM_FAILED: {
+      return state;
+    }
 
     default:
       return state;

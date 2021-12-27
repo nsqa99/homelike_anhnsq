@@ -34,16 +34,15 @@ export const getAllItemsByUsernameApi = async (username, options) => {
   });
 };
 
+export const destroyItemApi = async (username, itemId) => {
+  return await AuthorizedAxios.delete(
+    `${MERCHANT_ITEM_ENDPOINT}/${username}/items/${itemId}`
+  );
+};
+
 // export const createItemReviewApi = async (data) => {
 //   return await AuthorizedAxios.post(
 //     `${ITEM_ENDPOINT}/${data.itemId}/reviews`,
-//     data
-//   );
-// };
-
-// export const destroyItemReviewApi = async (data) => {
-//   return await AuthorizedAxios.delete(
-//     `${ITEM_ENDPOINT}/${data.itemId}/reviews/${data.reviewId}`,
 //     data
 //   );
 // };

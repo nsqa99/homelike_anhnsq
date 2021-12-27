@@ -4,6 +4,7 @@ import { appendItemDatas } from "../../utils";
 import {
   createItemResult,
   createReviewResult,
+  destroyItemResult,
   destroyReviewResult,
   getAllItemsByUsernameResult,
   getAllItemsResult,
@@ -14,6 +15,7 @@ import {
 import {
   createItemApi,
   createItemReviewApi,
+  destroyItemApi,
   destroyItemReviewApi,
   getAllItemsApi,
   getAllItemsByUsernameApi,
@@ -99,18 +101,18 @@ function* createItemSaga(props) {
   }
 }
 
-// function* destroyReviewSaga(props) {
-//   const data = props.payload;
-//   try {
-//     const res = yield call(destroyItemReviewApi, data);
-//     if (res.status === 200) {
-//       const response = res.data?.data;
-//       yield all([put(destroyReviewResult(response))]);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+function* destroyItemSaga(props) {
+  const {username, itemId, isSearch} = props.payload;
+  try {
+    const res = yield call(destroyItemApi, username, itemId);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(destroyItemResult(response, isSearch))]);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ITEM, getAllItemsSaga)]);
@@ -119,5 +121,5 @@ export default function* rootSaga() {
   yield all([takeEvery(types.RESET_ITEM_STATE, resetItemSaga)]);
   yield all([takeEvery(types.CREATE_ITEM, createItemSaga)]);
   yield all([takeEvery(types.GET_ALL_ITEM_BY_USERNAME, getAllItemsByUsernameSaga)]);
-  // yield all([takeEvery(types.DESTROY_REVIEW, destroyReviewSaga)]);
+  yield all([takeEvery(types.DESTROY_ITEM, destroyItemSaga)]);
 }

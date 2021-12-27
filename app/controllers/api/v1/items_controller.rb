@@ -17,7 +17,7 @@ class Api::V1::ItemsController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    items = @current_user.merchant.items.order(id: :desc).page(page).per(page_size)
+    items = @current_user.merchant.items.approved.order(id: :desc).page(page).per(page_size)
 
     json_response(
       serialize(items, with_children),
@@ -26,13 +26,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    item = Item.find(params[:id])
+    item = Item.approved.find(params[:id])
 
     json_response(serialize(item, with_children))
   end
 
   def update
-    item = Item.find(params[:id])
+    item = Item.approved.find(params[:id])
 
     if item.update(update_item_params)
       json_response(serialize(item, with_children))
@@ -54,7 +54,11 @@ class Api::V1::ItemsController < ApplicationController
     
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]
-    filters = params[:filters] ? params[:filters].map{|item| JSON.parse(item)} : []
+    
+    default_filter = [{"field" => "status", "value" => "approved"}]
+    filters = params[:filters] ? default_filter.concat(
+      params[:filters].map{|item| JSON.parse(item)}) : default_filter
+    
     sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : [["id", "desc"]]
     items, total = Item.build_search(search_text, filters, sort, search_fields, page, page_size)
 

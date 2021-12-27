@@ -14,6 +14,7 @@ import {
   getAllItemsByUsername,
   searchItem,
 } from "../../../../redux/item/item.action";
+import DeleteModal from "./ActionModal/DeleteModal";
 
 const ImageWrapper = styled.div`
   img {
@@ -27,9 +28,25 @@ const Item = () => {
   const { username } = useParams();
   const items = useSelector((state) => state.items.listNotES);
   const searchItems = useSelector((state) => state.items.list);
+  const searchStatus = useSelector((state) => state.items.isSearch);
   const dispatch = useDispatch();
-  const [isSearch, setIsSearch] = useState(false);
+  const [isSearch, setIsSearch] = useState(searchStatus);
   const [searchText, setSearchText] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleDeleteModal = (id) => {
+    setSelectedItem(id);
+    setDeleteModalOpen(true);
+  };
+
+  const filters = {
+    search_text: searchText,
+    fitlers: {
+      field: "merchant.user.username",
+      value: username,
+    },
+  };
 
   const handleSearch = (e) => {
     if (e.key === "Enter") {
@@ -37,14 +54,7 @@ const Item = () => {
         setIsSearch(false);
       } else {
         setIsSearch(true);
-
-        const filters = {
-          search_text: searchText,
-          fitlers: {
-            field: "merchant.user.username",
-            value: username,
-          },
-        };
+        
         dispatch(searchItem(filters));
       }
     }
@@ -120,7 +130,11 @@ const Item = () => {
                             <Button color="primary" className="me-2">
                               Edit
                             </Button>
-                            <Button color="danger" className="me-2">
+                            <Button
+                              color="danger"
+                              className="me-2"
+                              onClick={(e) => handleDeleteModal(item.id)}
+                            >
                               Delete
                             </Button>
                           </div>
@@ -134,7 +148,9 @@ const Item = () => {
             <CustomPagination
               totalPages={items.pagination.total_pages}
               currentPage={items.pagination.page}
-              fn={(options) => dispatch(getAllItemsByUsername(username, options))}
+              fn={(options) =>
+                dispatch(getAllItemsByUsername(username, options))
+              }
             />
           </>
         ) : (
@@ -191,7 +207,11 @@ const Item = () => {
                           <Button color="primary" className="me-2">
                             Edit
                           </Button>
-                          <Button color="danger" className="me-2">
+                          <Button
+                            color="danger"
+                            className="me-2"
+                            onClick={(e) => handleDeleteModal(item.id)}
+                          >
                             Delete
                           </Button>
                         </div>
@@ -205,12 +225,19 @@ const Item = () => {
           <CustomPagination
             totalPages={searchItems.pagination.total_pages}
             currentPage={searchItems.pagination.page}
-            fn={(options) => dispatch(searchItem(searchText, options))}
+            fn={(options) => dispatch(searchItem(filters, options))}
           />
         </>
       ) : (
         <span className="fs-5 fw-bold">No apartments found</span>
       )}
+      <DeleteModal
+        username={username}
+        itemId={selectedItem}
+        isOpen={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        isSearch={isSearch}
+      />
     </Container>
   );
 };

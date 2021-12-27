@@ -8,7 +8,7 @@ import { getAllReview } from "../../redux/review/review.action";
 
 const CustomPagination = ({ totalPages, currentPage, fn, ...props }) => {
   const [options, setOptions] = useState({
-    page: 1,
+    page: null,
     // pageSize: 10
   });
   const dispatch = useDispatch();
@@ -19,7 +19,9 @@ const CustomPagination = ({ totalPages, currentPage, fn, ...props }) => {
   };
 
   useEffect(() => {
-    fn(options);
+    if (options.page != null) {
+      fn(options);
+    }
   }, [options]);
 
   return (
