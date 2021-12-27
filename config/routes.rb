@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
       get "items/search", to: "items#search"
       get "items/:id", to: "items#show"
+      get "items/:item_id/reviews", to: "reviews#index"
       post "items/:item_id/reviews", to: "reviews#create"
       delete "items/:item_id/reviews/:id", to: "reviews#destroy"
       

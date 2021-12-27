@@ -26,7 +26,7 @@ import CustomPagination from "../../../../components/Pagination";
 import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
 import { getOneUser } from "../../../../redux/user/user.action";
-import { createReview } from "../../../../redux/review/review.action";
+import { createReview, getAllReview } from "../../../../redux/review/review.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -42,7 +42,7 @@ const CustomSlider = styled.div`
 
 const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   const user = useSelector((state) => state.users);
-  const listReviews = useSelector((state) => state.reviews.list);
+  const listReviews = useSelector((state) => state.reviews);
   const [review, setReview] = useState({
     itemId: item.id,
     content: "",
@@ -55,6 +55,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   useEffect(() => {
     if (item) {
       dispatch(getOneUser(item.owner.username));
+      dispatch(getAllReview(item.id));
     }
   }, []);
 
@@ -137,7 +138,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                   <div className="ms-auto">
                     {Array(item.rate)
                       .fill()
-                      .map((index) => (
+                      .map((_, index) => (
                         <StarIcon
                           key={index}
                           styleName="body__icon--star"
@@ -202,9 +203,9 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                   </div>
                 )}
 
-                {listReviews?.length > 0 ? (
+                {listReviews.list?.length > 0 ? (
                   <>
-                    {listReviews
+                    {listReviews.list
                       .slice(0)
                       .reverse()
                       .map((review) => {
@@ -220,9 +221,9 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                         );
                       })}
                     <CustomPagination
-                      url={`/items/${item.id}/comments`}
-                      totalPages={4}
-                      currentPage={1}
+                      totalPages={listReviews.pagination?.total_pages}
+                      currentPage={listReviews.pagination?.page}
+                      itemId={item.id}
                     />
                   </>
                 ) : (

@@ -85,6 +85,15 @@ class Item < ApplicationRecord
     items.map{|item| item["_source"]}
   end
 
+  def calculate_rating
+    total_reviews = self.reviews.count
+    cal_rate = self.reviews.sum(&:rate)
+    new_rate = (cal_rate / total_reviews).floor
+
+    self.rate = new_rate
+    self.save
+  end
+
   private
 
   def delete_items_tags_association

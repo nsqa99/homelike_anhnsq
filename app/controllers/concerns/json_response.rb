@@ -16,10 +16,10 @@ module JsonResponse
 
   def pagin_data(pagination)
     {
-      page: pagination[:page],
-      page_size: pagination[:page_size],
-      total_pages: pagination[:total_pages],
-      total_entries: pagination[:total_entries]
+      page: pagination[:page].to_i,
+      page_size: pagination[:page_size].to_i,
+      total_pages: pagination[:total_pages].to_i,
+      total_entries: pagination[:total_entries].to_i
     }
   end
 end

@@ -3,12 +3,18 @@ import _ from "lodash";
 
 const initState = {
   list: [],
+  pagination: {},
 };
 
 export default function reviewReducer(state = initState, action) {
   switch (action.type) {
     case types.GET_ALL_REVIEW_SUCCESS: {
-      return { ...state, list: action.payload };
+      const {data, pagination} = action.payload
+      return {
+        ...state,
+        list: data,
+        pagination: pagination,
+      };
     }
 
     case types.GET_ALL_REVIEW_FAILED: {
@@ -25,9 +31,7 @@ export default function reviewReducer(state = initState, action) {
     case types.DESTROY_REVIEW_SUCCESS: {
       return {
         ...state,
-        list: state.list.filter(
-          (review) => !_.isEqual(review, action.payload)
-        ),
+        list: state.list.filter((review) => !_.isEqual(review, action.payload)),
       };
     }
 
