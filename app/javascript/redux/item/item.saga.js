@@ -1,7 +1,20 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
-import { createReviewResult, destroyReviewResult, getAllItemsResult, getOneItemResult, searchItemResult } from "./item.action";
-import { createItemReviewApi, destroyItemReviewApi, getAllItemsApi, getOneItemsApi, searchItemsApi } from "./item.api";
+import {
+  createReviewResult,
+  destroyReviewResult,
+  getAllItemsResult,
+  getOneItemResult,
+  resetItemStateResult,
+  searchItemResult,
+} from "./item.action";
+import {
+  createItemReviewApi,
+  destroyItemReviewApi,
+  getAllItemsApi,
+  getOneItemsApi,
+  searchItemsApi,
+} from "./item.api";
 import types from "./item.type";
 
 function* getAllItemsSaga() {
@@ -45,6 +58,10 @@ function* searchItemSaga(props) {
   }
 }
 
+function* resetItemSaga() {
+  yield all([put(resetItemStateResult())]);
+}
+
 // function* createReviewSaga(props) {
 //   const data = props.payload;
 //   try {
@@ -72,9 +89,10 @@ function* searchItemSaga(props) {
 // }
 
 export default function* rootSaga() {
-  yield all([takeEvery(types.GET_ALL_ITEM, getAllItemsSaga)]);
-  yield all([takeEvery(types.GET_ONE_ITEM, getOneItemSaga)]);
-  yield all([takeEvery(types.SEARCH_ITEM, searchItemSaga)]);
+  yield all([takeLatest(types.GET_ALL_ITEM, getAllItemsSaga)]);
+  yield all([takeLatest(types.GET_ONE_ITEM, getOneItemSaga)]);
+  yield all([takeLatest(types.SEARCH_ITEM, searchItemSaga)]);
+  yield all([takeLatest(types.RESET_ITEM_STATE, resetItemSaga)]);
   // yield all([takeEvery(types.CREATE_REVIEW, createReviewSaga)]);
   // yield all([takeEvery(types.DESTROY_REVIEW, destroyReviewSaga)]);
 }

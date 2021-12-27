@@ -15,6 +15,10 @@ export const searchItem = (params) => ({
   payload: params,
 });
 
+export const resetItemState = () => ({
+  type: types.RESET_ITEM_STATE,
+});
+
 // export const createReview = (data) => ({
 //   type: types.CREATE_REVIEW,
 //   payload: data,
@@ -41,6 +45,10 @@ export const searchItemResult = (payload) => {
     payload,
   };
 };
+
+export const resetItemStateResult = () => ({
+  type: types.RESET_ITEM_STATE_SUCCESS,
+});
 
 // export const createReviewResult = (payload) => ({
 //   type: types.CREATE_REVIEW_SUCCESS,

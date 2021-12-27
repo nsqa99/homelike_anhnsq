@@ -28,6 +28,14 @@ export default function itemReducer(state = initState, action) {
       return { ...state, list: action.payload };
     }
 
+    case types.RESET_ITEM_STATE: {
+      return { ...state, item: {} };
+    }
+
+    case types.RESET_ITEM_STATE_SUCCESS: {
+      return { ...state, item: {} };
+    }
+
     // case types.CREATE_REVIEW_SUCCESS: {
     //   return {
     //     ...state,
