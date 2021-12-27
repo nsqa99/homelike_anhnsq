@@ -11,6 +11,7 @@ import {
   getOneItemResult,
   resetItemStateResult,
   searchItemResult,
+  updateItemResult,
 } from "./item.action";
 import {
   createItemApi,
@@ -21,6 +22,7 @@ import {
   getAllItemsByUsernameApi,
   getOneItemsApi,
   searchItemsApi,
+  updateItemApi,
 } from "./item.api";
 import types from "./item.type";
 
@@ -114,6 +116,23 @@ function* destroyItemSaga(props) {
   }
 }
 
+function* updateItemSaga(props) {
+  const {username, data, itemId, images, isSearch} = props.payload;
+  const formData = appendItemDatas(data, images);
+  const config = {
+    headers: { "content-type": "multipart/form-data" },
+  };
+  try {
+    const res = yield call(updateItemApi, username, itemId, formData, config);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(updateItemResult(response, isSearch))]);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ITEM, getAllItemsSaga)]);
   yield all([takeEvery(types.GET_ONE_ITEM, getOneItemSaga)]);
@@ -122,4 +141,5 @@ export default function* rootSaga() {
   yield all([takeEvery(types.CREATE_ITEM, createItemSaga)]);
   yield all([takeEvery(types.GET_ALL_ITEM_BY_USERNAME, getAllItemsByUsernameSaga)]);
   yield all([takeEvery(types.DESTROY_ITEM, destroyItemSaga)]);
+  yield all([takeEvery(types.UPDATE_ITEM, updateItemSaga)]);
 }

@@ -15,6 +15,8 @@ import {
   searchItem,
 } from "../../../../redux/item/item.action";
 import DeleteModal from "./ActionModal/DeleteModal";
+import UpdateModal from "./ActionModal/UpdateModal";
+import ViewModal from "./ActionModal/ViewModal";
 
 const ImageWrapper = styled.div`
   img {
@@ -33,11 +35,23 @@ const Item = () => {
   const [isSearch, setIsSearch] = useState(searchStatus);
   const [searchText, setSearchText] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleDeleteModal = (id) => {
     setSelectedItem(id);
     setDeleteModalOpen(true);
+  };
+
+  const handleUpdateModal = (id) => {
+    setSelectedItem(id);
+    setUpdateModalOpen(true);
+  };
+
+  const handleViewModal = (id) => {
+    setSelectedItem(id);
+    setViewModalOpen(true);
   };
 
   const filters = {
@@ -54,7 +68,7 @@ const Item = () => {
         setIsSearch(false);
       } else {
         setIsSearch(true);
-        
+
         dispatch(searchItem(filters));
       }
     }
@@ -124,10 +138,18 @@ const Item = () => {
                         </td>
                         <td>
                           <div className="d-flex align-items-start justify-content-end">
-                            <Button color="warning" className="me-2">
+                            <Button
+                              color="warning"
+                              className="me-2"
+                              onClick={(e) => handleViewModal(item.id)}
+                            >
                               View
                             </Button>
-                            <Button color="primary" className="me-2">
+                            <Button
+                              color="primary"
+                              className="me-2"
+                              onClick={(e) => handleUpdateModal(item.id)}
+                            >
                               Edit
                             </Button>
                             <Button
@@ -201,10 +223,18 @@ const Item = () => {
                       </td>
                       <td>
                         <div className="d-flex align-items-start justify-content-end">
-                          <Button color="warning" className="me-2">
+                          <Button
+                            color="warning"
+                            className="me-2"
+                            onClick={(e) => handleViewModal(item.id)}
+                          >
                             View
                           </Button>
-                          <Button color="primary" className="me-2">
+                          <Button
+                            color="primary"
+                            className="me-2"
+                            onClick={(e) => handleUpdateModal(item.id)}
+                          >
                             Edit
                           </Button>
                           <Button
@@ -237,6 +267,22 @@ const Item = () => {
         isOpen={deleteModalOpen}
         setOpen={setDeleteModalOpen}
         isSearch={isSearch}
+      />
+
+      <UpdateModal
+        username={username}
+        items={items}
+        itemId={selectedItem}
+        isOpen={updateModalOpen}
+        setOpen={setUpdateModalOpen}
+        isSearch={isSearch}
+      />
+
+      <ViewModal
+        items={items}
+        itemId={selectedItem}
+        isOpen={viewModalOpen}
+        setOpen={setViewModalOpen}
       />
     </Container>
   );

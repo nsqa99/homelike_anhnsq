@@ -40,9 +40,10 @@ export const destroyItemApi = async (username, itemId) => {
   );
 };
 
-// export const createItemReviewApi = async (data) => {
-//   return await AuthorizedAxios.post(
-//     `${ITEM_ENDPOINT}/${data.itemId}/reviews`,
-//     data
-//   );
-// };
+export const updateItemApi = async (username, itemId, data, config) => {
+  return await AuthorizedAxios.put(
+    `${MERCHANT_ITEM_ENDPOINT}/${username}/items/${itemId}`,
+    data,
+    config
+  );
+};

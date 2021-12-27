@@ -60,14 +60,7 @@ const CustomImagePreview = styled.div`
   }
 `;
 
-const UpdateModal = ({
-  username,
-  items,
-  itemId,
-  isOpen,
-  setOpen,
-  isSearch,
-}) => {
+const ViewModal = ({ username, items, itemId, isOpen, setOpen, isSearch }) => {
   const [images, setImages] = useState([]);
   const [itemImages, setItemImages] = useState([]);
   const [imageError, setImageError] = useState({});
@@ -146,39 +139,12 @@ const UpdateModal = ({
       city: item.apartment?.rent_address.city,
       country: item.apartment?.rent_address.country,
     },
-    validations: {
-      title: Yup.string()
-        .max(30, "Must be at most 30 characters")
-        .required("Required"),
-      description: Yup.string()
-        .max(500, "Must be at most 500 characters")
-        .required("Required"),
-      price: Yup.number().required("Required").min(1, "Must be greater than 0"),
-      size: Yup.number().required("Required").min(1, "Must be greater than 0"),
-      initial_allowance: Yup.number()
-        .required("Required")
-        .min(1, "Must be greater than 0"),
-      max_allowance: Yup.number()
-        .required("Required")
-        .min(1, "Must be greater than 0"),
-      extra_fee_each_person: Yup.number()
-        .required("Required")
-        .min(1, "Must be greater than 0"),
-      startDate: Yup.date()
-        .required("Required")
-        .min(new Date(), "Must be greater than 0"),
-      endDate: Yup.date().required("Required"),
-      homeNumber: Yup.string().required("Required"),
-      district: Yup.string().required("Required"),
-      city: Yup.string().required("Required"),
-      country: Yup.string().required("Required"),
-    },
   };
 
   return (
     <>
       <CustomModal isOpen={isOpen} toggle={toggleModal}>
-        <ModalHeader>Create apartment</ModalHeader>
+        <ModalHeader>View apartment</ModalHeader>
         <CustomModalBody>
           <CustomForm
             fields={fields}
@@ -187,8 +153,9 @@ const UpdateModal = ({
           >
             <Row className="p-2">
               <Col xs="12" md="6">
-                <CustomInput name="title" id="title" label="Title" />
+                <CustomInput disabled name="title" id="title" label="Title" />
                 <CustomInput
+                  disabled
                   name="description"
                   id="description"
                   label="Description"
@@ -197,25 +164,35 @@ const UpdateModal = ({
                   defaultValue="5"
                 />
                 <CustomInput
+                  disabled
                   name="price"
                   id="price"
                   label="Price"
                   type="number"
                 />
-                <CustomInput name="size" id="size" label="Size" type="number" />
                 <CustomInput
+                  disabled
+                  name="size"
+                  id="size"
+                  label="Size"
+                  type="number"
+                />
+                <CustomInput
+                  disabled
                   name="initial_allowance"
                   id="initial_allowance"
                   label="Customer initial allow"
                   type="number"
                 />
                 <CustomInput
+                  disabled
                   name="max_allowance"
                   id="max_allowance"
                   label="Max customer allow"
                   type="number"
                 />
                 <CustomInput
+                  disabled
                   name="extra_fee_each_person"
                   id="extra_fee_each_person"
                   label="Each person exceed fee"
@@ -224,6 +201,7 @@ const UpdateModal = ({
               </Col>
               <Col xs="12" md="6">
                 <CustomInput
+                  disabled
                   name="startDate"
                   id="startDate"
                   label="Start Date"
@@ -231,6 +209,7 @@ const UpdateModal = ({
                   type="date"
                 />
                 <CustomInput
+                  disabled
                   name="endDate"
                   id="endDate"
                   label="End Date"
@@ -238,22 +217,29 @@ const UpdateModal = ({
                   type="date"
                 />
                 <CustomInput
+                  disabled
                   name="homeNumber"
                   id="homeNumber"
                   label="Home Number"
                 />
-                <CustomInput name="street" id="street" label="Street" />
-                <CustomInput name="district" id="district" label="District" />
-                <CustomInput name="city" id="city" label="City" />
-                <CustomInput name="country" id="country" label="Country" />
                 <CustomInput
-                  name="images"
-                  id="images"
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  multiple
-                  onChange={(e) => handleImageChange(e)}
-                  imageValidator={imageError}
+                  disabled
+                  name="street"
+                  id="street"
+                  label="Street"
+                />
+                <CustomInput
+                  disabled
+                  name="district"
+                  id="district"
+                  label="District"
+                />
+                <CustomInput disabled name="city" id="city" label="City" />
+                <CustomInput
+                  disabled
+                  name="country"
+                  id="country"
+                  label="Country"
                 />
                 <CustomImagePreview>
                   {images.map(({ key, url }) => (
@@ -263,14 +249,14 @@ const UpdateModal = ({
               </Col>
             </Row>
 
-            <div className="mt-4 d-flex justify-content-end">
+            {/* <div className="mt-4 d-flex justify-content-end">
               <Button color="primary" type="submit">
                 Save
               </Button>
               <Button onClick={toggleModal} className="ms-2">
                 Cancel
               </Button>
-            </div>
+            </div> */}
           </CustomForm>
         </CustomModalBody>
       </CustomModal>
@@ -278,4 +264,4 @@ const UpdateModal = ({
   );
 };
 
-export default UpdateModal;
+export default ViewModal;

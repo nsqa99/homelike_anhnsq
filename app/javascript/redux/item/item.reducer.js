@@ -2,9 +2,9 @@ import types from "./item.type";
 import _ from "lodash";
 
 const initState = {
-  list: [],
+  list: {},
   item: {},
-  listNotES: [],
+  listNotES: {},
 };
 
 export default function itemReducer(state = initState, action) {
@@ -89,6 +89,54 @@ export default function itemReducer(state = initState, action) {
     }
 
     case types.DESTROY_ITEM_FAILED: {
+      return state;
+    }
+
+    case types.UPDATE_ITEM_SUCCESS: {
+      const { data, isSearch } = action.payload;
+      const pagination = isSearch
+        ? state.list.pagination
+        : state.listNotES.pagination;
+      const newPagin = {
+        total_entries: pagination.total_entries + 1,
+        total_pages: Math.ceil(
+          parseFloat(pagination.total_entries + 1) /
+            parseFloat(pagination.page_size)
+        ),
+      };
+      const newData = {
+        list: {
+          ...state.list,
+          // data: [data, ...state.list.data],
+          data: state.list.data?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+          pagination: { ...state.list.pagination, ...newPagin },
+        },
+
+        listNotES: {
+          ...state.listNotES,
+          data: state.listNotES.data?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+          pagination: { ...state.listNotES.pagination, ...newPagin },
+        },
+        isSearch: isSearch
+      };
+
+      return {
+        ...state,
+        ...newData,
+      };
+    }
+
+    case types.UPDATE_ITEM_FAILED: {
       return state;
     }
 

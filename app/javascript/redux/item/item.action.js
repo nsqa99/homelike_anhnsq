@@ -70,3 +70,13 @@ export const destroyItemResult = (payload, isSearch) => ({
   type: types.DESTROY_ITEM_SUCCESS,
   payload: { data: payload, isSearch },
 });
+
+export const updateItem = (username, itemId, data, images, isSearch) => ({
+  type: types.UPDATE_ITEM,
+  payload: { username, itemId, data, images, isSearch },
+});
+
+export const updateItemResult = (payload, isSearch) => ({
+  type: types.UPDATE_ITEM_SUCCESS,
+  payload: { data: payload, isSearch },
+});

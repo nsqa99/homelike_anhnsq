@@ -108,11 +108,9 @@ export const appendItemDatas = (data, images) => {
     "item[apartment_attributes][extra_fee_each_person]",
     data.extra_fee_each_person
   );
-  if (!isEmpty(images)) {
-    images.map((image) => {
-      formData.append("item[apartment_attributes][apartment_images][]", image);
-    });
-  }
+  images.map((image) => {
+    formData.append("item[apartment_attributes][apartment_images][]", image);
+  });
   formData.append(
     "item[apartment_attributes][rent_address_attributes][home_number]",
     data.homeNumber
