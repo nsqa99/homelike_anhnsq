@@ -5,18 +5,20 @@ import { getOneUser } from "../../redux/user/user.action";
 
 const CommonLayout = ({ children }) => {
   const authData = useSelector((state) => state.auth.data);
-  const userData = useSelector((state) => state.users.data);
+  const userData = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getOneUser(authData?.username));
+    if (authData) {
+      dispatch(getOneUser(authData.username));
+    }
   }, []);
-
+  
   return (
     <div className="">
       <Headers
         isAuthenticated={authData?.isAuthenticated}
-        username={userData?.username}
+        username={authData.username}
         avatar={userData?.avatar}
       />
       {children}

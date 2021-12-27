@@ -10,6 +10,13 @@ export const formatDateTime = (datetime) => {
   return `${date.slice(0).reverse().join(".")}, ${time}`;
 };
 
+export const calculateDateDiff = (startDate, endDate) => {
+  const utc1 = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const utc2 = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
+}
+
 export const shortAddress = ({ city, country }) => {
   let cityDisplay = city ? city + ", " : "";
   let countryDisplay = country ? country : "";

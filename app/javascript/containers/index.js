@@ -50,7 +50,11 @@ export default function index() {
               path="/users/:username/orders/:id"
               component={OrderDetails}
             />
-            <Route path="/items/:id" component={ItemDetails} />
+            <Route
+              path="/items/:id"
+              component={ItemDetails}
+            />
+
             <Route path="/">
               <Home />
             </Route>

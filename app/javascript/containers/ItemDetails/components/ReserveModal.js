@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
@@ -21,7 +21,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-
+import { calculateDateDiff } from "../../../utils";
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -31,7 +31,7 @@ const DatePickerWrapper = styled.div`
   .form-control {
     width: 80%;
   }
-  .react-datepicker-popper{
+  .react-datepicker-popper {
     z-index: 10000;
   }
 
@@ -48,13 +48,39 @@ const DatePickerWrapper = styled.div`
 const CustomFooter = styled(ModalFooter)`
   flex-direction: column;
   align-items: flex-end;
-`
+`;
 
 const ReserveModal = ({ item }) => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+  const [numOfCustomers, setNumOfCustomers] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [extraFee, setExtraFee] = useState(0);
+  const [totalPaid, setTotalPaid] = useState(0);
+
+  useEffect(() => {
+    if (startDate != null && endDate != null) {
+      let dateDiff = calculateDateDiff(startDate, endDate);
+      setTotalPrice(dateDiff * item.price);
+    }
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    if (numOfCustomers > item.apartment.initial_allowance) {
+      setExtraFee(
+        (numOfCustomers - item.apartment.initial_allowance) *
+          item.apartment.extra_fee_each_person
+      );
+    } else {
+      setExtraFee(0);
+    }
+  }, [numOfCustomers]);
+
+  useEffect(() => {
+    setTotalPaid(extraFee + totalPrice);
+  }, [extraFee, totalPrice]);
 
   return (
     <>
@@ -68,7 +94,7 @@ const ReserveModal = ({ item }) => {
       </Button>
       <Modal isOpen={open} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>
-          Reserve {item.apartment.title}
+          Reserve <strong>{item.apartment.title}</strong>
         </ModalHeader>
         <ModalBody>
           <div
@@ -104,35 +130,44 @@ const ReserveModal = ({ item }) => {
               type="number"
               min={1}
               max={item.apartment.max_allowance}
+              value={numOfCustomers}
+              onChange={(e) => setNumOfCustomers(e.target.value)}
             />
           </DatePickerWrapper>
         </ModalBody>
         <CustomFooter className="m-auto" style={{ width: "80%" }}>
           <div>
-            <strong>
-              Total:{"  "}
-              <span className="fs-4">
-                <CurrencyFormat
-                  value={item.price}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  prefix={"$"}
-                />
-              </span>
-            </strong>
+            <span className="fw-bold">Total:</span>
+            <span className=" ms-2 fs-4">
+              <CurrencyFormat
+                value={totalPrice}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+              />
+            </span>
           </div>
           <div>
-            <strong>
-              Extra Fee:{"  "}
-              <span className="fs-4">
-                <CurrencyFormat
-                  value={item.price}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  prefix={"$"}
-                />
-              </span>
-            </strong>
+            <span className="fw-bold">+ Extra Fee:</span>
+            <span className=" ms-2 fs-4">
+              <CurrencyFormat
+                value={extraFee}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+              />
+            </span>
+          </div>
+          <div>
+            <span className="fw-bold">Total paid amount:</span>
+            <span className=" ms-2 fs-4">
+              <CurrencyFormat
+                value={totalPaid}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+              />
+            </span>
           </div>
           <Button
             color="primary"

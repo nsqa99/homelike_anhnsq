@@ -26,7 +26,10 @@ import CustomPagination from "../../../../components/Pagination";
 import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
 import { getOneUser } from "../../../../redux/user/user.action";
-import { createReview, getAllReview } from "../../../../redux/review/review.action";
+import {
+  createReview,
+  getAllReview,
+} from "../../../../redux/review/review.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -122,7 +125,9 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
             <Row styleName="body__table">
               <Col sm="12" md="5">
                 <TableDetails item={item} />
-                <ReserveModal item={item} />
+                {isAuthenticated && currentUser !== item.owner.username && (
+                  <ReserveModal item={item} />
+                )}
               </Col>
               <Col sm="12" md="7">
                 <div styleName="body__title">Location</div>

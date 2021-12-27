@@ -73,8 +73,8 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
               <Avatar src={avatar} />
             </AvatarDropdown>
             <DropdownMenu styleName="dropdown-menu--right-align">
-              <RouterLink to={`/social/users/${username || "nsqa99"}`}>
-                <DropdownItem>Account</DropdownItem>
+              <RouterLink to={`/social/users/${username}`}>
+                <DropdownItem>Account: {username}</DropdownItem>
               </RouterLink>
               <DropdownItem>Orders</DropdownItem>
               <DropdownItem divider />
