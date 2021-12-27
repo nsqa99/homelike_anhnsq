@@ -61,7 +61,7 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
               Connect with friends
             </Button>
           </CustomNavLink>
-          <CustomNavLink tag={Link} to="/host">
+          <CustomNavLink tag={Link} to={`/host/${username}`}>
             <Button color="danger" styleName="header__btnSwitch">
               <SupervisedUserCircleIcon className="me-2" />
               Switch to hosting

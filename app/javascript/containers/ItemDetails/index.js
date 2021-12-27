@@ -6,23 +6,17 @@ import { shortAddress } from "../../utils/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { getOneItem, resetItemState } from "../../redux/item/item.action";
 import _ from "lodash";
-import { useHistory, withRouter } from "react-router-dom";
 
 const ItemDetails = ({ match: { params } }) => {
   const itemId = params?.id;
   const item = useSelector((state) => state.items.item);
   const authData = useSelector((state) => state.auth.data);
   const dispatch = useDispatch();
-  const history = useHistory();
 
   useEffect(() => {
-    const unlisten = history.listen(() => {
-      dispatch(resetItemState());
-    });
+    dispatch(resetItemState());
     dispatch(getOneItem(itemId));
-
-    return () => unlisten();
-  }, []);
+  }, [itemId]);
 
   return (
     <>
@@ -44,4 +38,4 @@ const ItemDetails = ({ match: { params } }) => {
     </>
   );
 };
-export default withRouter(ItemDetails);
+export default ItemDetails;

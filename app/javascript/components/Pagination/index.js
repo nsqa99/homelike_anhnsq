@@ -6,7 +6,7 @@ import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { getAllReview } from "../../redux/review/review.action";
 
-const CustomPagination = ({ totalPages, currentPage, ...props }) => {
+const CustomPagination = ({ totalPages, currentPage, fn, ...props }) => {
   const [options, setOptions] = useState({
     page: 1,
     // pageSize: 10
@@ -19,7 +19,7 @@ const CustomPagination = ({ totalPages, currentPage, ...props }) => {
   };
 
   useEffect(() => {
-    dispatch(getAllReview(props.itemId, options));
+    fn(options);
   }, [options]);
 
   return (

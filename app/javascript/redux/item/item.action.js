@@ -1,4 +1,3 @@
-// import { CreateAccount } from "./email.api";
 import types from "./item.type";
 
 export const getAllItems = () => ({
@@ -10,24 +9,14 @@ export const getOneItem = (data) => ({
   payload: { data },
 });
 
-export const searchItem = (params) => ({
+export const searchItem = (params, options = {}) => ({
   type: types.SEARCH_ITEM,
-  payload: params,
+  payload: { params, options },
 });
 
 export const resetItemState = () => ({
   type: types.RESET_ITEM_STATE,
 });
-
-// export const createReview = (data) => ({
-//   type: types.CREATE_REVIEW,
-//   payload: data,
-// });
-
-// export const destroyReview = (data) => ({
-//   type: types.DESTROY_REVIEW,
-//   payload: data,
-// });
 
 export const getAllItemsResult = (payload, isSuccess = true) => ({
   type: isSuccess ? types.GET_ALL_ITEM_SUCCESS : types.GET_ALL_ITEM_FAILED,
@@ -45,15 +34,36 @@ export const searchItemResult = (payload) => {
     payload,
   };
 };
+export const createItem = (username, data, images) => ({
+  type: types.CREATE_ITEM,
+  payload: { username, data, images },
+});
 
 export const resetItemStateResult = () => ({
   type: types.RESET_ITEM_STATE_SUCCESS,
 });
 
-// export const createReviewResult = (payload) => ({
-//   type: types.CREATE_REVIEW_SUCCESS,
-//   payload,
+export const createItemResult = (payload) => ({
+  type: types.CREATE_ITEM_SUCCESS,
+  payload,
+});
+
+// export const destroyReview = (data) => ({
+//   type: types.DESTROY_REVIEW,
+//   payload: data,
 // });
+
+export const getAllItemsByUsernameResult = (payload, isSuccess = true) => ({
+  type: isSuccess
+    ? types.GET_ALL_ITEM_BY_USERNAME_SUCCESS
+    : types.GET_ALL_ITEM_BY_USERNAME_FAILED,
+  payload,
+});
+
+export const getAllItemsByUsername = (payload, options = {}) => ({
+  type: types.GET_ALL_ITEM_BY_USERNAME,
+  payload: { data: payload, options },
+});
 
 // export const destroyReviewResult = (payload) => ({
 //   type: types.DESTROY_REVIEW_SUCCESS,

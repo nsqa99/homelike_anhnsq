@@ -4,6 +4,7 @@ import _ from "lodash";
 const initState = {
   list: [],
   item: {},
+  listNotES: [],
 };
 
 export default function itemReducer(state = initState, action) {
@@ -13,6 +14,14 @@ export default function itemReducer(state = initState, action) {
     }
 
     case types.GET_ALL_ITEM_FAILED: {
+      return state;
+    }
+
+    case types.GET_ALL_ITEM_BY_USERNAME_SUCCESS: {
+      return { ...state, listNotES: action.payload };
+    }
+
+    case types.GET_ALL_ITEM_BY_USERNAME_FAILED: {
       return state;
     }
 
@@ -28,23 +37,23 @@ export default function itemReducer(state = initState, action) {
       return { ...state, list: action.payload };
     }
 
-    case types.RESET_ITEM_STATE: {
-      return { ...state, item: {} };
-    }
-
     case types.RESET_ITEM_STATE_SUCCESS: {
       return { ...state, item: {} };
     }
 
-    // case types.CREATE_REVIEW_SUCCESS: {
-    //   return {
-    //     ...state,
-    //     item: {
-    //       ...state.item,
-    //       reviews: [...state.item.reviews, action.payload],
-    //     },
-    //   };
-    // }
+    case types.CREATE_ITEM_SUCCESS: {
+      return {
+        ...state,
+        listNotES: {
+          ...state.listNotES,
+          data: [...state.listNotES.data, action.payload],
+        },
+      };
+    }
+
+    case types.CREATE_ITEM_FAILED: {
+      return state;
+    }
 
     // case types.DESTROY_REVIEW_SUCCESS: {
     //   return {

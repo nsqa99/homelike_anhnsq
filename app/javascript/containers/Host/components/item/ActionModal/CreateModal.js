@@ -3,6 +3,7 @@ import AddIcon from "@material-ui/icons/Add";
 import {
   Button,
   Col,
+  Input,
   Modal,
   ModalBody,
   ModalFooter,
@@ -21,6 +22,8 @@ import {
   isValidImageSize,
   isValidImageType,
 } from "../../../../../utils";
+import { useDispatch } from "react-redux";
+import { createItem } from "../../../../../redux/item/item.action";
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -56,11 +59,17 @@ const CustomImagePreview = styled.div`
   }
 `;
 
-const CreateModal = () => {
+const CreateModal = ({ username }) => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
+  const [itemImages, setItemImages] = useState([]);
   const [imageError, setImageError] = useState({});
-  const [dateRange, setDateRange] = useState([null, null]);
+  const dispatch = useDispatch();
+
+  const handleFormSubmit = (data) => {
+    dispatch(createItem(username, data, itemImages));
+    setOpen(false);
+  };
 
   const toggleModal = () => {
     setOpen(!open);
@@ -70,6 +79,7 @@ const CreateModal = () => {
 
   const handleImageChange = (e) => {
     const imgArr = Array.from(e.target.files);
+    setItemImages(imgArr);
     if (!isValidImageType(imgArr)) {
       setImageError({
         ...{
@@ -117,8 +127,8 @@ const CreateModal = () => {
       description: Yup.string()
         .max(500, "Must be at most 500 characters")
         .required("Required"),
-      price: Yup.number().required("Required"),
-      size: Yup.number().required("Required"),
+      price: Yup.number().required("Required").min(1, "Must be greater than 0"),
+      size: Yup.number().required("Required").min(1, "Must be greater than 0"),
       initial_allowance: Yup.number()
         .required("Required")
         .min(1, "Must be greater than 0"),
@@ -143,13 +153,17 @@ const CreateModal = () => {
     <>
       <Button color="danger" outline onClick={toggleModal} className="me-3">
         <AddIcon />
-        Add new item
+        Add apartment
       </Button>
 
       <CustomModal isOpen={open} toggle={toggleModal}>
-        <ModalHeader>Create new item</ModalHeader>
+        <ModalHeader>Create apartment</ModalHeader>
         <CustomModalBody>
-          <CustomForm fields={fields} action={""} images={images}>
+          <CustomForm
+            fields={fields}
+            handleSubmit={handleFormSubmit}
+            images={images}
+          >
             <Row className="p-2">
               <Col xs="12" md="6">
                 <CustomInput name="title" id="title" label="Title" />
@@ -166,13 +180,7 @@ const CreateModal = () => {
                   label="Price"
                   type="number"
                 />
-                <CustomInput
-                  name="size"
-                  id="size"
-                  label="Size"
-                  type="number"
-                  onChange={(e) => handleInputChange(e)}
-                />
+                <CustomInput name="size" id="size" label="Size" type="number" />
                 <CustomInput
                   name="initial_allowance"
                   id="initial_allowance"
@@ -220,6 +228,7 @@ const CreateModal = () => {
                   name="images"
                   id="images"
                   type="file"
+                  accept="image/png, image/gif, image/jpeg"
                   multiple
                   onChange={(e) => handleImageChange(e)}
                   imageValidator={imageError}

@@ -81,8 +81,8 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   };
 
   const carouselImages = item.apartment.image_urls?.length
-    ? item.apartment.image_urls.map((image) => {
-        return { key: image.url, altText: "Image", src: image.url };
+    ? item.apartment.image_urls.map((url) => {
+        return { key: url, altText: "Image", src: url };
       })
     : [
         {
@@ -228,7 +228,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                     <CustomPagination
                       totalPages={listReviews.pagination?.total_pages}
                       currentPage={listReviews.pagination?.page}
-                      itemId={item.id}
+                      fn={(options) => dispatch(getAllReview(item.id, options))}
                     />
                   </>
                 ) : (

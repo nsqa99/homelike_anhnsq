@@ -45,7 +45,7 @@ function* destroyReviewSaga(props) {
 }
 
 export default function* rootSaga() {
-  yield all([takeLatest(types.GET_ALL_REVIEW, getAllReviewSaga)]);
-  yield all([takeLatest(types.CREATE_REVIEW, createReviewSaga)]);
-  yield all([takeLatest(types.DESTROY_REVIEW, destroyReviewSaga)]);
+  yield all([takeEvery(types.GET_ALL_REVIEW, getAllReviewSaga)]);
+  yield all([takeEvery(types.CREATE_REVIEW, createReviewSaga)]);
+  yield all([takeEvery(types.DESTROY_REVIEW, destroyReviewSaga)]);
 }
