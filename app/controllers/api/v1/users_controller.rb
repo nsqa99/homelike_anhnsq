@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
 
     json_response(
       serialize(user_decorator.transform_list(users)),
-      paginate(page, page_size, (total / page_size.to_i).ceil, total)
+      paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
     )
   end
 
@@ -58,7 +58,7 @@ class Api::V1::UsersController < ApplicationController
     users, total = User.build_search(search_text, filters, sort, search_fields, page, page_size)
     json_response(
       serialize(user_decorator.transform_list(users)),
-      paginate(page, page_size, (total / page_size.to_i).ceil, total)
+      paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
     )
   end
 

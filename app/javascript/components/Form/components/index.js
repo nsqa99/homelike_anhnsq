@@ -24,7 +24,7 @@ const CustomInput = ({ label, imageValidator, ...props }) => {
       <Label htmlFor={props.id || props.name} className="mt-2">
         {label}
       </Label>
-      <Input invalid={errorDisplay} {...field} {...props} />
+      <Input invalid={errorDisplay} value={field.defaultValue} {...field} {...props} />
 
       {errorDisplay ? (
         <FormFeedback>{imageValidator?.message || meta.error}</FormFeedback>

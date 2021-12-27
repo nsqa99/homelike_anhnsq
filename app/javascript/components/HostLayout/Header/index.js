@@ -8,7 +8,7 @@ import PublicIcon from "@material-ui/icons/Public";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   DropdownItem,
   Dropdown,
@@ -37,7 +37,7 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const Header = ({ user }) => {
+const Header = () => {
   // const history = useHistory();
   // const login = () => {
   //   if (user) {
@@ -45,8 +45,8 @@ const Header = ({ user }) => {
   //     history.push("/login");
   //   }
   // };
-
   const [isOpen, setOpen] = useState(false);
+  const authData = useSelector((state) => state.auth.data);
 
   const toggle = () => {
     setOpen(!isOpen);
@@ -54,10 +54,10 @@ const Header = ({ user }) => {
 
   return (
     <Navbar color="light" expand={true} light className="sticky-top">
-      <RouterLink to="/host" className="navbar-brand">
-        Home
+      <RouterLink to="/" className="navbar-brand">
+        HomeLike
       </RouterLink>
-      <RouterLink to="/host/items" className="navbar-brand">
+      <RouterLink to={`/host/${authData.username}`} className="navbar-brand">
         Items
       </RouterLink>
       <RouterLink to="/host/orders" className="navbar-brand">
@@ -83,6 +83,9 @@ const Header = ({ user }) => {
             <Avatar />
           </AvatarDropdown>
           <DropdownMenu styleName="dropdown-menu--right-align">
+              <RouterLink to={`/host/${authData.username}`}>
+                <DropdownItem>Account: {authData.username}</DropdownItem>
+              </RouterLink>
             <DropdownItem>Sign out</DropdownItem>
           </DropdownMenu>
         </Dropdown>

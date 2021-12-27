@@ -35,8 +35,8 @@ export default function index() {
         <Route path="/host">
           <HostLayout>
             <Switch>
-              <Route path="/host/items/:id" component={PostDetails} />
-              <Route path="/host" component={Item} />
+              {/* <Route path="/host/:username/items/:id" component={ItemDetails} /> */}
+              <Route path="/host/:username" component={Item} />
             </Switch>
           </HostLayout>
         </Route>
@@ -50,7 +50,11 @@ export default function index() {
               path="/users/:username/orders/:id"
               component={OrderDetails}
             />
-            <Route path="/items/:id" component={ItemDetails} />
+            <Route
+              path="/items/:id"
+              component={ItemDetails}
+            />
+
             <Route path="/">
               <Home />
             </Route>

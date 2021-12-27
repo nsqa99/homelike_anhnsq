@@ -28,6 +28,8 @@ class User < BaseModel
   has_many :following, through: :following_relationships, source: :followed
   has_many :followers, through: :being_followed_relationships, source: :follower
   has_one :contact, dependent: :destroy
+  has_one_attached :avatar
+  has_many :reviews, dependent: :destroy
 
   accepts_nested_attributes_for :full_name, :address, :customer, :merchant
   validates_confirmation_of :password
@@ -79,6 +81,10 @@ class User < BaseModel
 
   def user_full_name
     "#{first_name} #{last_name}"
+  end
+
+  def avatar_url
+    self.avatar.url
   end
 
   private

@@ -14,6 +14,7 @@ class Item < ApplicationRecord
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :posts
   has_many :orders
+  has_many :reviews, dependent: :destroy
 
   accepts_nested_attributes_for :apartment
 
@@ -22,16 +23,13 @@ class Item < ApplicationRecord
   scope :approved, -> { where(status: 0)}
 
   after_save {
-    unless status_deleted?
-      __elasticsearch__.index_document
-    else
-      __elasticsearch__.delete_document(refresh: true)
-    end
+    __elasticsearch__.index_document
   }
 
   def as_indexed_json(options = {})
     as_json(
       only: [:id, :rate, :status, :price, :initial_start_date, :initial_end_date, :description],
+      methods: [:disabled_dates],
       include: {
         merchant: {
           include: {
@@ -71,6 +69,10 @@ class Item < ApplicationRecord
     availables
   end
 
+  def disabled_dates
+    (initial_start_date.to_date..initial_end_date.to_date).to_a - available_dates
+  end
+
   def similar_items
     page = 1
     page_size = 3
@@ -82,6 +84,15 @@ class Item < ApplicationRecord
     items, total = Item.build_search(search_text, filter, sort, search_fields, page, page_size)
 
     items.map{|item| item["_source"]}
+  end
+
+  def calculate_rating
+    total_reviews = self.reviews.count
+    cal_rate = self.reviews.sum(&:rate)
+    new_rate = (cal_rate / total_reviews).floor
+
+    self.rate = new_rate
+    self.save
   end
 
   private

@@ -20,11 +20,11 @@ const ItemSection = () => {
   const [filter, setFilter] = useState({
     sort: [],
   });
-  const items = useSelector((state) => state.items.list);
+  const items = useSelector((state) => state.items.list.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllItems());
+    dispatch(searchItem(""));
   }, []);
 
   const handleSelect = (e) => {

@@ -21,7 +21,7 @@ const RightPanel = ({ items }) => {
           <Item key={item.id} item={item} style="item--no-margin" />
         ))
       ) : (
-        <span className="fs-5 fw-bold">Oops! Seems like no apartment around here yet</span>
+        <span className="fs-5 fw-bold fst-italic">Oops! Seems like no apartment around here yet</span>
       )}
     </ItemWrapper>
   );

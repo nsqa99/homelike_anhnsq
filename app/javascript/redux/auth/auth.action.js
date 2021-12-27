@@ -23,6 +23,6 @@ export const loginResult = (isSuccess) => ({
 export const setCurrentUser = (username) => {
   return {
     type: types.SET_CURRENT_USER,
-    result: { username },
+    result: username,
   };
 };

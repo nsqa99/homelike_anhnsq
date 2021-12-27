@@ -5,7 +5,7 @@ import * as Yup from "yup";
 const CustomForm = ({
   children,
   fields: { initValues, validations },
-  action,
+  handleSubmit,
   images,
 }) => {
   /*---------- Example for fields props ---------------*/
@@ -35,8 +35,11 @@ const CustomForm = ({
         ...validations,
       })}
       onSubmit={(values) => {
-        console.log(values);
-        console.log(images);
+        const data = {...values}
+        if (images) {
+          data["images"] = images
+        }
+        handleSubmit(data);
       }}
     >
       <Form>{children}</Form>

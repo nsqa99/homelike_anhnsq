@@ -1,12 +1,11 @@
 class Api::V1::ItemsController < ApplicationController
   load_and_authorize_resource
 
-  skip_before_action :authenticate_request_token, only: [:index, :show, :search]
-  skip_load_and_authorize_resource only: [:create, :index, :show, :search]
+  skip_before_action :authenticate_request_token, only: [:show, :search]
+  skip_load_and_authorize_resource only: [:create, :show, :search]
 
   def create
-    item = @current_user.merchant.items.build(new_item_params)
-
+    item = @current_user.merchant.items.build(new_item_params)    
     if item.save
       json_response(serialize(item, with_children))
     else
@@ -14,14 +13,26 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  def index
+    page = params[:page] || DEFAULT_PAGE
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+
+    items = @current_user.merchant.items.approved.order(id: :desc).page(page).per(page_size)
+
+    json_response(
+      serialize(items, with_children),
+      pagination: paginate(page, page_size, items.total_pages, items.total_count)
+    )
+  end
+
   def show
-    item = Item.find(params[:id])
+    item = Item.approved.find(params[:id])
 
     json_response(serialize(item, with_children))
   end
 
   def update
-    item = Item.find(params[:id])
+    item = Item.approved.find(params[:id])
 
     if item.update(update_item_params)
       json_response(serialize(item, with_children))
@@ -43,20 +54,24 @@ class Api::V1::ItemsController < ApplicationController
     
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]
-    filters = params[:filters] ? params[:filters].map{|item| JSON.parse(item)} : []
-    sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : []
+    
+    default_filter = [{"field" => "status", "value" => "approved"}]
+    filters = params[:filters] ? default_filter.concat(
+      params[:filters].map{|item| JSON.parse(item)}) : default_filter
+    
+    sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : [["id", "desc"]]
     items, total = Item.build_search(search_text, filters, sort, search_fields, page, page_size)
 
     json_response(
       serialize(item_decorator.transform_list(items)),
-      paginate(page, page_size, (total / page_size.to_i).ceil, total)
+      pagination: paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
     )
   end
 
   private
 
   def new_item_params
-    params.require(:item).permit(:price, :initial_start_date,
+    params.require(:item).permit(:price, :initial_start_date, :description,
       :initial_end_date, apartment_attributes: [:title, :size, :initial_quantity,
         :initial_allowance, :max_allowance, :extra_fee_each_person,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
@@ -67,7 +82,7 @@ class Api::V1::ItemsController < ApplicationController
   end
   
   def update_item_params
-    params.require(:item).permit(:rate, :status, :price, :initial_start_date,
+    params.require(:item).permit(:rate, :status, :price, :initial_start_date, :description,
       :initial_end_date, apartment_attributes: [:id, :title, :size, :initial_quantity,
         :initial_allowance, :max_allowance, :extra_fee_each_person, :item_id,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,

@@ -61,7 +61,7 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
               Connect with friends
             </Button>
           </CustomNavLink>
-          <CustomNavLink tag={Link} to="/host">
+          <CustomNavLink tag={Link} to={`/host/${username}`}>
             <Button color="danger" styleName="header__btnSwitch">
               <SupervisedUserCircleIcon className="me-2" />
               Switch to hosting
@@ -73,8 +73,8 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
               <Avatar src={avatar} />
             </AvatarDropdown>
             <DropdownMenu styleName="dropdown-menu--right-align">
-              <RouterLink to={`/social/users/${username || "nsqa99"}`}>
-                <DropdownItem>Account</DropdownItem>
+              <RouterLink to={`/social/users/${username}`}>
+                <DropdownItem>Account: {username}</DropdownItem>
               </RouterLink>
               <DropdownItem>Orders</DropdownItem>
               <DropdownItem divider />
