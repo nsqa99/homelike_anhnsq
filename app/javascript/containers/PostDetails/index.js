@@ -7,6 +7,7 @@ import DefaultAvatar from "../../constants/images/DefaultAvatar.png";
 import { getOnePost } from "../../redux/post/post.action";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { isEqual } from "lodash";
 
 const PostDetails = ({ location }) => {
   const params = useParams();
@@ -20,14 +21,20 @@ const PostDetails = ({ location }) => {
   }, [params.id]);
 
   return (
-    <Container>
-      <DetailBody
-        isAuthenticated={authData?.isAuthenticated}
-        currentUser={authData?.username}
-        post={post}
-        location={location}
-      />
-    </Container>
+    <>
+      {!isEqual(post, {}) ? (
+        <Container>
+          <DetailBody
+            isAuthenticated={authData?.isAuthenticated}
+            currentUser={authData?.username}
+            post={post}
+            location={location}
+          />
+        </Container>
+      ) : (
+        null
+      )}
+    </>
   );
 };
 export default PostDetails;

@@ -26,7 +26,7 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def destroy
-    comment = Review.find(params[:id])
+    comment = Comment.find(params[:id])
 
     if comment.destroy
       json_response(serialize(comment))

@@ -12,17 +12,18 @@ import {
 } from "reactstrap";
 import Avatar from "../../constants/images/Avatar.png";
 import DeleteIcon from "@material-ui/icons/Delete";
+import StarIcon from "@material-ui/icons/Star";
 import { formatDateTime } from "../../utils";
-import { destroyComment } from "../../redux/comment/comment.action";
+import { destroyReview } from '../../redux/review/review.action'
 
-const Comment = ({ comment, isOwner }) => {
+const Review = ({ review, isOwner }) => {
   const dispatch = useDispatch();
-  const handleDestroyComment = () => {
+  const handleDestroyReview = () => {
     const data = {
-      postId: comment.post_id,
-      commentId: comment.id,
+      itemId: review.itemId,
+      reviewId: review.id,
     };
-    dispatch(destroyComment(data));
+    dispatch(destroyReview(data));
   };
 
   return (
@@ -30,26 +31,33 @@ const Comment = ({ comment, isOwner }) => {
       <CardBody>
         <div className="d-flex align-items-center mb-2">
           <img
-            src={comment.owner.avatar || Avatar}
+            src={review.owner.avatar || Avatar}
             styleName="comment__avatar"
           />
           <CardTitle className="ms-2 mb-0" styleName="">
-            {comment.owner.fullname}
+            {review.owner.fullname}
           </CardTitle>
+          <div className="ms-auto text-warning">
+            {review.rate && Array(review.rate)
+              .fill()
+              .map((_, index) => (
+                <StarIcon key={index}></StarIcon>
+              ))}
+          </div>
         </div>
         <CardSubtitle className="mb-2 ms-1 text-muted" style={{ fontSize: 13 }}>
-          {formatDateTime(comment.created_at)}
+          {formatDateTime(review.created_at)}
         </CardSubtitle>
 
         <hr />
         <div className="d-flex align-items-center">
-          <div styleName="comment__content">{comment.content}</div>
+          <div styleName="comment__content">{review.content}</div>
           {isOwner && (
             <Button
               className="ms-auto"
               color="danger"
               outline
-              onClick={handleDestroyComment}
+              onClick={handleDestroyReview}
             >
               <DeleteIcon />
             </Button>
@@ -59,4 +67,4 @@ const Comment = ({ comment, isOwner }) => {
     </Card>
   );
 };
-export default CSSModules(Comment, style);
+export default CSSModules(Review, style);

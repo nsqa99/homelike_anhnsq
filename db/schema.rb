@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_27_192925) do
+ActiveRecord::Schema.define(version: 2021_12_28_045759) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -102,6 +102,16 @@ ActiveRecord::Schema.define(version: 2021_12_27_192925) do
     t.index ["apartment_id", "facility_id"], name: "index_apartments_facilities_on_apartment_id_and_facility_id", unique: true
     t.index ["apartment_id"], name: "index_apartments_facilities_on_apartment_id"
     t.index ["facility_id"], name: "index_apartments_facilities_on_facility_id"
+  end
+
+  create_table "comments", charset: "utf8mb4", force: :cascade do |t|
+    t.string "content", null: false
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "contacts", charset: "utf8mb4", force: :cascade do |t|
@@ -315,6 +325,8 @@ ActiveRecord::Schema.define(version: 2021_12_27_192925) do
   add_foreign_key "apartments", "items"
   add_foreign_key "apartments_facilities", "apartments"
   add_foreign_key "apartments_facilities", "facilities"
+  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "users"
   add_foreign_key "contacts", "users"
   add_foreign_key "customers", "users"
   add_foreign_key "full_names", "users"

@@ -16,7 +16,7 @@ class Post < ApplicationRecord
   before_destroy :delete_posts_items_association
 
   has_many_attached :images
-  has_many_attached :comments
+  has_many :comments
 
   def image_urls
     self.images.map(&:url)

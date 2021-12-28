@@ -1,0 +1,16 @@
+@import "../../assets/styles/variables";
+$section-margin-top: 30px;
+
+.comment {
+  margin: $section-margin-top 0;
+  font-size: $text-small;
+
+  &__avatar {
+    border-radius: $border-radius-hack;
+    width: 30px;
+    height: 30px;
+  }
+  &__content {
+    padding: 10px;
+  }
+}
