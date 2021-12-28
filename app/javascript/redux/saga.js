@@ -3,6 +3,7 @@ import authSagas from "./auth/auth.saga";
 import userSagas from "./user/user.saga";
 import itemSagas from "./item/item.saga";
 import reviewSagas from "./review/review.saga";
+import postSagas from "./post/post.saga";
 
 export default function* rootSaga() {
   yield all([
@@ -10,5 +11,6 @@ export default function* rootSaga() {
     userSagas(),
     itemSagas(),
     reviewSagas(),
+    postSagas()
   ]);
 }

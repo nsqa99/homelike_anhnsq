@@ -41,6 +41,23 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
+  def index
+    page = params[:page] || DEFAULT_PAGE
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+    username = params[:user_id]
+
+    posts = if username
+      User.find(username: owner).posts.order(id: :desc).page(page).per(page_size)
+    else
+      Post.order(id: :desc).page(page).per(page_size)
+    end
+
+    json_response(
+      serialize(posts, with_children),
+      pagination: paginate(page, page_size, posts.total_pages, posts.total_count)
+    )
+  end
+
   def show
     post = Post.find(params[:id])
 

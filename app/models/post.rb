@@ -25,6 +25,10 @@ class Post < ApplicationRecord
     __elasticsearch__.index_document
   }
 
+  after_destroy {
+    __elasticsearch__.delete_document
+  }
+
   def as_indexed_json(options = {})
     as_json(
       only: [:content, :likes, :shares],

@@ -20,6 +20,8 @@ Rails.application.routes.draw do
           post "unfollow/:unfollowed", to: "users#unfollow"
         end
       end
+
+      resources :posts, only: [:index, :search]
       
       # Auth
       post "auth", to: "authentication#sign_in"
