@@ -23,8 +23,7 @@ class Post < ApplicationRecord
   end
 
   def self.popular_posts
-    Post.where("likes > ?", 100).or(Post.where("shares > ?", 100))
-      .order(likes: :desc, shares: :desc, id: :desc).page(1).per(3)
+    Post.order(likes: :desc, shares: :desc, id: :desc).page(1).per(3)
   end
 
   def owner

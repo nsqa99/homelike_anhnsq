@@ -73,7 +73,7 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
           post={post}
           detail={true}
           imageSize="400px"
-          style={{ maxWidth: "80%" }}
+          style={{ width: "80%" }}
         />
 
         <Card styleName="body__merchant">
@@ -123,8 +123,8 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
                     );
                   })}
                 <CustomPagination
-                  totalPages={listComments.pagination?.total_pages}
-                  currentPage={listComments.pagination?.page}
+                  totalPages={listComments.pagination.total_pages}
+                  currentPage={listComments.pagination.page}
                   fn={(options) => dispatch(getAllComment(comment.id, options))}
                 />
               </>

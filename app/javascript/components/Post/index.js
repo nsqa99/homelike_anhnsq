@@ -12,6 +12,7 @@ import { formatDate } from "../../utils";
 import styled from "styled-components";
 import { MySlider } from "../Slider";
 import { isEqual } from "lodash";
+import { Button } from "reactstrap";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -25,7 +26,7 @@ const CustomSlider = styled.div`
   }
 `;
 
-const Post = ({ post, rightPanel, style, detail, imageSize }) => {
+const Post = ({ post, rightPanel, style, detail, imageSize, profile }) => {
   const [displayLong, toggleDisplayLong] = useState(false);
   const handleReadMore = () => {
     toggleDisplayLong(!displayLong);
@@ -43,7 +44,7 @@ const Post = ({ post, rightPanel, style, detail, imageSize }) => {
   return (
     <>
       {post && !isEqual(post, {}) ? (
-        <div styleName="post" style={{ ...style }}>
+        <div styleName="post" style={{ ...style }} className={rightPanel ? "mb-4" : ""}>
           {carouselImages?.length > 0 && (
             <div styleName="img-wrapper">
               {!detail ? (
@@ -106,7 +107,7 @@ const Post = ({ post, rightPanel, style, detail, imageSize }) => {
             </div>
           )}
           <div
-            className="d-flex align-items-center w-100 justify-content-start flex-wrap"
+            className="d-flex align-items-center w-100 flex-wrap"
             styleName="post__create"
           >
             <CalendarTodayIcon styleName="icon__calendar" className="mb-2" />
@@ -115,6 +116,7 @@ const Post = ({ post, rightPanel, style, detail, imageSize }) => {
               <PersonIcon styleName="icon__user" />
               {`${post.owner?.user_full_name}`}
             </RouterLink>
+            {profile && <Button color="danger" outline className="ms-auto me-4">Remove</Button>}
           </div>
         </div>
       ) : (

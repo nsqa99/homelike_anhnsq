@@ -4,7 +4,7 @@ import DetailBody from "./components/body";
 import { goBack, shortAddress } from "../../utils/index.js";
 import { useHistory, useParams } from "react-router-dom";
 import DefaultAvatar from "../../constants/images/DefaultAvatar.png";
-import { getOnePost } from "../../redux/post/post.action";
+import { getOnePost, resetPostState } from "../../redux/post/post.action";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { isEqual } from "lodash";
@@ -16,7 +16,7 @@ const PostDetails = ({ location }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(resetItemState());
+    dispatch(resetPostState());
     dispatch(getOnePost(params.id));
   }, [params.id]);
 

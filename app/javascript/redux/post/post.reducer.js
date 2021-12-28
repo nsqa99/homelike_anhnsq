@@ -3,7 +3,7 @@ import _ from "lodash";
 
 const initState = {
   list: {},
-  listNotES: {},
+  listES: {},
   post: {}
 };
 
@@ -18,7 +18,7 @@ export default function postReducer(state = initState, action) {
     }
 
     case types.GET_ALL_POST_BY_USERNAME_SUCCESS: {
-      return { ...state, listNotES: action.payload };
+      return { ...state, list: action.payload };
     }
 
     case types.GET_ALL_POST_BY_USERNAME_FAILED: {
@@ -44,9 +44,9 @@ export default function postReducer(state = initState, action) {
     case types.CREATE_POST_SUCCESS: {
       return {
         ...state,
-        listNotES: {
-          ...state.listNotES,
-          data: [action.payload, ...state.listNotES.data],
+        list: {
+          ...state.list,
+          list: [action.payload, ...state.list.list],
         },
       };
     }
@@ -59,7 +59,7 @@ export default function postReducer(state = initState, action) {
       const { data, isSearch } = action.payload;
       const pagination = isSearch
         ? state.list.pagination
-        : state.listNotES.pagination;
+        : state.list.pagination;
       const newPagin = {
         total_entries: pagination.total_entries - 1,
         total_pages: Math.ceil(
@@ -74,10 +74,10 @@ export default function postReducer(state = initState, action) {
           pagination: { ...state.list.pagination, ...newPagin },
         },
 
-        listNotES: {
-          ...state.listNotES,
-          data: state.listNotES.data.filter((post) => post.id !== data.id),
-          pagination: { ...state.listNotES.pagination, ...newPagin },
+        list: {
+          ...state.list,
+          data: state.list.data.filter((post) => post.id !== data.id),
+          pagination: { ...state.list.pagination, ...newPagin },
         },
         isSearch: isSearch
       };
@@ -96,7 +96,7 @@ export default function postReducer(state = initState, action) {
       const { data, isSearch } = action.payload;
       const pagination = isSearch
         ? state.list.pagination
-        : state.listNotES.pagination;
+        : state.list.pagination;
       const newPagin = {
         total_entries: pagination.total_entries + 1,
         total_pages: Math.ceil(
@@ -117,15 +117,15 @@ export default function postReducer(state = initState, action) {
           pagination: { ...state.list.pagination, ...newPagin },
         },
 
-        listNotES: {
-          ...state.listNotES,
-          data: state.listNotES.data?.map((elem) => {
+        list: {
+          ...state.list,
+          data: state.list.data?.map((elem) => {
             if (elem.id === data.id) {
               elem = data;
             }
             return elem;
           }),
-          pagination: { ...state.listNotES.pagination, ...newPagin },
+          pagination: { ...state.list.pagination, ...newPagin },
         },
         isSearch: isSearch
       };

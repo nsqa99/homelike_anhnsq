@@ -86,7 +86,11 @@ function* resetPostSaga() {
 
 function* createPostSaga(props) {
   const { username, data, images } = props.payload;
-  const formData = appendPostDatas(data, images);
+  const formData = new FormData();
+  formData.append('post[content]', data.content);
+  images.map(image => {
+    formData.append('post[images][]', image);
+  })
   const config = {
     headers: { "content-type": "multipart/form-data" },
   };
