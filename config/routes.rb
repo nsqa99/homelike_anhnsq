@@ -21,7 +21,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :posts, only: [:index, :search]
+      resources :posts, except: [:create, :udpate, :destroy] do
+        post "like_post"
+
+        resources :comments
+      end
       
       # Auth
       post "auth", to: "authentication#sign_in"

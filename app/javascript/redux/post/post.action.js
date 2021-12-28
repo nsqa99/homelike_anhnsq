@@ -49,12 +49,12 @@ export const createPostResult = (payload) => ({
   payload,
 });
 
-export const getAllPostsByUsername = (payload, options = {}) => ({
+export const getAllPostByUsername = (payload, options = {}) => ({
   type: types.GET_ALL_POST_BY_USERNAME,
   payload: { data: payload, options },
 });
 
-export const getAllPostsByUsernameResult = (payload, isSuccess = true) => ({
+export const getAllPostByUsernameResult = (payload, isSuccess = true) => ({
   type: isSuccess
     ? types.GET_ALL_POST_BY_USERNAME_SUCCESS
     : types.GET_ALL_POST_BY_USERNAME_FAILED,

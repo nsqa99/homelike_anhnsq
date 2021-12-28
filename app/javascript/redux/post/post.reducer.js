@@ -3,7 +3,8 @@ import _ from "lodash";
 
 const initState = {
   list: {},
-  listNotES: {}
+  listNotES: {},
+  post: {}
 };
 
 export default function postReducer(state = initState, action) {

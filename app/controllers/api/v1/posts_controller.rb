@@ -53,7 +53,10 @@ class Api::V1::PostsController < ApplicationController
     end
 
     json_response(
-      serialize(posts, with_children),
+      {
+        list: serialize(posts, with_children),
+        popular_posts: serialize(Post.popular_posts)
+      },
       pagination: paginate(page, page_size, posts.total_pages, posts.total_count)
     )
   end

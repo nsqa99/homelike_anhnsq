@@ -160,7 +160,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                 {isAuthenticated ? (
                   currentUser !== item.owner.username ? (
                     <>
-                      {"Comments"}
+                      {"Reviews"}
                       <Row>
                         <Col xs="12" md="9">
                           <Input

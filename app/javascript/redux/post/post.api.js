@@ -7,7 +7,7 @@ const POST_ENDPOINT = `${API_BASE_URL}/posts`;
 const USER_POST_ENDPOINT = `${API_BASE_URL}/users`;
 
 export const getAllPostApi = async () => {
-  return await axios.get(`${POST_ENDPOINT}/search`);
+  return await axios.get(POST_ENDPOINT);
 };
 
 export const searchPostApi = async (params, options) => {
@@ -20,7 +20,7 @@ export const getOnePostApi = async (postId) => {
   return await axios.get(`${POST_ENDPOINT}/${postId}`);
 };
 
-export const createPostApi = async (username, data, config = {}) => {
+export const createPostApi = async (username, data, config) => {
   return await AuthorizedAxios.post(
     `${USER_POST_ENDPOINT}/${username}/posts`,
     data,
@@ -40,7 +40,7 @@ export const destroyPostApi = async (username, postId) => {
   );
 };
 
-export const updatePostApi = async (username, postId, data, config = {}) => {
+export const updatePostApi = async (username, postId, data, config) => {
   return await AuthorizedAxios.put(
     `${USER_POST_ENDPOINT}/${username}/posts/${postId}`,
     data,

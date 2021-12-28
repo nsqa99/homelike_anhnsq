@@ -16,9 +16,19 @@ class Post < ApplicationRecord
   before_destroy :delete_posts_items_association
 
   has_many_attached :images
+  has_many_attached :comments
 
   def image_urls
     self.images.map(&:url)
+  end
+
+  def self.popular_posts
+    Post.where("likes > ?", 100).or(Post.where("shares > ?", 100))
+      .order(likes: :desc, shares: :desc, id: :desc).page(1).per(3)
+  end
+
+  def owner
+    {username: self.user.username, user_full_name: self.user.user_full_name}
   end
 
   after_save {

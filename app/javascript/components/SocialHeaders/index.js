@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import DescriptionIcon from "@material-ui/icons/Description";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   DropdownItem,
   Dropdown,
@@ -24,6 +24,7 @@ import { FlexCentered } from "../../common/styles";
 import styled from "styled-components";
 import { CustomNavLink } from "../custom/NavLink";
 import { RouterLink } from "../custom/RouterLink";
+import { logout } from "../../redux/auth/auth.action";
 // import { auth } from "firebase";
 
 const AvatarDropdown = styled(FlexCentered)`
@@ -35,14 +36,15 @@ const AvatarDropdown = styled(FlexCentered)`
   cursor: pointer;
 `;
 
-const SocialHeaders = ({ user }) => {
-  // const history = useHistory();
-  // const login = () => {
-  //   if (user) {
-  //     auth().signOut();
-  //     history.push("/login");
-  //   }
-  // };
+const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const handleSignout = () => {
+    if (isAuthenticated) {
+      dispatch(logout());
+      history.push("/login");
+    }
+  };
 
   const [isOpen, setOpen] = useState(false);
 
@@ -67,33 +69,44 @@ const SocialHeaders = ({ user }) => {
         </InputGroupText>
       </InputGroup>
 
-      <Nav className="ms-auto" navbar>
-        <CustomNavLink tag={Link} to="/social">
-          <Button
-            color="danger"
-            outline
-            className="d-flex align-items-center"
-            style={{ borderRadius: 999 }}
-          >
-            <DescriptionIcon className="" />
-            Newsfeed
-          </Button>
-        </CustomNavLink>
-        <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
-          <AvatarDropdown onClick={toggle}>
-            <MenuIcon />
-            <Avatar />
-          </AvatarDropdown>
-          <DropdownMenu styleName="dropdown-menu--right-align">
-            <RouterLink to={`/social/users/${user?.username || "nsqa99"}`}>
-              <DropdownItem>Account</DropdownItem>
-            </RouterLink>
-            <DropdownItem>Orders</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>Sign out</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </Nav>
+      {isAuthenticated ? (
+        <Nav className="ms-auto" navbar>
+          <CustomNavLink tag={Link} to="/social">
+            <Button
+              color="danger"
+              outline
+              className="d-flex align-items-center"
+              style={{ borderRadius: 999 }}
+            >
+              <DescriptionIcon className="" />
+              Newsfeed
+            </Button>
+          </CustomNavLink>
+          <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
+            <AvatarDropdown onClick={toggle}>
+              <MenuIcon />
+              <Avatar src={avatar} />
+            </AvatarDropdown>
+            <DropdownMenu styleName="dropdown-menu--right-align">
+              <RouterLink to={`/social/users/${username}`}>
+                <DropdownItem>Account: {username}</DropdownItem>
+              </RouterLink>
+              <DropdownItem>Orders</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </Nav>
+      ) : (
+        <Nav className="ms-auto" navbar>
+          <CustomNavLink tag={Link} to="/login">
+            <Button color="danger" styleName="header__btnSwitch">
+              <PublicIcon className="me-2" />
+              Sign in
+            </Button>
+          </CustomNavLink>
+        </Nav>
+      )}
     </Navbar>
   );
 };
