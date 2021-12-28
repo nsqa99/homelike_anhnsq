@@ -49,6 +49,26 @@ export const createPostResult = (payload) => ({
   payload,
 });
 
+export const likePost = (username, postId) => ({
+  type: types.LIKE_POST,
+  payload: { username, postId },
+});
+
+export const likePostResult = (payload) => ({
+  type: types.LIKE_POST_SUCCESS,
+  payload,
+});
+
+export const unlikePost = (username, postId) => ({
+  type: types.UNLIKE_POST,
+  payload: { username, postId },
+});
+
+export const unlikePostResult = (payload) => ({
+  type: types.UNLIKE_POST_SUCCESS,
+  payload,
+});
+
 export const getAllPostByUsername = (payload, options = {}) => ({
   type: types.GET_ALL_POST_BY_USERNAME,
   payload: { data: payload, options },

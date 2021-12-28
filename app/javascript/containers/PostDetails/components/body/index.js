@@ -28,6 +28,7 @@ import {
 const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   const listComments = useSelector((state) => state.comments);
   const [content, setContent] = useState("");
+  const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState({
     postId: post.id,
     content: content,
@@ -40,6 +41,15 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
       dispatch(getAllComment(post.id));
     }
   }, []);
+
+  useEffect(() => {
+    if (post) {
+      const found = post.like_users.find(
+        (user) => user.username === currentUser
+      );
+      setIsLiked(found != null);
+    }
+  }, [post]);
 
   const handleComment = () => {
     dispatch(createComment(comment));
@@ -74,6 +84,7 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
           detail={true}
           imageSize="400px"
           style={{ width: "80%" }}
+          isLiked={isLiked}
         />
 
         <Card styleName="body__merchant">
@@ -125,7 +136,7 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
                 <CustomPagination
                   totalPages={listComments.pagination.total_pages}
                   currentPage={listComments.pagination.page}
-                  fn={(options) => dispatch(getAllComment(comment.id, options))}
+                  fn={(options) => dispatch(getAllComment(post.id, options))}
                 />
               </>
             ) : (

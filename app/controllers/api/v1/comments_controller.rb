@@ -19,6 +19,9 @@ class Api::V1::CommentsController < ApplicationController
     comment.post = Post.find(params[:post_id])
 
     if comment.save
+      comment.post.increment!(:comments_count)
+      comment.post.__elasticsearch__.update_document
+
       json_response(serialize(comment))
     else
       json_response([], :bad_request, message: comment.errors.full_messages.to_sentence)
@@ -29,6 +32,9 @@ class Api::V1::CommentsController < ApplicationController
     comment = Comment.find(params[:id])
 
     if comment.destroy
+      comment.post.decrement!(:comments_count)
+      comment.post.__elasticsearch__.update_document
+
       json_response(serialize(comment))
     else
       json_response([], :bad_request, message: comment.errors.full_messages.to_sentence)

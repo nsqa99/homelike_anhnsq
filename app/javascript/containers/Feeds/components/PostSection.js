@@ -7,16 +7,20 @@ import { RouterLink } from "../../../components/custom/RouterLink";
 import Post from "../../../components/Post";
 import DefaultAvatar from "../../../constants/images/DefaultAvatar.png";
 
-const PostSection = ({ posts }) => {
+const PostSection = ({ username, posts }) => {
   return (
     <>
       {!_.isEmpty(posts) ? (
         posts.map((post) => {
+          const likeUsers = post.like_users
+          const isLiked = likeUsers.find(user => user.username === username);
+
           return (
             <Post
               key={post.id}
               post={post}
               style={{ width: "80%", margin: "0 auto 30px" }}
+              isLiked={isLiked}
             />
           );
         })

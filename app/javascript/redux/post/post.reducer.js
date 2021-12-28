@@ -4,7 +4,7 @@ import _ from "lodash";
 const initState = {
   list: {},
   listES: {},
-  post: {}
+  post: {},
 };
 
 export default function postReducer(state = initState, action) {
@@ -55,6 +55,60 @@ export default function postReducer(state = initState, action) {
       return state;
     }
 
+    case types.LIKE_POST_SUCCESS: {
+      const { data } = action.payload;
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          list: state.list.list?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+          popular_posts: state.list.popular_posts?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+        },
+        post: data.id === state.post.id ? data : state.post,
+      };
+    }
+
+    case types.LIKE_POST_FAILED: {
+      return state;
+    }
+
+    case types.UNLIKE_POST_SUCCESS: {
+      const { data } = action.payload;
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          list: state.list.list?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+          popular_posts: state.list.popular_posts?.map((elem) => {
+            if (elem.id === data.id) {
+              elem = data;
+            }
+            return elem;
+          }),
+        },
+        post: data.id === state.post.id ? data : state.post,
+      };
+    }
+
+    case types.UNLIKE_POST_FAILED: {
+      return state;
+    }
+
     case types.DESTROY_POST_SUCCESS: {
       const { data, isSearch } = action.payload;
       const pagination = isSearch
@@ -79,7 +133,7 @@ export default function postReducer(state = initState, action) {
           data: state.list.data.filter((post) => post.id !== data.id),
           pagination: { ...state.list.pagination, ...newPagin },
         },
-        isSearch: isSearch
+        isSearch: isSearch,
       };
 
       return {
@@ -127,7 +181,7 @@ export default function postReducer(state = initState, action) {
           }),
           pagination: { ...state.list.pagination, ...newPagin },
         },
-        isSearch: isSearch
+        isSearch: isSearch,
       };
 
       return {

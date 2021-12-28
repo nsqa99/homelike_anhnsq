@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_28_045759) do
+ActiveRecord::Schema.define(version: 2021_12_28_104843) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -171,6 +171,16 @@ ActiveRecord::Schema.define(version: 2021_12_28_045759) do
     t.index ["item_id", "tag_id"], name: "index_items_tags_on_item_id_and_tag_id", unique: true
   end
 
+  create_table "likes", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_id", "user_id"], name: "index_likes_on_post_id_and_user_id", unique: true
+    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "merchants", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -221,10 +231,11 @@ ActiveRecord::Schema.define(version: 2021_12_28_045759) do
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
     t.text "content", null: false
     t.bigint "user_id", null: false
-    t.integer "likes", default: 0, null: false
-    t.integer "shares", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
+    t.integer "shares_count", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "comments_count", default: 0
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -330,6 +341,8 @@ ActiveRecord::Schema.define(version: 2021_12_28_045759) do
   add_foreign_key "contacts", "users"
   add_foreign_key "customers", "users"
   add_foreign_key "full_names", "users"
+  add_foreign_key "likes", "posts"
+  add_foreign_key "likes", "users"
   add_foreign_key "merchants", "users"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "items"

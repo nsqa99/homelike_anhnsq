@@ -28,6 +28,18 @@ export const createPostApi = async (username, data, config) => {
   );
 };
 
+export const likePostApi = async (username, postId) => {
+  return await AuthorizedAxios.post(
+    `${USER_POST_ENDPOINT}/${username}/posts/${postId}/like`
+  );
+};
+
+export const unlikePostApi = async (username, postId) => {
+  return await AuthorizedAxios.post(
+    `${USER_POST_ENDPOINT}/${username}/posts/${postId}/unlike`
+  );
+};
+
 export const getAllPostByUsernameApi = async (username, options) => {
   return await AuthorizedAxios.get(`${USER_POST_ENDPOINT}/${username}/posts`, {
     params: options,

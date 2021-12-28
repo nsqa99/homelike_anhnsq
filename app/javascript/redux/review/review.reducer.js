@@ -22,16 +22,36 @@ export default function reviewReducer(state = initState, action) {
     }
 
     case types.CREATE_REVIEW_SUCCESS: {
+      const pagination = state.pagination;
+      const newPagin = {
+        total_entries: pagination.total_entries + 1,
+        total_pages: Math.ceil(
+          parseFloat(pagination.total_entries + 1) /
+            parseFloat(pagination.page_size)
+        ),
+      };
+
       return {
         ...state,
         list: [...state.list, action.payload],
+        pagination: {...pagination, ...newPagin}
       };
     }
 
     case types.DESTROY_REVIEW_SUCCESS: {
+      const pagination = state.pagination;
+      const newPagin = {
+        total_entries: pagination.total_entries - 1,
+        total_pages: Math.ceil(
+          parseFloat(pagination.total_entries - 1) /
+            parseFloat(pagination.page_size)
+        ),
+      };
+
       return {
         ...state,
         list: state.list.filter((review) => !_.isEqual(review, action.payload)),
+        pagination: {...pagination, ...newPagin}
       };
     }
 

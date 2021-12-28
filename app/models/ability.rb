@@ -17,7 +17,7 @@ class Ability
     when User
       can [:follow, :unfollow], User
       can [:read, :like_post], Post
-      can [:create, :update, :destroy], Post, user_id: actor.id
+      can [:create, :update, :destroy, :like_post, :unlike_post], Post, user_id: actor.id
       
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id

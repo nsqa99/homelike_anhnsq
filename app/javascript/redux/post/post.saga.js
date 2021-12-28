@@ -8,8 +8,10 @@ import {
   getAllPostByUsernameResult,
   getAllPostResult,
   getOnePostResult,
+  likePostResult,
   resetPostStateResult,
   searchPostResult,
+  unlikePostResult,
   updatePostResult,
 } from "./post.action";
 import {
@@ -20,7 +22,9 @@ import {
   getAllPostApi,
   getAllPostByUsernameApi,
   getOnePostApi,
+  likePostApi,
   searchPostApi,
+  unlikePostApi,
   updatePostApi,
 } from "./post.api";
 import types from "./post.type";
@@ -136,6 +140,33 @@ function* updatePostSaga(props) {
   }
 }
 
+function* likePostSaga(props) {
+  const {username, postId} = props.payload;
+  try {
+    const res = yield call(likePostApi, username, postId);
+    if (res.status === 200) {
+      const response = res.data;
+      yield all([put(likePostResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* unlikePostSaga(props) {
+  const {username, postId} = props.payload;
+  try {
+    const res = yield call(unlikePostApi, username, postId);
+    if (res.status === 200) {
+      console.log(res)
+      const response = res.data;
+      yield all([put(unlikePostResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_POST, getAllPostSaga)]);
   yield all([takeEvery(types.GET_ONE_POST, getOnePostSaga)]);
@@ -145,4 +176,6 @@ export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_POST_BY_USERNAME, getAllPostByUsernameSaga)]);
   yield all([takeEvery(types.DESTROY_POST, destroyPostSaga)]);
   yield all([takeEvery(types.UPDATE_POST, updatePostSaga)]);
+  yield all([takeEvery(types.LIKE_POST, likePostSaga)]);
+  yield all([takeEvery(types.UNLIKE_POST, unlikePostSaga)]);
 }

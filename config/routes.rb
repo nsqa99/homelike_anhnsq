@@ -12,7 +12,8 @@ Rails.application.routes.draw do
         end
 
         resources :posts do
-          post "like_post"
+          post "like", to: "posts#like_post"
+          post "unlike", to: "posts#unlike_post"
         end
 
         member do
@@ -22,7 +23,6 @@ Rails.application.routes.draw do
       end
 
       resources :posts, except: [:create, :udpate, :destroy] do
-        post "like_post"
 
         resources :comments
       end

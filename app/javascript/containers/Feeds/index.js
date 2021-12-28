@@ -32,10 +32,10 @@ const index = () => {
               ) : (
                 "Sign in to create post"
               )}
-              <PostSection posts={postDatas.list} />
+              <PostSection username={authData.username} posts={postDatas.list} />
             </Col>
             <Col sm="6" md="5" lg="4">
-              <RightPanel populars={postDatas.popular_posts} />
+              <RightPanel username={authData.username} populars={postDatas.popular_posts} />
             </Col>
           </Row>
         </Container>

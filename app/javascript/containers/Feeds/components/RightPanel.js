@@ -11,7 +11,7 @@ const PostWrapper = styled.div`
   margin-top: 30px;
 `;
 
-const RightPanel = ({ populars }) => {
+const RightPanel = ({ username, populars }) => {
   const posts = populars;
 
   return (
@@ -20,9 +20,13 @@ const RightPanel = ({ populars }) => {
         Popular Posts
       </div>
       {!isEmpty(posts) &&
-        posts.map((post) => (
-          <Post key={post.id} post={post} rightPanel={true} />
-        ))}
+        posts.map((post) => {
+          const isLiked = post.like_users.find(
+            (user) => user.username === username
+          );
+
+          return <Post key={post.id} isLiked={!!isLiked} post={post} rightPanel={true} />;
+        })}
     </PostWrapper>
   );
 };

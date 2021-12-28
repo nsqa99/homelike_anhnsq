@@ -2,7 +2,7 @@ class Api::V1::PostsController < ApplicationController
   load_and_authorize_resource
 
   skip_before_action :authenticate_request_token, only: [:index, :show]
-  skip_load_and_authorize_resource only: [:create, :index, :show, :like_post]
+  skip_load_and_authorize_resource only: [:create, :index, :show]
   authorize_resource only: [:create]
 
   # before_action :validate_user, only: [:create]
@@ -89,10 +89,32 @@ class Api::V1::PostsController < ApplicationController
 
   def like_post
     post = Post.find(params[:post_id])
-    post.increment!(:likes)
-    post.__elasticsearch__.update_document
+    
+    like = post.likes.build
+    like.user = @current_user
+    
+    if like.save
+      post.increment!(:likes_count)
+      post.__elasticsearch__.update_document
 
-    json_response([], :ok)
+      return json_response(serialize(post, with_children), :ok)
+    end
+    
+    json_response([], :bad_request)
+  end
+
+  def unlike_post
+    post = Post.find(params[:post_id])
+    like = post.likes.find_by(user_id: @current_user.id)
+    
+    if like.destroy
+      post.decrement!(:likes_count)
+      post.__elasticsearch__.update_document
+
+      return json_response(serialize(post, with_children), :ok)
+    end
+    
+    json_response([], :bad_request)
   end
 
   private
