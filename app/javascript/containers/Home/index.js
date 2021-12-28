@@ -21,7 +21,7 @@ const TopBodyWrapper = styled.div`
 
 const index = () => {
   return (
-    <div style={{background: '#f8f9fa', height: '100vh'}}>
+    <div>
       <Container fluid className="p-0">
         <TopBodyWrapper>
           <SearchSection />
