@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import { CustomInput } from "../../../components/Form/components";
 import styled from "styled-components";
 import { getBlobUrl, isValidImageSize, isValidImageType } from "../../../utils";
+import { createPost } from "../../../redux/post/post.action";
+import { useDispatch } from "react-redux";
+
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -39,17 +42,24 @@ const CustomImagePreview = styled.div`
   }
 `;
 
-const PostCreateModal = () => {
+const PostCreateModal = ({ username }) => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
+  const [postImages, setPostImages] = useState([]);
   const [imageError, setImageError] = useState({});
+  const dispatch = useDispatch();
   const toggleModal = () => {
     setOpen(!open);
     setImages([]);
     setImageError({});
   };
+  const handleFormSubmit = (data) => {
+    dispatch(createPost(username, data, postImages));
+    setOpen(false);
+  };
   const handleImageChange = (e) => {
     const imgArr = Array.from(e.target.files);
+    setPostImages(imgArr);
     if (!isValidImageType(imgArr)) {
       setImageError({
         ...{
@@ -100,7 +110,11 @@ const PostCreateModal = () => {
       <CustomModal isOpen={open} toggle={toggleModal}>
         <ModalHeader>Create new post</ModalHeader>
         <CustomModalBody>
-          <CustomForm fields={fields}>
+          <CustomForm
+            fields={fields}
+            handleSubmit={handleFormSubmit}
+            images={images}
+          >
             <CustomInput
               name="content"
               id="content"
@@ -112,6 +126,7 @@ const PostCreateModal = () => {
               name="images"
               id="images"
               type="file"
+              accept="image/png, image/gif, image/jpeg"
               multiple
               onChange={(e) => handleImageChange(e)}
               imageValidator={imageError}

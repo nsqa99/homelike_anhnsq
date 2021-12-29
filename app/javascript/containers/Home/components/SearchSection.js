@@ -151,10 +151,10 @@ const SearchSection = () => {
 
   return (
     <Row className="mt-5" styleName="search-section__wrapper">
-      <Col md="8">
-        <Label for="search_text" styleName="color--red">
-          Where?
-        </Label>
+      <Label for="search_text" styleName="color--red">
+        Where?
+      </Label>
+      <div className="d-flex">
         <InputGroup>
           <Input
             id="search_text"
@@ -169,27 +169,26 @@ const SearchSection = () => {
             <LocationOnIcon styleName="search-icon" />
           </InputGroupText>
         </InputGroup>
-      </Col>
+        <div className="d-flex">
+          <Button
+            color="danger"
+            onClick={handleSearch}
+            styleName="btn-danger_custom"
+            className="ms-3 me-2"
+          >
+            Search
+          </Button>
 
-      <Col md="4" className="d-flex">
-        <Button
-          color="danger"
-          onClick={handleSearch}
-          styleName="btn-danger_custom"
-          className="me-2"
-        >
-          Search
-        </Button>
-
-        <Button
-          color="primary"
-          className="d-flex align-items-center"
-          onClick={handleClear}
-        >
-          <ClearIcon />
-          Clear
-        </Button>
-      </Col>
+          <Button
+            color="primary"
+            className="d-flex align-items-center"
+            onClick={handleClear}
+          >
+            <ClearIcon />
+            Clear
+          </Button>
+        </div>
+      </div>
 
       <Col md="10" className="mt-3">
         <OptionWrapper id="toggler">

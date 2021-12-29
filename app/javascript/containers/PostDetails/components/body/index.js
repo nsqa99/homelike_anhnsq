@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import RightPanel from "./RightPanel";
 import {
   Button,
@@ -20,11 +20,55 @@ import Comment from "../../../../components/Comment";
 import CustomPagination from "../../../../components/Pagination";
 import Post from "../../../../components/Post";
 import { RouterLink } from "../../../../components/custom/RouterLink";
+import {
+  createComment,
+  getAllComment,
+} from "../../../../redux/comment/comment.action";
 
-const DetailBody = ({ post, location }) => {
+const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
+  const listComments = useSelector((state) => state.comments);
+  const [content, setContent] = useState("");
+  const [isLiked, setIsLiked] = useState(false);
+  const [comment, setComment] = useState({
+    postId: post.id,
+    content: content,
+  });
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (post) {
+      setComment({ ...comment, postId: post.id });
+      dispatch(getAllComment(post.id));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (post) {
+      const found = post.like_users.find(
+        (user) => user.username === currentUser
+      );
+      setIsLiked(found != null);
+    }
+  }, [post]);
+
+  const handleComment = () => {
+    dispatch(createComment(comment));
+    setContent("");
+  };
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+
+    setComment({ ...comment, content: e.target.value });
+  };
+
   return (
     <Row>
-      <Col md="12" lg="9" className="mt-4 d-flex flex-column align-items-center">
+      <Col
+        md="12"
+        lg="9"
+        className="mt-4 d-flex flex-column align-items-center"
+      >
         <div styleName="body__title" className="mb-5 align-self-start">
           <RouterLink
             to={location.state?.prevPath || "/social"}
@@ -39,37 +83,73 @@ const DetailBody = ({ post, location }) => {
           post={post}
           detail={true}
           imageSize="400px"
-          style={{maxWidth: "80%"}}
+          style={{ width: "80%" }}
+          isLiked={isLiked}
         />
+
         <Card styleName="body__merchant">
           <CardBody>
-            {"Comments"}
+            {isAuthenticated ? (
+              <>
+                {"Comments"}
+                <Input
+                  id="comment"
+                  name="comment"
+                  type="textarea"
+                  placeholder="Write down your comment"
+                  className="mt-3"
+                  rows="5"
+                  onChange={handleContentChange}
+                  value={content}
+                />
+                <Button
+                  color="danger"
+                  className="mt-3 mb-5"
+                  onClick={handleComment}
+                >
+                  Post
+                </Button>{" "}
+                <hr />
+              </>
+            ) : (
+              <div className="fs-6 mt-2 fw-bold fst-italic">
+                Sign in and drop some comments
+              </div>
+            )}
 
-            <Input
-              id="comment"
-              name="comment"
-              type="textarea"
-              placeholder="Write down your comment"
-              className="mt-3"
-              rows="5"
-            />
-            <Button color="danger" className="mt-3 mb-3">
-              Post
-            </Button>
-
-            <hr />
-
-            <Comment />
-            <CustomPagination
-              url={`/posts/${post.id}/comments`}
-              totalPages={4}
-              currentPage={1}
-            />
+            {listComments.list?.length > 0 ? (
+              <>
+                {listComments.list
+                  .slice(0)
+                  .reverse()
+                  .map((comment) => {
+                    const isOwner =
+                      isAuthenticated && comment.owner.username === currentUser;
+                    return (
+                      <Comment
+                        key={comment.id}
+                        comment={comment}
+                        isOwner={isOwner}
+                      />
+                    );
+                  })}
+                <CustomPagination
+                  totalPages={listComments.pagination.total_pages}
+                  currentPage={listComments.pagination.page}
+                  fn={(options) => dispatch(getAllComment(post.id, options))}
+                />
+              </>
+            ) : (
+              <div className="fs-6 mt-2 fw-bold fst-italic mt-5 mb-4 w-100 text-center">
+                No comment
+              </div>
+            )}
           </CardBody>
         </Card>
       </Col>
+
       <Col md="12" lg="3" className="pl-3">
-        <RightPanel />
+        {/* <RightPanel /> */}
       </Col>
     </Row>
   );

@@ -2,32 +2,39 @@ import React from "react";
 import { Container } from "reactstrap";
 import DetailBody from "./components/body";
 import { goBack, shortAddress } from "../../utils/index.js";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import DefaultAvatar from "../../constants/images/DefaultAvatar.png";
+import { getOnePost, resetPostState } from "../../redux/post/post.action";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { isEqual } from "lodash";
 
-const PostDetails = ({ match: { params }, location }) => {
-  const postId = params?.id;
-  const post = {
-    id: 1,
-    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis`,
-    likes: 100,
-    shares: 12,
-    user: {
-      username: "nsqa99",
-      user_full_name: "Anh Nguyen Sy Quang",
-    },
-    images: [DefaultAvatar, DefaultAvatar, DefaultAvatar],
-    created_at: "2021-12-21",
-  };
+const PostDetails = ({ location }) => {
+  const params = useParams();
+  const post = useSelector((state) => state.posts.post);
+  const authData = useSelector((state) => state.auth.data);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetPostState());
+    dispatch(getOnePost(params.id));
+  }, [params.id]);
 
   return (
-    <Container>
-      <DetailBody post={post} location={location} />
-    </Container>
+    <>
+      {!isEqual(post, {}) ? (
+        <Container>
+          <DetailBody
+            isAuthenticated={authData?.isAuthenticated}
+            currentUser={authData?.username}
+            post={post}
+            location={location}
+          />
+        </Container>
+      ) : (
+        null
+      )}
+    </>
   );
 };
 export default PostDetails;

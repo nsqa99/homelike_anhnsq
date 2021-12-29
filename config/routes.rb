@@ -12,13 +12,19 @@ Rails.application.routes.draw do
         end
 
         resources :posts do
-          post "like_post"
+          post "like", to: "posts#like_post"
+          post "unlike", to: "posts#unlike_post"
         end
 
         member do
           post "follow/:followed", to: "users#follow"
           post "unfollow/:unfollowed", to: "users#unfollow"
         end
+      end
+
+      resources :posts, except: [:create, :udpate, :destroy] do
+
+        resources :comments
       end
       
       # Auth

@@ -43,10 +43,6 @@ $left-margin: 20px;
   .icon {
     cursor: pointer;
 
-    &:hover {
-      color: $theme_color;
-    }
-
     &__user {
       font-size: 15px;
       margin-left: $left-margin;

@@ -21,7 +21,7 @@ import DefaultAvatar from "../../../../constants/images/DefaultAvatar.png";
 import styled from "styled-components";
 import TableDetails from "./TableDetails";
 import StarIcon from "@material-ui/icons/Star";
-import Comment from "../../../../components/Comment";
+import Review from "../../../../components/Review";
 import CustomPagination from "../../../../components/Pagination";
 import ReserveModal from "../ReserveModal";
 import { MySlider } from "../../../../components/Slider";
@@ -160,7 +160,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                 {isAuthenticated ? (
                   currentUser !== item.owner.username ? (
                     <>
-                      {"Comments"}
+                      {"Reviews"}
                       <Row>
                         <Col xs="12" md="9">
                           <Input
@@ -218,7 +218,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
                           isAuthenticated &&
                           review.owner.username === currentUser;
                         return (
-                          <Comment
+                          <Review
                             key={review.id}
                             review={review}
                             isOwner={isOwner}

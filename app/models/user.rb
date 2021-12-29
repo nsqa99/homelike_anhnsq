@@ -30,6 +30,8 @@ class User < BaseModel
   has_one :contact, dependent: :destroy
   has_one_attached :avatar
   has_many :reviews, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   accepts_nested_attributes_for :full_name, :address, :customer, :merchant
   validates_confirmation_of :password

@@ -1,4 +1,4 @@
-import types from "./review.type";
+import types from "./comment.type";
 import _ from "lodash";
 
 const initState = {
@@ -6,9 +6,9 @@ const initState = {
   pagination: {},
 };
 
-export default function reviewReducer(state = initState, action) {
+export default function commentReducer(state = initState, action) {
   switch (action.type) {
-    case types.GET_ALL_REVIEW_SUCCESS: {
+    case types.GET_ALL_COMMENT_SUCCESS: {
       const {data, pagination} = action.payload
       return {
         ...state,
@@ -17,11 +17,11 @@ export default function reviewReducer(state = initState, action) {
       };
     }
 
-    case types.GET_ALL_REVIEW_FAILED: {
+    case types.GET_ALL_COMMENT_FAILED: {
       return state;
     }
 
-    case types.CREATE_REVIEW_SUCCESS: {
+    case types.CREATE_COMMENT_SUCCESS: {
       const pagination = state.pagination;
       const newPagin = {
         total_entries: pagination.total_entries + 1,
@@ -34,11 +34,11 @@ export default function reviewReducer(state = initState, action) {
       return {
         ...state,
         list: [...state.list, action.payload],
-        pagination: {...pagination, ...newPagin}
+        pagination: {...state.pagination, ...newPagin}
       };
     }
 
-    case types.DESTROY_REVIEW_SUCCESS: {
+    case types.DESTROY_COMMENT_SUCCESS: {
       const pagination = state.pagination;
       const newPagin = {
         total_entries: pagination.total_entries - 1,
@@ -50,8 +50,8 @@ export default function reviewReducer(state = initState, action) {
 
       return {
         ...state,
-        list: state.list.filter((review) => !_.isEqual(review, action.payload)),
-        pagination: {...pagination, ...newPagin}
+        list: state.list.filter((comment) => !_.isEqual(comment, action.payload)),
+        pagination: {...state.pagination, ...newPagin}
       };
     }
 

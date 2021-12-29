@@ -16,18 +16,44 @@ class Post < ApplicationRecord
   before_destroy :delete_posts_items_association
 
   has_many_attached :images
+  has_many :comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   def image_urls
     self.images.map(&:url)
+  end
+
+  def self.popular_posts
+    Post.order(likes_count: :desc, shares_count: :desc, id: :desc).page(1).per(3)
+  end
+
+  def owner
+    {username: self.user.username, user_full_name: self.user.user_full_name}
+  end
+
+  def like_users
+    self.likes.map do |like|
+      user = like.user
+      
+      {
+        username: user.username, 
+        full_name: user.user_full_name, 
+        avatar: user.avatar
+      }
+    end
   end
 
   after_save {
     __elasticsearch__.index_document
   }
 
+  after_destroy {
+    __elasticsearch__.delete_document
+  }
+
   def as_indexed_json(options = {})
     as_json(
-      only: [:content, :likes, :shares],
+      only: [:content, :likes_count, :shares_count, :comments_count],
       methods: [:image_urls],
       include: {
         child: {
