@@ -71,7 +71,7 @@ const ItemSection = () => {
           {!_.isEmpty(items)
             ? items.map((item) => {
                 return (
-                  <Col key={item.id} xl="3" lg="4" md="6" sm="12">
+                  <Col key={item.id} lg="4" md="6" sm="12">
                     <Item item={item} />
                   </Col>
                 );

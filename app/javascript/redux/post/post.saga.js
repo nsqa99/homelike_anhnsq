@@ -47,7 +47,7 @@ function* getAllPostByUsernameSaga(props) {
   try {
     const res = yield call(getAllPostByUsernameApi, data, options);
     if (res.status === 200) {
-      yield put(getAllPostByUsernameResult(res.data));
+      yield put(getAllPostByUsernameResult(res.data?.data));
     }
   } catch (error) {
     console.log(error);

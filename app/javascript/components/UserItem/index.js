@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import CSSModules from "react-css-modules";
 import style from "./style.module.scss";
-import DefaultAvatar from "../../constants/images/DefaultAvatar.png";
+import Avatar from "../../constants/images/Avatar.png";
 import { useDispatch } from "react-redux";
 import { RouterLink } from "../custom/RouterLink";
 import { Button, Table } from "reactstrap";
 
-const UserItem = ({ user, small, follower, following }) => {
+const UserItem = ({ user, small, follower, following, currentUser }) => {
+  console.log(user)
   const detailPath = `/social/users/${user.username}`;
 
   return (
@@ -17,7 +18,7 @@ const UserItem = ({ user, small, follower, following }) => {
       >
         <RouterLink to={detailPath}>
           <img
-            src={user.avatar || DefaultAvatar}
+            src={user.avatar || Avatar}
             alt={user.id}
             className="mb-sm-3 mb-0"
           />
@@ -30,7 +31,7 @@ const UserItem = ({ user, small, follower, following }) => {
         >
           <div styleName={`user__full-name${small ? "--small" : ""}`}>
             <RouterLink to={detailPath}>{user.user_full_name}</RouterLink>
-            {!follower && (
+            {(follower == null && following == null) && (
               <div styleName="user__follow">
                 <span>{user.follower_count}</span>
                 Followers
@@ -38,13 +39,15 @@ const UserItem = ({ user, small, follower, following }) => {
             )}
           </div>
 
-          <Button
-            size={small ? "sm" : ""}
-            color="danger"
-            styleName={`user__full-name--btn${small ? "--small" : ""}`}
-          >
-            Follow
-          </Button>
+          {currentUser !== user.username && (
+            <Button
+              size={small ? "sm" : ""}
+              color="danger"
+              styleName={`user__full-name--btn${small ? "--small" : ""}`}
+            >
+              Follow
+            </Button>
+          )}
         </div>
       </div>
     </div>

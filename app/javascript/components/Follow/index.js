@@ -24,78 +24,19 @@ const CustomModal = styled(Modal)`
   }
 `;
 
-const Follow = ({ user, follower }) => {
+const Follow = ({ user, follower, currentUser }) => {
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
-  const followList = [
-    {
-      id: 1,
-      username: "nsqa99",
-      user_full_name:
-        "Anh Nguyen Sy QuangAnh Nguyen Sy QuanAnh Nguyen Sy QuanAnh Nguyen Sy Quan",
-      created_at: "2021-12-12",
-      email: "test@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-    {
-      id: 2,
-      username: "nsqa",
-      user_full_name: "Lorem 1",
-      created_at: "2021-12-12",
-      email: "test1@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-    {
-      id: 3,
-      username: "nsqa",
-      user_full_name: "Lorem 345",
-      created_at: "2021-12-12",
-      email: "test2@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-    {
-      id: 4,
-      username: "nsqa99",
-      user_full_name:
-        "Anh Nguyen Sy QuangAnh Nguyen Sy QuanAnh Nguyen Sy QuanAnh Nguyen Sy Quan",
-      created_at: "2021-12-12",
-      email: "test@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-    {
-      id: 5,
-      username: "nsqa",
-      user_full_name: "Lorem 1",
-      created_at: "2021-12-12",
-      email: "test1@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-    {
-      id: 6,
-      username: "nsqa",
-      user_full_name: "Lorem 345",
-      created_at: "2021-12-12",
-      email: "test2@example.com",
-      address: "HN, VN",
-      follower_count: 100,
-      following_count: 1000,
-    },
-  ];
+  const toggleModal = () => {
+    const count = follower ? user.follower_count : user.following_count
+    if (count > 0) setOpen(!open);
+  };
 
+  const list = follower ? user.follower_users : user.following_users
+  
   return (
     <>
       <div styleName="follow" onClick={toggleModal}>
-        <span>{user.follower_count}</span>
+        <span>{follower ? user.follower_count : user.following_count}</span>
         {follower ? "Followers" : "Following"}
       </div>
       <CustomModal isOpen={open} toggle={toggleModal}>
@@ -103,12 +44,14 @@ const Follow = ({ user, follower }) => {
           {follower ? "Followers" : "Following"}
         </ModalHeader>
         <CustomModalBody>
-          {followList.map((follow) => (
+          {list && list.map((follow) => (
             <UserItem
+              key={follow.id}
               user={follow}
               small
               follower={follower}
               following={!follower}
+              currentUser={currentUser}
             />
           ))}
         </CustomModalBody>

@@ -30,7 +30,9 @@ class Api::V1::UsersController < ApplicationController
       followed_user.increment!(:follower_count)
     end
     
-    json_response([], :ok)
+    json_response({
+      follower: serialize(current_user),
+      followed: serialize(followed_user)}, :ok)
   end
   
   def unfollow
@@ -43,7 +45,9 @@ class Api::V1::UsersController < ApplicationController
       unfollowed_user.decrement!(:follower_count)
     end
     
-    json_response([], :ok)
+    json_response({
+      unfollower: serialize(current_user),
+      unfollowed: serialize(unfollowed_user)}, :ok)
   end
 
   def search

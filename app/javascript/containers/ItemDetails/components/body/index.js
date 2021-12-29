@@ -44,7 +44,7 @@ const CustomSlider = styled.div`
 `;
 
 const DetailBody = ({ item, isAuthenticated, currentUser }) => {
-  const user = useSelector((state) => state.users);
+  const user = useSelector((state) => state.users.user);
   const listReviews = useSelector((state) => state.reviews);
   const [review, setReview] = useState({
     itemId: item.id,
