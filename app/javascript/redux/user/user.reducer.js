@@ -45,15 +45,53 @@ export default function userReducer(state = initState, action) {
 
     case types.FOLLOW_USER_SUCCESS: {
       const data = action.payload;
+      const displayUser = state.user;
+      let response = state;
+      if (data.followed.username === displayUser.username) {
+        response = {
+          ...state,
+          user: {
+            ...displayUser,
+            follower_count: data.followed.follower_count,
+            follower_users: [data.follower, ...displayUser.follower_users],
+          },
+        };
+      } else {
+        const insideFollower =
+          displayUser.follower_users.find(
+            (user) => user.username === data.followed.username
+          ) != null;
 
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          follower_count: data.followed.follower_count,
-          followers: [data.follower, ...state.user.followers],
-        },
-      };
+        response = insideFollower
+          ? {
+              ...state,
+              user: {
+                ...displayUser,
+                follower_users: displayUser.follower_users.map((user) => {
+                  if (user.username === data.followed.username) {
+                    user.list_follower = [data.follower, ...user.list_follower];
+                  }
+
+                  return user;
+                }),
+              },
+            }
+          : {
+              ...state,
+              user: {
+                ...displayUser,
+                following_users: displayUser.following_users.map((user) => {
+                  if (user.username === data.followed.username) {
+                    user.list_follower = [data.follower, ...user.list_follower];
+                  }
+
+                  return user;
+                }),
+              },
+            };
+      }
+
+      return response;
     }
 
     case types.FOLLOW_USER_FAILED: {
@@ -62,17 +100,62 @@ export default function userReducer(state = initState, action) {
 
     case types.UNFOLLOW_USER_SUCCESS: {
       const data = action.payload;
+      const displayUser = state.user;
+      let response = state;
 
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          follower_count: data.unfollowed.follower_count,
-          followers: state.user.followers.filter(
-            (flw) => flw.id !== data.unfollower.id
-          ),
-        },
-      };
+      if (data.unfollowed.username === displayUser.username) {
+        response = {
+          ...state,
+          user: {
+            ...displayUser,
+            follower_count: data.unfollowed.follower_count,
+            follower_users: displayUser.follower_users.filter(
+              (flw) => flw.id !== data.unfollower.id
+            ),
+          },
+        };
+      } else {
+        const insideFollower =
+          displayUser.follower_users.find(
+            (user) => user.username === data.unfollowed.username
+          ) != null;
+
+        response = insideFollower
+          ? {
+              ...state,
+              user: {
+                ...displayUser,
+                follower_users: displayUser.follower_users.map((user) => {
+                  if (user.username === data.unfollowed.username) {
+                    user.list_follower = user.list_follower.filter(
+                      (flw) => {
+                        return flw.id !== data.unfollower.id
+                      }
+                    );
+                  }
+
+                  return user;
+                }),
+              },
+            }
+          : {
+              ...state,
+              user: {
+                ...displayUser,
+                following_users: displayUser.following_users.map((user) => {
+                  if (user.username === data.unfollowed.username) {
+                    user.list_follower = user.list_follower.filter(
+                      (flw) => flw.id !== data.unfollower.id
+                    );
+                  }
+
+                  return user;
+                }),
+              },
+            };
+      }
+
+      return response;
     }
 
     case types.UNFOLLOW_USER_FAILED: {

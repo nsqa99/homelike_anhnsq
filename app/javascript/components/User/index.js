@@ -37,7 +37,6 @@ const User = ({ username, currentUser }) => {
   }, [user]);
 
   const handleFollowOrUnfollowAction = () => {
-    console.log(isFollowed)
     if (!isFollowed) {
       dispatch(followUser(currentUser, username));
     } else {
