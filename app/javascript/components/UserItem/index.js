@@ -53,8 +53,7 @@ const UserItem = ({ user, small, follower, following, currentUser }) => {
 
               {currentUser !== user.username && (
                 <>
-                  {following ||
-                  listFollowers.find(
+                  {listFollowers.find(
                     (user) => user.username === currentUser
                   ) ? (
                     <Button

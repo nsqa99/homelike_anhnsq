@@ -25,7 +25,7 @@ const Item = ({ item, style }) => {
   };
   
   const detailPath = `/items/${item.id}`;
-  const merchantPath = `/merchants/${item.merchant.user.username}`;
+  const merchantPath = `/social/users/${item.merchant.user.username}`;
 
   return (
     <div styleName={style ? `item ${style}` : "item"}>

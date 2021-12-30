@@ -34,7 +34,7 @@ const DetailBody = ({ order, location }) => {
         </div>
         <Card styleName="body__merchant">
           <CardBody>
-            <ItemOrder item={order.item} />
+            <ItemOrder order={order} />
           </CardBody>
         </Card>
       </Col>

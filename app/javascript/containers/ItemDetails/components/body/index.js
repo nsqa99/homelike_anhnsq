@@ -126,7 +126,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
               <Col sm="12" md="5">
                 <TableDetails item={item} />
                 {isAuthenticated && currentUser !== item.owner.username && (
-                  <ReserveModal item={item} />
+                  <ReserveModal item={item} currentUser={currentUser} />
                 )}
               </Col>
               <Col sm="12" md="7">

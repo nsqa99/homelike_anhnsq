@@ -27,6 +27,17 @@ class Api::V1::OrdersController < ApplicationController
     json_response(serialize(order, with_children))
   end
 
+  def get_one_by_item_and_customer
+    item = Item.approved.find(params[:item_id])
+    order = Order.pending.find_by(item_id: item, customer_id: @current_user.customer.id)
+
+    if order
+      json_response(serialize(order, with_children))
+    else
+      json_response([], :not_found)
+    end
+  end
+
   def update
     order = Order.find(params[:id])
 
@@ -47,7 +58,7 @@ class Api::V1::OrdersController < ApplicationController
   private
 
   def new_order_params
-    params.require(:order).permit(:total, :customer_quantity, :start_rent_date, :end_rent_date, :item_id)
+    params.require(:order).permit(:total, :extra_price, :total_paid, :customer_quantity, :start_rent_date, :end_rent_date, :item_id)
   end
   
   def update_order_params

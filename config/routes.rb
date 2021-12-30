@@ -49,6 +49,10 @@ Rails.application.routes.draw do
       # Customer
       resources :customers do
         resources :orders do
+          member do
+            get "get_one/by_item", to: "orders#get_one_by_item_and_customer"
+          end
+
           post "payments/complete", to: "payments#complete"
           post "payments/payout", to: "payments#payout"
           resources :payments, only: [:create]

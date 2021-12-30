@@ -19,7 +19,7 @@ class PaypalService
         {
           amount: {
             currency_code: "USD",
-            value: order.total
+            value: order.total_paid
           }
         }
       ]
@@ -27,7 +27,7 @@ class PaypalService
     
     response = @client.execute request
     payment = Payment.new
-    payment.price = order.total
+    payment.price = order.total_paid
     payment.token = response.result.id
     payment.order = order
     payment.customer = order.customer
