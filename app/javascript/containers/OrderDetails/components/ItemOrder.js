@@ -47,6 +47,9 @@ const ItemOrder = ({ order }) => {
             />
             {"  "}/{"  "}night
           </div>
+          <RouterLink to={`/social/users/${order.item.owner.username}`}>
+            <div>Host: {order.item.owner.fullname}</div>
+          </RouterLink>
         </div>
       </div>
       <hr />
@@ -124,7 +127,12 @@ const ItemOrder = ({ order }) => {
             />
           </PayPalScriptProvider>
         ) : (
-          <Button color="success" className="w-100 d-flex align-items-center justify-content-center" size="lg" disabled>
+          <Button
+            color="success"
+            className="w-100 d-flex align-items-center justify-content-center"
+            size="lg"
+            disabled
+          >
             <CheckCircleIcon className="text-white me-3" />
             Paid
           </Button>

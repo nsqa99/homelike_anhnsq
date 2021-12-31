@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       
       # Merchant
       resources :merchants do
+        get "orders", to: "orders#index_for_merchant"
         resources :items do
           collection do
             get "search"

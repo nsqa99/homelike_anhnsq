@@ -9,18 +9,18 @@ const initState = {
 
 export default function orderReducer(state = initState, action) {
   switch (action.type) {
-    // case types.GET_ALL_ORDER_SUCCESS: {
-    //   const {data, pagination} = action.payload
-    //   return {
-    //     ...state,
-    //     list: data,
-    //     pagination: pagination,
-    //   };
-    // }
+    case types.GET_ALL_ORDER_SUCCESS: {
+      const {data, pagination} = action.payload
+      return {
+        ...state,
+        list: data,
+        pagination: pagination,
+      };
+    }
 
-    // case types.GET_ALL_ORDER_FAILED: {
-    //   return state;
-    // }
+    case types.GET_ALL_ORDER_FAILED: {
+      return state;
+    }
 
     case types.CREATE_ORDER_SUCCESS: {
       return {

@@ -21,6 +21,30 @@ class Api::V1::OrdersController < ApplicationController
     end
   end
 
+  def index
+    page = params[:page] || DEFAULT_PAGE
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+
+    orders = @current_user.customer.orders.order(id: :desc).page(page).per(page_size)
+
+    json_response(
+      serialize(orders, with_children),
+      pagination: paginate(page, page_size, orders.total_pages, orders.total_count)
+    )
+  end
+
+  def index_for_merchant
+    page = params[:page] || DEFAULT_PAGE
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+
+    orders = @current_user.merchant.orders.order(id: :desc).page(page).per(page_size)
+
+    json_response(
+      serialize(orders, with_children),
+      pagination: paginate(page, page_size, orders.total_pages, orders.total_count)
+    )
+  end
+
   def show
     order = @current_user.customer.orders.find(params[:id])
 
@@ -66,6 +90,6 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def with_children
-    ["item", "item.apartment"]
+    ["item", "item.apartment","item.apartment.rent_address"]
   end
 end
