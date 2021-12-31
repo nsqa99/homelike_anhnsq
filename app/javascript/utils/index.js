@@ -1,3 +1,5 @@
+import axios from "axios";
+import { isEmpty } from "lodash";
 import moment from "moment";
 
 export const formatDate = (date) => {
@@ -144,3 +146,13 @@ export const appendItemDatas = (data, images) => {
 
   return formData;
 };
+
+export const getLatLngApi = async (address) => {
+  const datas = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${address}`);
+  if (datas.status === 200 && !isEmpty(datas.data)) {
+    return {
+      lat: datas.data[0].lat,
+      lon: datas.data[0].lon
+    }
+  }
+}

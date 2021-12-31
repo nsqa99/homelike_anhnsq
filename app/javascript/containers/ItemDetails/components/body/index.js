@@ -30,6 +30,7 @@ import {
   getAllReview,
 } from "../../../../redux/review/review.action";
 import { getOneOrderByItem } from "../../../../redux/order/order.action";
+import Map from "./Map";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -125,14 +126,17 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
               </div>
             </div>
             <Row styleName="body__table">
-              <Col sm="12" md="5">
+              <Col sm="12" md="5" className="d-flex flex-column justify-content-between">
                 <TableDetails item={item} />
                 {isAuthenticated && currentUser !== item.owner.username && (
                   <ReserveModal item={item} orderItem={order} currentUser={currentUser} />
                 )}
               </Col>
-              <Col sm="12" md="7">
+              <Col sm="12" md="7" className="d-flex flex-column justify-content-between">
                 <div styleName="body__title">Location</div>
+                <div>
+                  <Map apartment={item.apartment} />
+                </div>
               </Col>
             </Row>
             <Card styleName="body__merchant">
