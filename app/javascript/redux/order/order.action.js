@@ -15,6 +15,11 @@ export const getOneOrder = (username, orderId) => ({
   payload: { username, orderId },
 });
 
+export const confirmPayment = (username, orderId) => ({
+  type: types.CONFIRM_PAYMENT,
+  payload: { username, orderId },
+});
+
 export const getOneOrderByItem = (username, itemId) => ({
   type: types.GET_ONE_BY_ITEM_ORDER,
   payload: { username, itemId },
@@ -35,6 +40,13 @@ export const getAllOrderResult = (payload, isSuccess = true) => {
 export const getOneOrderResult = (payload, isSuccess = true) => {
   return {
     type: isSuccess ? types.GET_ONE_ORDER_SUCCESS : types.GET_ONE_ORDER_FAILED,
+    payload,
+  };
+};
+
+export const confirmPaymentResult = (payload, isSuccess = true) => {
+  return {
+    type: isSuccess ? types.CONFIRM_PAYMENT_SUCCESS : types.CONFIRM_PAYMENT_FAILED,
     payload,
   };
 };

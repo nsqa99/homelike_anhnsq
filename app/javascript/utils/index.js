@@ -1,8 +1,12 @@
-import { isEmpty } from "lodash";
+import moment from "moment";
 
 export const formatDate = (date) => {
   let elems = date.split("T")[0].split("-");
   return elems.slice(0).reverse().join(".");
+};
+
+export const convertToUTC = (date) => {
+  return moment(date).format().slice(0, -6) + "+00:00";
 };
 
 export const formatDateTime = (datetime) => {
@@ -42,11 +46,11 @@ export const fullAddress = ({
   city,
   country,
 }) => {
-  let homeNumberDisplay = home_number ? (home_number + ", ") : "";
-  let streetDisplay = street ? (street + ", ") : "";
-  let wardDisplay = ward ? (ward + ", ") : "";
-  let districtDisplay = district ? (district + ", ") : "";
-  let cityDisplay = city ? (city + ", ") : "";
+  let homeNumberDisplay = home_number ? home_number + ", " : "";
+  let streetDisplay = street ? street + ", " : "";
+  let wardDisplay = ward ? ward + ", " : "";
+  let districtDisplay = district ? district + ", " : "";
+  let cityDisplay = city ? city + ", " : "";
   let countryDisplay = country ? country : "";
 
   return (

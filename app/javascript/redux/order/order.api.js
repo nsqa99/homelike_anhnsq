@@ -31,6 +31,18 @@ export const createOrderApi = async (username, data) => {
   );
 };
 
+export const checkoutApi = async (username, orderId) => {
+  return await AuthorizedAxios.post(
+    `${CUSTOMER_ENDPOINT}/${username}/orders/${orderId}/payments`
+  );
+};
+
+export const confirmPaymentApi = async (username, orderId) => {
+  return await AuthorizedAxios.post(
+    `${CUSTOMER_ENDPOINT}/${username}/orders/${orderId}/payments/complete`
+  );
+};
+
 export const destroyOrderApi = async (username, orderId) => {
   return await AuthorizedAxios.delete(
     `${CUSTOMER_ENDPOINT}/${username}/orders/${orderId}`

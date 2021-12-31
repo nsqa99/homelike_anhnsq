@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { createOrderResult, destroyOrderResult, getAllOrderResult, getOneOrderByItemResult, getOneOrderResult } from "./order.action";
-import { createOrderApi, destroyOrderApi, getAllOrderApi, getOneOrderApi, getOneOrderByItemApi } from "./order.api";
+import { confirmPaymentResult, createOrderResult, destroyOrderResult, getAllOrderResult, getOneOrderByItemResult, getOneOrderResult } from "./order.action";
+import { confirmPaymentApi, createOrderApi, destroyOrderApi, getAllOrderApi, getOneOrderApi, getOneOrderByItemApi } from "./order.api";
 import types from "./order.type";
 
 function* getAllOrderSaga(props) {
@@ -74,10 +74,26 @@ function* destroyOrderSaga(props) {
   }
 }
 
+function* confirmPaymentSaga(props) {
+  const {username, orderId} = props.payload;
+  try {
+    const res = yield call(confirmPaymentApi, username, orderId);
+    if (res.status === 200) {
+      const response = res.data?.status;
+      console.log(response)
+      yield all([put(confirmPaymentResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    yield all([put(confirmPaymentResult(error, false))]);
+  }
+}
+
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ORDER, getAllOrderSaga)]);
   yield all([takeEvery(types.CREATE_ORDER, createOrderSaga)]);
   yield all([takeEvery(types.DESTROY_ORDER, destroyOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_ORDER, getOneOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_BY_ITEM_ORDER, getOneOrderByItemSaga)]);
+  yield all([takeEvery(types.CONFIRM_PAYMENT, confirmPaymentSaga)]);
 }

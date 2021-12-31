@@ -1,8 +1,8 @@
 class Api::V1::OrdersController < ApplicationController
   load_and_authorize_resource
 
-  skip_before_action :authenticate_request_token, only: [:index, :show]
-  skip_load_and_authorize_resource only: [:create, :index, :show]
+  # skip_before_action :authenticate_request_token, only: [:index, :show]
+  skip_load_and_authorize_resource only: [:create]
 
   def create
     order = @current_user.customer.orders.build(new_order_params)
@@ -22,14 +22,14 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def show
-    order = Order.find(params[:id])
+    order = @current_user.customer.orders.find(params[:id])
 
     json_response(serialize(order, with_children))
   end
 
   def get_one_by_item_and_customer
-    item = Item.approved.find(params[:item_id])
-    order = Order.pending.find_by(item_id: item, customer_id: @current_user.customer.id)
+    item_id = Item.approved.find(params[:item_id])
+    order = @current_user.customer.orders.pending.find_by(item_id: item_id)
 
     if order
       json_response(serialize(order, with_children))

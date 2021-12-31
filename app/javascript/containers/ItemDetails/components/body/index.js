@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +29,7 @@ import {
   createReview,
   getAllReview,
 } from "../../../../redux/review/review.action";
+import { getOneOrderByItem } from "../../../../redux/order/order.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -46,6 +46,7 @@ const CustomSlider = styled.div`
 const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   const user = useSelector((state) => state.users.user);
   const listReviews = useSelector((state) => state.reviews);
+  const order = useSelector((state) => state.orders.orderItem);
   const [review, setReview] = useState({
     itemId: item.id,
     content: "",
@@ -59,6 +60,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
     if (item) {
       dispatch(getOneUser(item.owner.username));
       dispatch(getAllReview(item.id));
+      dispatch(getOneOrderByItem(currentUser, item.id))
     }
   }, []);
 
@@ -126,7 +128,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
               <Col sm="12" md="5">
                 <TableDetails item={item} />
                 {isAuthenticated && currentUser !== item.owner.username && (
-                  <ReserveModal item={item} currentUser={currentUser} />
+                  <ReserveModal item={item} orderItem={order} currentUser={currentUser} />
                 )}
               </Col>
               <Col sm="12" md="7">

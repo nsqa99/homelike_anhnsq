@@ -5,8 +5,26 @@ import style from "../styles/item-order.module.scss";
 import CurrencyFormat from "react-currency-format";
 import { RouterLink } from "../../../components/custom/RouterLink";
 import { formatDate } from "../../../utils";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { checkoutApi } from "../../../redux/order/order.api";
+import { useDispatch } from "react-redux";
+import { confirmPayment } from "../../../redux/order/order.action";
+import { useParams } from "react-router-dom";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const ItemOrder = ({ order }) => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const handleCheckout = async () => {
+    const response = await checkoutApi(params.username, order.id);
+
+    return response.data?.data.token;
+  };
+
+  const handleConfirmPayment = () => {
+    dispatch(confirmPayment(params.username, order.id));
+  };
+
   return (
     <Container className="p-2">
       <div className="d-flex mb-md-5 flex-column flex-md-row justify-content-start align-items-center align-items-md-stretch">
@@ -34,8 +52,11 @@ const ItemOrder = ({ order }) => {
       <hr />
       <div className="mt-md-5">
         <h3>Your options</h3>
-        <Row className="mt-4">
-          <Col sm="6" className="d-flex flex-column align-items-start justify-content-end">
+        <Row className="mt-4 mb-5">
+          <Col
+            sm="6"
+            className="d-flex flex-column align-items-start justify-content-end"
+          >
             <div className="mb-2">
               <span className="fw-bold me-3">Checkin date:</span>
               {formatDate(order.start_rent_date)}
@@ -87,15 +108,27 @@ const ItemOrder = ({ order }) => {
               </span>
             </div>
           </Col>
-          <Button
-            color="danger"
-            className="w-100 mt-5"
-            size="lg"
-            onClick={function noRefCheck() {}}
-          >
-            Confirm payment
-          </Button>
         </Row>
+        {order.status === "pending" ? (
+          <PayPalScriptProvider
+            options={{
+              "client-id":
+                "AcKoypG2QWeNbx2UE29l5yb-mDiRHZEVr0mRE6fNj6iSLHaYgM-xVuPmlgP1N6I6R5qGkDlhttupIFKU",
+              locale: "en_US",
+            }}
+          >
+            <PayPalButtons
+              style={{ layout: "horizontal" }}
+              createOrder={handleCheckout}
+              onApprove={handleConfirmPayment}
+            />
+          </PayPalScriptProvider>
+        ) : (
+          <Button color="success" className="w-100 d-flex align-items-center justify-content-center" size="lg" disabled>
+            <CheckCircleIcon className="text-white me-3" />
+            Paid
+          </Button>
+        )}
       </div>
     </Container>
   );

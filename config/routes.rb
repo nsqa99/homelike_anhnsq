@@ -49,7 +49,7 @@ Rails.application.routes.draw do
       # Customer
       resources :customers do
         resources :orders do
-          member do
+          collection do
             get "get_one/by_item", to: "orders#get_one_by_item_and_customer"
           end
 

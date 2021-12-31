@@ -12,7 +12,7 @@ class PaypalService
     request.request_body({
       intent: "CAPTURE",
       application_context: {
-        return_url: PAYPAL_RETURN_URL,
+        # return_url: PAYPAL_RETURN_URL,
         shipping_preference: "NO_SHIPPING"
       },
       purchase_units: [

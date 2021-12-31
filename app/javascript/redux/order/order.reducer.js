@@ -4,6 +4,7 @@ import _ from "lodash";
 const initState = {
   list: [],
   order: {},
+  orderItem: {}
 };
 
 export default function orderReducer(state = initState, action) {
@@ -44,14 +45,28 @@ export default function orderReducer(state = initState, action) {
     case types.GET_ONE_BY_ITEM_ORDER_SUCCESS: {
       return {
         ...state,
-        order: {
-          ...state.order,
+        orderItem: {
+          ...state.orderItem,
           ...action.payload,
         },
       };
     }
 
     case types.CREATE_ONE_ORDER_FAILED: {
+      return state;
+    }
+
+    case types.CONFIRM_PAYMENT_SUCCESS: {
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          status: action.payload
+        }
+      };
+    }
+
+    case types.CONFIRM_PAYMENT_FAILED: {
       return state;
     }
 

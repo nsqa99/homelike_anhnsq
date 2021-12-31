@@ -21,7 +21,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import { calculateDateDiff } from "../../../utils";
+import { calculateDateDiff, convertToUTC } from "../../../utils";
 import { createOrder } from "../../../redux/order/order.action";
 import { useHistory } from "react-router-dom";
 import { isEqual } from "lodash";
@@ -53,17 +53,19 @@ const CustomFooter = styled(ModalFooter)`
   align-items: flex-end;
 `;
 
-const ReserveModal = ({ currentUser, item }) => {
+const ReserveModal = ({ currentUser, item, orderItem }) => {
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
   const [numOfCustomers, setNumOfCustomers] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [extraFee, setExtraFee] = useState(0);
   const [totalPaid, setTotalPaid] = useState(0);
   const [daySpend, setDaySpend] = useState(0);
   const [isRedirect, setRedirect] = useState(false);
+  const [isOrderItemRedirect, setOrderItemRedirect] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const order = useSelector((state) => state.orders.order);
@@ -73,6 +75,8 @@ const ReserveModal = ({ currentUser, item }) => {
       let dateDiff = calculateDateDiff(startDate, endDate);
       setDaySpend(dateDiff);
       setTotalPrice(dateDiff * item.price);
+      setStart(convertToUTC(startDate))
+      setEnd(convertToUTC(endDate))
     }
   }, [startDate, endDate]);
 
@@ -88,6 +92,12 @@ const ReserveModal = ({ currentUser, item }) => {
   }, [numOfCustomers]);
 
   useEffect(() => {
+    if (orderItem && !isEqual(orderItem, {}) && !isEqual(item, {})) {
+      setOrderItemRedirect(orderItem.item.id === item.id);
+    }
+  }, [orderItem]);
+
+  useEffect(() => {
     setTotalPaid(extraFee + totalPrice);
   }, [extraFee, totalPrice]);
 
@@ -97,10 +107,19 @@ const ReserveModal = ({ currentUser, item }) => {
     }
   }, [order]);
 
+  const toggleModal = () => {
+    if (!open && isOrderItemRedirect) {
+      history.push(`/users/${currentUser}/orders/${orderItem.id}`);
+      return;
+    }
+
+    setOpen(!open);
+  };
+
   const handleOrderSubmit = () => {
     const orderDatas = {
-      start_rent_date: startDate,
-      end_rent_date: endDate,
+      start_rent_date: start,
+      end_rent_date: end,
       customer_quantity: numOfCustomers,
       item_id: item.id,
       total: totalPrice,
@@ -145,8 +164,10 @@ const ReserveModal = ({ currentUser, item }) => {
             <DatePicker
               selectsRange={true}
               minDate={new Date()}
+              maxDate={new Date(item.initial_end_date)}
               startDate={startDate}
               endDate={endDate}
+              excludeDates={item.disabled_dates.map((date) => new Date(date))}
               placeholderText="Start date - End date"
               onChange={(update) => {
                 setDateRange(update);
