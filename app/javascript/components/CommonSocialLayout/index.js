@@ -6,12 +6,12 @@ import SocialHeaders from "../SocialHeaders";
 
 const CommonSocialLayout = ({ children }) => {
   const authData = useSelector((state) => state.auth.data);
-  const userData = useSelector((state) => state.users);
+  const userData = useSelector((state) => state.users.authUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (authData) {
-      dispatch(getOneUser(authData.username));
+      dispatch(getOneUser(authData.username, true));
     }
   }, []);
   return (

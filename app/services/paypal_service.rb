@@ -12,14 +12,14 @@ class PaypalService
     request.request_body({
       intent: "CAPTURE",
       application_context: {
-        return_url: PAYPAL_RETURN_URL,
+        # return_url: PAYPAL_RETURN_URL,
         shipping_preference: "NO_SHIPPING"
       },
       purchase_units: [
         {
           amount: {
             currency_code: "USD",
-            value: order.total
+            value: order.total_paid
           }
         }
       ]
@@ -27,7 +27,7 @@ class PaypalService
     
     response = @client.execute request
     payment = Payment.new
-    payment.price = order.total
+    payment.price = order.total_paid
     payment.token = response.result.id
     payment.order = order
     payment.customer = order.customer

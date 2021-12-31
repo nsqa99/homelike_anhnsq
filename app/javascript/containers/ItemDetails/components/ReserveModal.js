@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import CurrencyFormat from "react-currency-format";
 import CSSModules from "react-css-modules";
 import style from "../styles/modal.module.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import {
@@ -21,7 +21,10 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import { calculateDateDiff } from "../../../utils";
+import { calculateDateDiff, convertToUTC } from "../../../utils";
+import { createOrder } from "../../../redux/order/order.action";
+import { useHistory } from "react-router-dom";
+import { isEqual } from "lodash";
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -50,20 +53,30 @@ const CustomFooter = styled(ModalFooter)`
   align-items: flex-end;
 `;
 
-const ReserveModal = ({ item }) => {
+const ReserveModal = ({ currentUser, item, orderItem }) => {
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
   const [numOfCustomers, setNumOfCustomers] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [extraFee, setExtraFee] = useState(0);
   const [totalPaid, setTotalPaid] = useState(0);
+  const [daySpend, setDaySpend] = useState(0);
+  const [isRedirect, setRedirect] = useState(false);
+  const [isOrderItemRedirect, setOrderItemRedirect] = useState(false);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const order = useSelector((state) => state.orders.order);
 
   useEffect(() => {
     if (startDate != null && endDate != null) {
       let dateDiff = calculateDateDiff(startDate, endDate);
+      setDaySpend(dateDiff);
       setTotalPrice(dateDiff * item.price);
+      setStart(convertToUTC(startDate))
+      setEnd(convertToUTC(endDate))
     }
   }, [startDate, endDate]);
 
@@ -79,8 +92,44 @@ const ReserveModal = ({ item }) => {
   }, [numOfCustomers]);
 
   useEffect(() => {
+    if (orderItem && !isEqual(orderItem, {}) && !isEqual(item, {})) {
+      setOrderItemRedirect(orderItem.item.id === item.id);
+    }
+  }, [orderItem]);
+
+  useEffect(() => {
     setTotalPaid(extraFee + totalPrice);
   }, [extraFee, totalPrice]);
+
+  useEffect(() => {
+    if (!isEqual(order, {}) && isRedirect) {
+      history.push(`/users/${currentUser}/orders/${order.id}`);
+    }
+  }, [order]);
+
+  const toggleModal = () => {
+    if (!open && isOrderItemRedirect) {
+      history.push(`/users/${currentUser}/orders/${orderItem.id}`);
+      return;
+    }
+
+    setOpen(!open);
+  };
+
+  const handleOrderSubmit = () => {
+    const orderDatas = {
+      start_rent_date: start,
+      end_rent_date: end,
+      customer_quantity: numOfCustomers,
+      item_id: item.id,
+      total: totalPrice,
+      extra_price: extraFee,
+      total_paid: totalPaid,
+    };
+
+    dispatch(createOrder(currentUser, orderDatas));
+    setRedirect(true);
+  };
 
   return (
     <>
@@ -115,8 +164,10 @@ const ReserveModal = ({ item }) => {
             <DatePicker
               selectsRange={true}
               minDate={new Date()}
+              maxDate={new Date(item.initial_end_date)}
               startDate={startDate}
               endDate={endDate}
+              excludeDates={item.disabled_dates.map((date) => new Date(date))}
               placeholderText="Start date - End date"
               onChange={(update) => {
                 setDateRange(update);
@@ -138,6 +189,9 @@ const ReserveModal = ({ item }) => {
         <CustomFooter className="m-auto" style={{ width: "80%" }}>
           <div>
             <span className="fw-bold">Total:</span>
+            {daySpend > 0 && (
+              <span className="text-muted"> ( x {daySpend} days ) </span>
+            )}
             <span className=" ms-2 fs-4">
               <CurrencyFormat
                 value={totalPrice}
@@ -173,9 +227,9 @@ const ReserveModal = ({ item }) => {
             color="primary"
             className="w-100 mt-5"
             size="lg"
-            onClick={function noRefCheck() {}}
+            onClick={handleOrderSubmit}
           >
-            Proceed
+            Proceed with Paypal
           </Button>
         </CustomFooter>
       </Modal>

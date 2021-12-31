@@ -47,7 +47,7 @@ class Api::V1::PostsController < ApplicationController
     username = params[:user_id]
 
     posts = if username
-      User.find(username: owner).posts.order(id: :desc).page(page).per(page_size)
+      User.find_by(username: username).posts.order(id: :desc).page(page).per(page_size)
     else
       Post.order(id: :desc).page(page).per(page_size)
     end

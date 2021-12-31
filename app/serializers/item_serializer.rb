@@ -1,6 +1,6 @@
 class ItemSerializer < ActiveModel::Serializer
   attributes :id, :rate, :price, :initial_start_date, :initial_end_date, :status, :owner,
-    :similar_items, :reviews,  :description
+    :similar_items, :reviews, :description, :disabled_dates
 
   has_one :apartment
 

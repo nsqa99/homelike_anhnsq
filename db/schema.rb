@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_28_104843) do
+ActiveRecord::Schema.define(version: 2021_12_30_163600) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 2021_12_28_104843) do
     t.integer "customer_quantity", null: false
     t.float "extra_price", default: 0.0
     t.bigint "merchant_id", null: false
+    t.float "total_paid", default: 0.0, null: false
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["item_id"], name: "index_orders_on_item_id"
     t.index ["merchant_id"], name: "index_orders_on_merchant_id"

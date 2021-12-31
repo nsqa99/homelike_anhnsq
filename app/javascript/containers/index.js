@@ -12,6 +12,7 @@ import Profile from "./Profile";
 import OrderDetails from "./OrderDetails";
 import HostLayout from "../components/HostLayout";
 import Item from "./Host/components/item";
+import OrderList from "./OrderList";
 
 export default function index() {
   return (
@@ -49,6 +50,10 @@ export default function index() {
             <Route
               path="/users/:username/orders/:id"
               component={OrderDetails}
+            />
+            <Route
+              path="/users/:username/orders"
+              component={OrderList}
             />
             <Route
               path="/items/:id"

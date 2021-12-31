@@ -24,6 +24,7 @@ import {
   createComment,
   getAllComment,
 } from "../../../../redux/comment/comment.action";
+import { useHistory } from "react-router-dom";
 
 const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   const listComments = useSelector((state) => state.comments);
@@ -35,6 +36,12 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   });
 
   const dispatch = useDispatch();
+  const history = useHistory();
+  
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
   useEffect(() => {
     if (post) {
       setComment({ ...comment, postId: post.id });
@@ -70,14 +77,15 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
         className="mt-4 d-flex flex-column align-items-center"
       >
         <div styleName="body__title" className="mb-5 align-self-start">
-          <RouterLink
-            to={location.state?.prevPath || "/social"}
+          <div
+            onClick={handleGoBack}
             className="d-flex align-items-center w-100 justify-content-start"
             styleName="post__create"
+            style={{ cursor: "pointer" }}
           >
             <ArrowBackIosIcon styleName="icon__back" />
             Back
-          </RouterLink>
+          </div>
         </div>
         <Post
           post={post}

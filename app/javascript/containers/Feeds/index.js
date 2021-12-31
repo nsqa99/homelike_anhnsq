@@ -30,12 +30,20 @@ const index = () => {
               {authData?.isAuthenticated ? (
                 <PostCreateModal username={authData.username} />
               ) : (
-                "Sign in to create post"
+                <div className="fs-4 mb-5 p-2 border border-danger border-2 rounded fw-bold">
+                  Sign in to create a post
+                </div>
               )}
-              <PostSection username={authData.username} posts={postDatas.list} />
+              <PostSection
+                username={authData.username}
+                posts={postDatas.list}
+              />
             </Col>
             <Col sm="6" md="5" lg="4">
-              <RightPanel username={authData.username} populars={postDatas.popular_posts} />
+              <RightPanel
+                username={authData.username}
+                populars={postDatas.popular_posts}
+              />
             </Col>
           </Row>
         </Container>

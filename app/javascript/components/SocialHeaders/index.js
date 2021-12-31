@@ -7,6 +7,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useDispatch, useSelector } from "react-redux";
+import PublicIcon from "@material-ui/icons/Public";
 import {
   DropdownItem,
   Dropdown,
@@ -99,7 +100,7 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
         </Nav>
       ) : (
         <Nav className="ms-auto" navbar>
-          <CustomNavLink tag={Link} to="/login">
+          <CustomNavLink tag={Link} to="/login" style={{width: 150}}>
             <Button color="danger" styleName="header__btnSwitch">
               <PublicIcon className="me-2" />
               Sign in

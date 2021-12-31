@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       
       # Merchant
       resources :merchants do
+        get "orders", to: "orders#index_for_merchant"
         resources :items do
           collection do
             get "search"
@@ -49,6 +50,10 @@ Rails.application.routes.draw do
       # Customer
       resources :customers do
         resources :orders do
+          collection do
+            get "get_one/by_item", to: "orders#get_one_by_item_and_customer"
+          end
+
           post "payments/complete", to: "payments#complete"
           post "payments/payout", to: "payments#payout"
           resources :payments, only: [:create]
