@@ -13,6 +13,7 @@ import OrderDetails from "./OrderDetails";
 import HostLayout from "../components/HostLayout";
 import Item from "./Host/components/item";
 import OrderList from "./OrderList";
+import ItemSearchList from "../containers/ItemSearchList";
 
 export default function index() {
   return (
@@ -44,6 +45,7 @@ export default function index() {
 
         <CommonLayout>
           <Switch>
+            <Route path="/search" component={ItemSearchList} />
             <Route path="/user">
               <Users />
             </Route>

@@ -1,0 +1,134 @@
+@import "../../../assets/styles/variables";
+$img-width: 40%;
+$img-height: 200px;
+$left-margin: 20px;
+
+.item {
+  display: flex;
+  width: 100%;
+  background-color: white;
+  margin: 10px;
+  margin-top: 0;
+  z-index: 1;
+  border-radius: $border-radius-base;
+  box-shadow: 1px 1px 5px 1px rgba(82, 80, 80, 0.2);
+
+  .img-wrapper {
+    width: $img-width;
+    background: $bg--dark-light;
+    padding: 5px;
+    display: flex;
+    border-radius: $border-radius-base $border-radius-base 0 0;
+
+
+    img {
+      width: 100%;
+      border-radius: $border-radius-base;
+      height: $img-height;
+      object-fit: cover;
+    }
+  }
+
+  .icon {
+    &__location {
+      font-size: 15px;
+    }
+
+    &__calendar {
+      font-size: 15px;
+      margin-right: 5px;
+    }
+    
+    &__fa {
+      color: #f0c14b;
+    }
+    
+    &__merchant {
+      font-size: 15px;
+      margin-right: 5px;
+    }
+  }
+
+  
+  
+  &__info {
+    height: 100px;
+    align-self: flex-start;
+    font-size: $text-small;
+    padding: 10px 15px;
+    
+    p {
+      max-height: 100%;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+  }
+  
+  &__price {
+    margin-top: 5px;
+    font-size: 16px;
+    background: $bg--dark-light;
+    padding: 5px 10px;
+    border-radius: $border-radius-base $border-radius-base 0 0;
+    color: $color--dark;
+  }
+  
+  &__rating {
+    display: flex;
+  }
+  
+  &__title {
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+
+    &:hover {
+      color: black;
+      text-decoration: underline;
+    }
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+    font-size: $text-small;
+
+    &:hover {
+      color: black;
+      text-decoration: underline;
+    }
+  }
+
+  &__merchant {
+    display: flex;
+    align-items: center;
+    color: $theme_color;
+    text-decoration: none;
+    font-size: 12px;
+    width: 100%;
+    align-items: center;
+    padding: 0 0 10px 0;
+  }
+
+  &__time-info {
+    width: 100%;
+    margin-right: 0 !important;
+    color: $color--dark;
+    font-size: $text-small;
+    cursor: pointer;
+  }
+  
+  &__details {
+    text-transform: uppercase;
+    cursor: pointer;
+    color: $theme_color;
+    font-weight: 700;
+    font-size: $text-small;
+    align-self: flex-end;
+    padding: 10px;
+  }
+}

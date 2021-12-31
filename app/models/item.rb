@@ -48,7 +48,7 @@ class Item < ApplicationRecord
           methods: [:image_urls],
           include: {
             rent_address: {
-              only: [:home_number, :street, :ward, :district, :city, :country]
+              only: [:home_number, :street, :ward, :district, :city, :country, :latitude, :longitude]
             },
             apartments_facilities: {
               only: [:quality, :quantity],
