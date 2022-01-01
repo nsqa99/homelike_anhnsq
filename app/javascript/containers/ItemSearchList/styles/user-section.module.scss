@@ -1,0 +1,28 @@
+@import '../../../assets/styles/variables';
+
+.filter-select {
+  option {
+    &:first-child {
+      color: grey;
+    }
+  }
+}
+
+.user {
+  &__list {
+    &--title {
+      font-size: $text-larger;
+    }
+  }
+  
+  &__title {
+    color: black;
+    font-size: $text-larger;
+  }
+}
+
+.item__wrapper {
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

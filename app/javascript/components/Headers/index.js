@@ -4,6 +4,7 @@ import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import PublicIcon from "@material-ui/icons/Public";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import MapIcon from '@material-ui/icons/Map';
 import MenuIcon from "@material-ui/icons/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -53,8 +54,15 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
       <Link to="/" className="navbar-brand">
         Home Like
       </Link>
+      
       {isAuthenticated ? (
         <Nav className="ms-auto" navbar>
+          <CustomNavLink tag={Link} to="/search">
+            <Button color="danger" styleName="header__btnSwitch">
+              <MapIcon className="me-2" />
+              Search apartments on Map
+            </Button>
+          </CustomNavLink>
           <CustomNavLink tag={Link} to="/social">
             <Button color="danger" styleName="header__btnSwitch">
               <PublicIcon className="me-2" />
