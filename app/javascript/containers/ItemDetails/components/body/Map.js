@@ -33,10 +33,20 @@ const MapComponent = ({ apartment }) => {
   const [latLon, setLatLon] = useState([0, 0]);
 
   useEffect(async () => {
-    const itemAddress = fullAddress(apartment.rent_address);
-    const response = await getLatLngApi(itemAddress);
-    if (response) {
-      setLatLon([parseFloat(response.lat), parseFloat(response.lon)]);
+    // const itemAddress = fullAddress(apartment.rent_address);
+    // const response = await getLatLngApi(itemAddress);
+    // if (response) {
+    //   setLatLon([parseFloat(response.lat), parseFloat(response.lon)]);
+    // } else {
+    //   setLatLon(HANOI_LAT_LON);
+    // }
+    const latitude = apartment.rent_address.latitude;
+    const longitude = apartment.rent_address.longitude;
+    if (latitude && longitude) {
+      setLatLon([
+        apartment.rent_address.latitude,
+        apartment.rent_address.longitude,
+      ]);
     } else {
       setLatLon(HANOI_LAT_LON);
     }
