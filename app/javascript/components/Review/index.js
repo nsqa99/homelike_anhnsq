@@ -38,7 +38,7 @@ const Review = ({ review, isOwner }) => {
             {review.owner.fullname}
           </CardTitle>
           <div className="ms-auto text-warning">
-            {review.rate && Array(review.rate)
+            {!!review.rate && Array(review.rate)
               .fill()
               .map((_, index) => (
                 <StarIcon key={index}></StarIcon>

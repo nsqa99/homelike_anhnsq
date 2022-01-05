@@ -8,33 +8,9 @@ class Api::V1::PostsController < ApplicationController
   # before_action :validate_user, only: [:create]
 
   def create
-    post = @current_user.posts.build(new_post_params)
+    post = post_service.create(@current_user, new_post_params, params[:item_ids], params[:shared_id])
 
-    # Attach Item to post
-
-    if (item_ids = params[:item_ids])
-      items = Item.where(id: item_ids).approved
-      
-      if items.count < item_ids.count
-        return json_response([], :bad_request, message: "Item must be approved")
-      end
-
-      post.items.concat(items)
-    end
-
-    # Share posts
-
-    if (shared_id = params[:shared_id])
-      shared = Post.find(shared_id)
-      post.child = shared
-    end
-
-    if post.save
-      if shared.present?
-        shared.try(:increment!, :shares)
-        shared.__elasticsearch__.update_document
-      end
-      
+    if post
       json_response(serialize(post, with_children))
     else
       error_json_response(post)
@@ -46,11 +22,7 @@ class Api::V1::PostsController < ApplicationController
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
     username = params[:user_id]
 
-    posts = if username
-      User.find_by(username: username).posts.order(id: :desc).page(page).per(page_size)
-    else
-      Post.order(id: :desc).page(page).per(page_size)
-    end
+    posts = post_service.get_list_posts(username, page, page_size)
 
     json_response(
       {
@@ -62,15 +34,15 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    post = Post.find(params[:id])
+    post = post_service.get_one(params[:id])
 
     json_response(serialize(post, with_children))
   end
 
   def update
-    post = Post.find(params[:id])
+    post = post_service.update(params[:id], new_post_params)
 
-    if post.update(new_post_params)
+    if post
       json_response(serialize(post, with_children))
     else
       error_json_response(post)
@@ -78,25 +50,19 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    post = Post.find(params[:id])
-    
-    if post.destroy
-      json_response([], :ok)
+    post = post_service.destroy(params[:id])
+
+    if post
+      json_response(serialize(post, with_children), :ok)
     else
       error_json_response(post)
     end
   end
 
   def like_post
-    post = Post.find(params[:post_id])
-    
-    like = post.likes.build
-    like.user = @current_user
-    
-    if like.save
-      post.increment!(:likes_count)
-      post.__elasticsearch__.update_document
+    post = post_service.like_post(@current_user, params[:post_id])
 
+    if post
       return json_response(serialize(post, with_children), :ok)
     end
     
@@ -104,13 +70,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def unlike_post
-    post = Post.find(params[:post_id])
-    like = post.likes.find_by(user_id: @current_user.id)
-    
-    if like.destroy
-      post.decrement!(:likes_count)
-      post.__elasticsearch__.update_document
+    post = post_service.unlike_post(@current_user, params[:post_id])
 
+    if post
       return json_response(serialize(post, with_children), :ok)
     end
     
@@ -121,6 +83,10 @@ class Api::V1::PostsController < ApplicationController
 
   def new_post_params
     params.require(:post).permit(:content, images: [])
+  end
+
+  def post_service
+    @post_service ||= PostService.new
   end
 
   def with_children

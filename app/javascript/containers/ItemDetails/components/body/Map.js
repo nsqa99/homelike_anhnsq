@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import L from "leaflet";
 import { fullAddress, getLatLngApi } from "../../../../utils";
 import { isEqual } from "lodash";
 import { HANOI_LAT_LON } from "../../../../common/constant";
 import styled from "styled-components";
-
-let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+import { CustomIcon } from "../../../../components/MapIcon";
 
 const FillerWrapper = styled.div`
   .map__filler {
@@ -42,14 +33,10 @@ const MapComponent = ({ apartment }) => {
     // }
     const latitude = apartment.rent_address.latitude;
     const longitude = apartment.rent_address.longitude;
-    if (latitude && longitude) {
-      setLatLon([
-        apartment.rent_address.latitude,
-        apartment.rent_address.longitude,
-      ]);
-    } else {
-      setLatLon(HANOI_LAT_LON);
-    }
+    const coordinates = [latitude, longitude];
+
+    if (!latitude && !longitude) coordinates = HANOI_LAT_LON;
+    setLatLon(coordinates);
   }, []);
 
   return (
@@ -74,7 +61,7 @@ const MapComponent = ({ apartment }) => {
 
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {!isEqual(latLon, HANOI_LAT_LON) && (
-              <Marker position={latLon}>
+              <Marker position={latLon} icon={CustomIcon}>
                 <Popup>Hello World</Popup>
               </Marker>
             )}

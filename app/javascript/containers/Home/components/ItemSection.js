@@ -51,7 +51,7 @@ const ItemSection = () => {
     <Container fluid styleName="item__container">
       <Container>
         <FilterWrapper>
-          <div styleName="item__list--title">Recent Listings</div>
+          <div styleName="item__list--title">Recent Apartments</div>
           <FormGroup>
             <Input
               id="filter"
