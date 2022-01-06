@@ -4,9 +4,8 @@ class Api::V1::ReviewsController < ApplicationController
   def index
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
-    item = Item.approved.find(params[:item_id])
 
-    reviews = item.reviews.page(page).per(page_size)
+    reviews = review_service.get_list_reviews_by_item(params[:item_id], page, page_size)
 
     json_response(
       serialize(reviews),
@@ -15,10 +14,9 @@ class Api::V1::ReviewsController < ApplicationController
   end
 
   def create
-    review = @current_user.reviews.build(new_review_params)
-    review.item = Item.approved.find(params[:item_id])
+    review = review_service.create(@current_user, params[:item_id], new_review_params)
 
-    if review.save
+    if review
       json_response(serialize(review))
     else
       json_response([], :bad_request, message: review.errors.full_messages.to_sentence)
@@ -28,7 +26,7 @@ class Api::V1::ReviewsController < ApplicationController
   def destroy
     review = Review.find(params[:id])
 
-    if review.destroy
+    if review
       json_response(serialize(review))
     else
       json_response([], :bad_request, message: review.errors.full_messages.to_sentence)
@@ -39,5 +37,9 @@ class Api::V1::ReviewsController < ApplicationController
 
   def new_review_params
     params.require(:review).permit(:content, :rate)
+  end
+
+  def review_service
+    @review_service ||= ReviewService.new
   end
 end

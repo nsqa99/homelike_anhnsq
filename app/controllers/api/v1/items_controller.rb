@@ -5,8 +5,9 @@ class Api::V1::ItemsController < ApplicationController
   skip_load_and_authorize_resource only: [:create, :show, :search]
 
   def create
-    item = @current_user.merchant.items.build(new_item_params)    
-    if item.save
+    item = item_service.create(@current_user.merchant, new_item_params)
+    
+    if item
       json_response(serialize(item, with_children))
     else
       json_response([], :bad_request, message: item.errors.full_messages.to_sentence)
@@ -17,7 +18,7 @@ class Api::V1::ItemsController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    items = @current_user.merchant.items.approved.order(id: :desc).page(page).per(page_size)
+    items = item_service.get_list_items_by_merchant(@current_user.merchant, page, page_size)
 
     json_response(
       serialize(items, with_children),
@@ -26,15 +27,15 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    item = Item.approved.find(params[:id])
+    item = item_service.get_one(params[:id])
 
     json_response(serialize(item, with_children))
   end
 
   def update
-    item = Item.approved.find(params[:id])
+    item = item_service.update(params[:id], update_item_params)
 
-    if item.update(update_item_params)
+    if item
       json_response(serialize(item, with_children))
     else
       json_response([], :bad_request, message: item.errors.full_messages.to_sentence)
@@ -42,8 +43,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    item = Item.approved.find(params[:id])
-    item.update_attribute(:status, 1) # Deleted = 1
+    item = item_service.destroy(params[:id])
 
     json_response(serialize(item, with_children))
   end
@@ -60,7 +60,7 @@ class Api::V1::ItemsController < ApplicationController
       params[:filters].map{|item| JSON.parse(item)}) : default_filter
     
     sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : [["id", "desc"]]
-    items, total = Item.build_search(search_text, filters, sort, search_fields, page, page_size)
+    items, total = item_service.search(search_text, filters, sort, search_fields, page, page_size)
 
     json_response(
       serialize(item_decorator.transform_list(items)),
@@ -90,6 +90,10 @@ class Api::V1::ItemsController < ApplicationController
           apartment_images: []
       ]
     )
+  end
+
+  def item_service
+    @item_service ||= ItemService.new
   end
 
   def with_children

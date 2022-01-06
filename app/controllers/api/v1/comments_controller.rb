@@ -4,9 +4,8 @@ class Api::V1::CommentsController < ApplicationController
   def index
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
-    post = Post.find(params[:post_id])
 
-    comments = post.comments.page(page).per(page_size)
+    comments = comment_service.get_list_comments_by_post(params[:post_id], page, page_size)
 
     json_response(
       serialize(comments),
@@ -15,13 +14,9 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def create
-    comment = @current_user.comments.build(new_comment_params)
-    comment.post = Post.find(params[:post_id])
+    comment = comment_service.create(@current_user, params[:post_id], new_comment_params)
 
-    if comment.save
-      comment.post.increment!(:comments_count)
-      comment.post.__elasticsearch__.update_document
-
+    if comment
       json_response(serialize(comment))
     else
       json_response([], :bad_request, message: comment.errors.full_messages.to_sentence)
@@ -29,12 +24,9 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def destroy
-    comment = Comment.find(params[:id])
+    comment = comment_service.destroy(params[:id])
 
-    if comment.destroy
-      comment.post.decrement!(:comments_count)
-      comment.post.__elasticsearch__.update_document
-
+    if comment
       json_response(serialize(comment))
     else
       json_response([], :bad_request, message: comment.errors.full_messages.to_sentence)
@@ -45,5 +37,9 @@ class Api::V1::CommentsController < ApplicationController
 
   def new_comment_params
     params.require(:comment).permit(:content, :rate)
+  end
+
+  def comment_service
+    @comment_service ||= CommentService.new
   end
 end

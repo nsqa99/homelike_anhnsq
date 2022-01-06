@@ -85,12 +85,12 @@ const SearchSection = () => {
     if (e.target.checked) {
       setFilters({
         ...filters,
-        sort: [...filters.sort, ["id", "desc"]],
+        sort: [...filters.sort, ["id", "asc"]],
       });
     } else {
       setFilters({
         ...filters,
-        sort: filters.sort.filter((data) => !_.isEqual(data, ["id", "desc"])),
+        sort: filters.sort.filter((data) => !_.isEqual(data, ["id", "asc"])),
       });
     }
   };
@@ -207,7 +207,7 @@ const SearchSection = () => {
                       onChange={handleNewestFilter}
                       checked={sorts.newest}
                     />
-                    <Label check>Newest</Label>
+                    <Label check>Oldest</Label>
                   </FormGroup>
                 </Col>
                 <Col md="3">

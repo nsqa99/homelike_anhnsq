@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_30_163600) do
+ActiveRecord::Schema.define(version: 2022_01_05_044002) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 2021_12_30_163600) do
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["item_id"], name: "index_orders_on_item_id"
     t.index ["merchant_id"], name: "index_orders_on_merchant_id"
-    t.index ["start_rent_date", "end_rent_date"], name: "index_orders_on_start_rent_date_and_end_rent_date", unique: true
+    t.index ["start_rent_date", "end_rent_date", "item_id"], name: "index_orders_on_start_rent_date_and_end_rent_date_and_item_id", unique: true
   end
 
   create_table "payments", charset: "utf8mb4", force: :cascade do |t|

@@ -5,16 +5,13 @@ class Api::V1::OrdersController < ApplicationController
   skip_load_and_authorize_resource only: [:create]
 
   def create
-    order = @current_user.customer.orders.build(new_order_params)
-    item_id = params[:item_id]
-    item = Item.approved.find(item_id)
-      
+    item = Item.approved.find(params[:item_id])
+    
     return json_response([], :bad_request, message: "Item must be approved") unless item
+    
+    order = order_service.create(@current_user.customer, item, new_order_params)
 
-    order.item = item
-    order.merchant = item.merchant
-
-    if order.save
+    if order
       json_response(serialize(order, with_children))
     else
       json_response([], :bad_request, message: order.errors.full_messages.to_sentence)
@@ -25,7 +22,7 @@ class Api::V1::OrdersController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    orders = @current_user.customer.orders.order(id: :desc).page(page).per(page_size)
+    orders = order_service.get_list_orders_by_user(@current_user.customer, page, page_size)
 
     json_response(
       serialize(orders, with_children),
@@ -37,7 +34,7 @@ class Api::V1::OrdersController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    orders = @current_user.merchant.orders.order(id: :desc).page(page).per(page_size)
+    orders = order_service.get_list_orders_by_user(@current_user.merchant, page, page_size)
 
     json_response(
       serialize(orders, with_children),
@@ -46,14 +43,13 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def show
-    order = @current_user.customer.orders.find(params[:id])
+    order = order_service.get_one(@current_user, params[:id])
 
     json_response(serialize(order, with_children))
   end
 
   def get_one_by_item_and_customer
-    item_id = Item.approved.find(params[:item_id])
-    order = @current_user.customer.orders.pending.find_by(item_id: item_id)
+    order = order_service.get_one_by_item_and_user(params[:item_id], @current_user.customer)
 
     if order
       json_response(serialize(order, with_children))
@@ -63,9 +59,9 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def update
-    order = Order.find(params[:id])
+    order = order_service.update(params[:id], update_order_params)
 
-    if order.update(update_order_params)
+    if order
       json_response(serialize(order, with_children))
     else
       json_response([], :bad_request, message: order.errors.full_messages.to_sentence)
@@ -73,8 +69,7 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def destroy
-    order = Order.not_postponed.find(params[:id])
-    order.update_attribute(:status, 2) # Deleted = 2
+    order = order_service.postpone(params[:id])
 
     json_response(serialize(order, with_children))
   end
@@ -87,6 +82,10 @@ class Api::V1::OrdersController < ApplicationController
   
   def update_order_params
     params.require(:order).permit(:customer_quantity, :status, :start_rent_date, :end_rent_date)
+  end
+
+  def order_service
+    @order_service ||= OrderService.new
   end
 
   def with_children

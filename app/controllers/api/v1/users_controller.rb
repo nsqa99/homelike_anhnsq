@@ -6,7 +6,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
-    users, total = User.build_search("", [], [], [], page, page_size)
+    users, total = user_service.get_list_users(page, page_size)
 
     json_response(
       serialize(user_decorator.transform_list(users)),
@@ -16,38 +16,29 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     username = params[:id]
-    user = User.find_by(username: username)
+    user = user_service.get_one(username)
 
     json_response(serialize(user), :ok)
   end
 
   def follow
-    followed_user = User.find_by!(username: params[:followed])
-
-    ActiveRecord::Base.transaction do
-      current_user.following << followed_user
-      current_user.increment!(:following_count)
-      followed_user.increment!(:follower_count)
-    end
+    followed_user = params[:followed]
+    response = user_service.follow(current_user, followed_user)
+    return json_response([], :bad_request) if !response
     
     json_response({
       follower: serialize(current_user),
-      followed: serialize(followed_user)}, :ok)
+      followed: serialize(response)}, :ok)
   end
   
   def unfollow
-    unfollowed_user = User.find_by!(username: params[:unfollowed])
-    return json_response([], :bad_request) if !current_user.following.include?(unfollowed_user)
+    unfollowed_user = params[:unfollowed]
+    response = user_service.unfollow(current_user, unfollowed_user)
+    return json_response([], :bad_request) if !response
 
-    ActiveRecord::Base.transaction do
-      current_user.following.delete(unfollowed_user)
-      current_user.decrement!(:following_count)
-      unfollowed_user.decrement!(:follower_count)
-    end
-    
     json_response({
       unfollower: serialize(current_user),
-      unfollowed: serialize(unfollowed_user)}, :ok)
+      unfollowed: serialize(response)}, :ok)
   end
 
   def search
@@ -59,7 +50,8 @@ class Api::V1::UsersController < ApplicationController
     filters = params[:filters]
     sort = params[:sort]
     
-    users, total = User.build_search(search_text, filters, sort, search_fields, page, page_size)
+    users, total = user_service.search(search_text, filters, sort, search_fields, page, page_size)
+    
     json_response(
       serialize(user_decorator.transform_list(users)),
       paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
@@ -70,6 +62,10 @@ class Api::V1::UsersController < ApplicationController
 
   def user_decorator
     @user_decorator ||= Elasticsearch::UserDecorator.new
+  end
+
+  def user_service
+    @user_service ||= UserService.new
   end
 
   def all_search_fields
