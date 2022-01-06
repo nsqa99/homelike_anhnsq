@@ -1,11 +1,11 @@
 import React from "react";
 import { Container } from "reactstrap";
-import UserSection from "./components/UserSection";
+import ItemSection from "./components/ItemSection";
 
 const index = () => {
   return (
     <>
-      <UserSection />
+      <ItemSection />
     </>
   );
 };

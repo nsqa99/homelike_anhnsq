@@ -62,7 +62,7 @@ const MapComponent = ({ apartment }) => {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {!isEqual(latLon, HANOI_LAT_LON) && (
               <Marker position={latLon} icon={CustomIcon}>
-                <Popup>Hello World</Popup>
+                <Popup>{apartment.title}</Popup>
               </Marker>
             )}
           </MapContainer>

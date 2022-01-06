@@ -59,12 +59,11 @@ const MerchantOrderList = () => {
                 <th>Checkin Date</th>
                 <th>Checkout Date</th>
                 <th>Customer</th>
-                <th>Total Paid</th>
+                <th>Total Amount</th>
                 <th>Payout Status</th>
-                <th style={{ width: "20%" }}></th>
+                <th></th>
               </tr>
               {orders.list.map((order) => {
-                console.log(order)
                 let item = order.item;
                 let apartment = item.apartment;
                 let itemDetailPath = `/items/${item.id}`
@@ -107,13 +106,13 @@ const MerchantOrderList = () => {
                       </td>
                       <td>
                         <div className="d-flex align-orders-start justify-content-end">
-                          <Button
+                          {/* <Button
                             color="warning"
                             className="me-2"
                             onClick={() => handleViewModal(order.id)}
                           >
                             Details
-                          </Button>
+                          </Button> */}
                           {order.payout_status !== "paid" && (
                             <Button
                               color="danger"

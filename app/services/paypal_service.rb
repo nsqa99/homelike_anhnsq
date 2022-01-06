@@ -59,7 +59,8 @@ class PaypalService
   def make_payout_for(order)
     payout = Payout.new
     payout.order = order
-    payout.total = (order.total_paid * (1 - DEFAULT_PLATFORM_AFFILIATE_RATE.to_f)).round(2)
+    # payout.total = (order.total_paid * (1 - DEFAULT_PLATFORM_AFFILIATE_RATE.to_f)).round(2)
+    payout.total = order.total_paid.round(2)
 
     response = request_create_payout(order.payment.id, payout.total, order.merchant.user.email)
     
