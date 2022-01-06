@@ -7,6 +7,7 @@ const CustomForm = ({
   fields: { initValues, validations },
   handleSubmit,
   images,
+  formRef
 }) => {
   /*---------- Example for fields props ---------------*/
   // const fields = {
@@ -41,6 +42,7 @@ const CustomForm = ({
         }
         handleSubmit(data);
       }}
+      innerRef={formRef}
     >
       <Form>{children}</Form>
     </Formik>

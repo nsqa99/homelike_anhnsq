@@ -33,7 +33,7 @@ const MapComponent = ({ apartment }) => {
     // }
     const latitude = apartment.rent_address.latitude;
     const longitude = apartment.rent_address.longitude;
-    const coordinates = [latitude, longitude];
+    let coordinates = [latitude, longitude];
 
     if (!latitude && !longitude) coordinates = HANOI_LAT_LON;
     setLatLon(coordinates);

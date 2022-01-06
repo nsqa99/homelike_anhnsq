@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import {
   Button,
@@ -19,11 +19,17 @@ import {
 import CustomForm from "../../../../../components/Form";
 import {
   getBlobUrl,
+  getLatLngApi,
   isValidImageSize,
   isValidImageType,
 } from "../../../../../utils";
 import { useDispatch } from "react-redux";
 import { createItem } from "../../../../../redux/item/item.action";
+import MapComponent from "../Map";
+import { add, debounce, isEqual, throttle } from "lodash";
+import { HANOI_LAT_LON } from "../../../../../common/constant";
+import toast, { Toaster } from "react-hot-toast";
+import { FillerWrapper } from "../../../../../components/LoadingFiller";
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -61,20 +67,66 @@ const CustomImagePreview = styled.div`
 
 const CreateModal = ({ username }) => {
   const [open, setOpen] = useState(false);
+  const [validAddress, setValid] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
+  const [latLon, setLatLon] = useState(HANOI_LAT_LON);
   const [itemImages, setItemImages] = useState([]);
   const [imageError, setImageError] = useState({});
   const dispatch = useDispatch();
+  const formRef = useRef(null);
 
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = async (data) => {
+    const [latitude, longitude] = latLon;
+    if (latitude && longitude) {
+      data = {
+        ...data,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      };
+    }
+    console.log(data);
     dispatch(createItem(username, data, itemImages));
     setOpen(false);
+  };
+
+  const handleVerifyAddress = async () => {
+    const data = formRef.current.values;
+    console.log(data);
+    if (data.street && data.district && data.city && data.country) {
+      const address = [
+        data.street,
+        data.district,
+        data.city,
+        data.country,
+      ].join(",");
+      const toastId = toast.loading("Verifying...");
+      setLoading(true);
+      const response = await getLatLngApi(address);
+      if (response) {
+        toast.success("All done! Check it on map", { id: toastId });
+        setLatLon([response.lat, response.lon]);
+        setValid(true);
+        setLoading(false);
+      } else {
+        toast.error("Address cannot be resolved :(", { id: toastId });
+        setLatLon(HANOI_LAT_LON);
+        setValid(false);
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleAddressChange = (e) => {
+    formRef.current.handleBlur(e);
+    handleVerifyAddress();
   };
 
   const toggleModal = () => {
     setOpen(!open);
     setImages([]);
     setImageError({});
+    setLatLon(HANOI_LAT_LON);
   };
 
   const handleImageChange = (e) => {
@@ -157,12 +209,14 @@ const CreateModal = ({ username }) => {
       </Button>
 
       <CustomModal isOpen={open} toggle={toggleModal}>
+        {loading && <FillerWrapper />}
         <ModalHeader>Create apartment</ModalHeader>
         <CustomModalBody>
           <CustomForm
             fields={fields}
             handleSubmit={handleFormSubmit}
             images={images}
+            formRef={formRef}
           >
             <Row className="p-2">
               <Col xs="12" md="6">
@@ -199,6 +253,22 @@ const CreateModal = ({ username }) => {
                   label="Each person exceed fee"
                   type="number"
                 />
+                <CustomInput
+                  name="images"
+                  id="images"
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  multiple
+                  onChange={(e) => handleImageChange(e)}
+                  imageValidator={imageError}
+                />
+                {images.length > 0 && (
+                  <CustomImagePreview>
+                    {images.map(({ key, url }) => (
+                      <img key={key} src={url} />
+                    ))}
+                  </CustomImagePreview>
+                )}
               </Col>
               <Col xs="12" md="6">
                 <CustomInput
@@ -220,33 +290,39 @@ const CreateModal = ({ username }) => {
                   id="homeNumber"
                   label="Home Number"
                 />
-                <CustomInput name="street" id="street" label="Street" />
-                <CustomInput name="district" id="district" label="District" />
-                <CustomInput name="city" id="city" label="City" />
-                <CustomInput name="country" id="country" label="Country" />
                 <CustomInput
-                  name="images"
-                  id="images"
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  multiple
-                  onChange={(e) => handleImageChange(e)}
-                  imageValidator={imageError}
+                  name="street"
+                  id="street"
+                  label="Street"
+                  onBlur={(e) => handleAddressChange(e)}
                 />
-                {images.length > 0 && (
-                  <CustomImagePreview>
-                    {images.map(({ key, url }) => (
-                      <img key={key} src={url} />
-                    ))}
-                  </CustomImagePreview>
-                )}
+                <CustomInput
+                  name="district"
+                  id="district"
+                  label="District"
+                  onBlur={(e) => handleAddressChange(e)}
+                />
+                <CustomInput
+                  name="city"
+                  id="city"
+                  label="City"
+                  onBlur={(e) => handleAddressChange(e)}
+                />
+                <CustomInput
+                  name="country"
+                  id="country"
+                  label="Country"
+                  onBlur={(e) => handleAddressChange(e)}
+                />
+                <MapComponent latLon={latLon} setLatLon={setLatLon} />
               </Col>
             </Row>
 
             <div className="mt-4 d-flex justify-content-end">
-              <Button color="primary" type="submit">
+              <Button color="primary" type="submit" disabled={!validAddress}>
                 Save
               </Button>
+              <Toaster />
               <Button onClick={toggleModal} className="ms-2">
                 Cancel
               </Button>

@@ -137,6 +137,14 @@ export const appendItemDatas = (data, images) => {
     "item[apartment_attributes][rent_address_attributes][city]",
     data.city
   );
+  formData.append(
+    "item[apartment_attributes][rent_address_attributes][latitude]",
+    data.latitude
+  );
+  formData.append(
+    "item[apartment_attributes][rent_address_attributes][longitude]",
+    data.longitude
+  );
   if (data.street) {
     formData.append(
       "item[apartment_attributes][rent_address_attributes][street]",

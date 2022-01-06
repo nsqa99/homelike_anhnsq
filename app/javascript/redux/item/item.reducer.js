@@ -70,13 +70,13 @@ export default function itemReducer(state = initState, action) {
       const newData = {
         list: {
           ...state.list,
-          data: state.list.data.filter((item) => item.id !== data.id),
+          data: state.list.data?.filter((item) => item.id !== data.id),
           pagination: { ...state.list.pagination, ...newPagin },
         },
 
         listNotES: {
           ...state.listNotES,
-          data: state.listNotES.data.filter((item) => item.id !== data.id),
+          data: state.listNotES.data?.filter((item) => item.id !== data.id),
           pagination: { ...state.listNotES.pagination, ...newPagin },
         },
         isSearch: isSearch
