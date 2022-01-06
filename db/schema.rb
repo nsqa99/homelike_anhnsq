@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_05_044002) do
+ActiveRecord::Schema.define(version: 2022_01_06_035101) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -221,12 +221,12 @@ ActiveRecord::Schema.define(version: 2022_01_05_044002) do
   end
 
   create_table "payouts", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "payment_id", null: false
     t.float "total", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["payment_id"], name: "index_payouts_on_payment_id"
+    t.bigint "order_id"
+    t.index ["order_id"], name: "index_payouts_on_order_id"
   end
 
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_044002) do
   add_foreign_key "orders", "merchants"
   add_foreign_key "payments", "customers"
   add_foreign_key "payments", "orders"
-  add_foreign_key "payouts", "payments"
+  add_foreign_key "payouts", "orders"
   add_foreign_key "posts", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "rent_addresses", "apartments"

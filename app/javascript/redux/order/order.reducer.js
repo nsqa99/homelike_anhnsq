@@ -4,13 +4,13 @@ import _ from "lodash";
 const initState = {
   list: [],
   order: {},
-  orderItem: {}
+  orderItem: {},
 };
 
 export default function orderReducer(state = initState, action) {
   switch (action.type) {
     case types.GET_ALL_ORDER_SUCCESS: {
-      const {data, pagination} = action.payload
+      const { data, pagination } = action.payload;
       return {
         ...state,
         list: data,
@@ -19,6 +19,19 @@ export default function orderReducer(state = initState, action) {
     }
 
     case types.GET_ALL_ORDER_FAILED: {
+      return state;
+    }
+
+    case types.GET_ALL_ORDER_MERCHANT_SUCCESS: {
+      const { data, pagination } = action.payload;
+      return {
+        ...state,
+        list: data,
+        pagination: pagination,
+      };
+    }
+
+    case types.GET_ALL_ORDER_MERCHANT_FAILED: {
       return state;
     }
 
@@ -61,8 +74,8 @@ export default function orderReducer(state = initState, action) {
         ...state,
         order: {
           ...state.order,
-          status: action.payload
-        }
+          status: action.payload,
+        },
       };
     }
 
@@ -70,10 +83,27 @@ export default function orderReducer(state = initState, action) {
       return state;
     }
 
+    case types.MAKE_PAYOUT_SUCCESS: {
+      return {
+        ...state,
+        list: state.list.map((order) => {
+          if (order.id === action.payload.order_id) {
+            order = { ...order, payout_status: action.payload.status };
+          }
+
+          return order;
+        }),
+      };
+    }
+
+    case types.MAKE_PAYOUT_FAILED: {
+      return state;
+    }
+
     case types.GET_ONE_ORDER_FAILED: {
       return state;
     }
-    
+
     case types.GET_ONE_BY_ITEM_ORDER_FAILED: {
       return state;
     }

@@ -60,7 +60,7 @@ const Header = () => {
       <RouterLink to={`/host/${authData.username}`} className="navbar-brand">
         Items
       </RouterLink>
-      <RouterLink to="/host/orders" className="navbar-brand">
+      <RouterLink to={`/host/${authData.username}/orders`} className="navbar-brand">
         Orders
       </RouterLink>
 

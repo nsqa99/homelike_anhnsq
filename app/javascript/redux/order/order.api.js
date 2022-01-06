@@ -4,9 +4,16 @@ import { API_BASE_URL } from "../../common/constant";
 import { AuthorizedAxios } from "../../utils/axios";
 
 const CUSTOMER_ENDPOINT = `${API_BASE_URL}/customers`;
+const MERCHANT_ENDPOINT = `${API_BASE_URL}/merchants`;
 
 export const getAllOrderApi = async (username, options) => {
   return await AuthorizedAxios.get(`${CUSTOMER_ENDPOINT}/${username}/orders`, {
+    params: options,
+  });
+};
+
+export const getAllOrderMerchantApi = async (username, options) => {
+  return await AuthorizedAxios.get(`${MERCHANT_ENDPOINT}/${username}/orders`, {
     params: options,
   });
 };
@@ -46,5 +53,11 @@ export const confirmPaymentApi = async (username, orderId) => {
 export const destroyOrderApi = async (username, orderId) => {
   return await AuthorizedAxios.delete(
     `${CUSTOMER_ENDPOINT}/${username}/orders/${orderId}`
+  );
+};
+
+export const makePayoutApi = async (username, orderId) => {
+  return await AuthorizedAxios.post(
+    `${MERCHANT_ENDPOINT}/${username}/orders/${orderId}/payout`
   );
 };
