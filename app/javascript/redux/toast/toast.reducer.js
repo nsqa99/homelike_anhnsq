@@ -43,6 +43,15 @@ export default function toastReducer(state = initState, action) {
     case types.RESET_TOAST_SUCCESS: {
       return initState;
     }
+    case types.REMOVE_TOAST_SUCCESS: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          status: 'remove',
+        },
+      };;
+    }
 
     default:
       return state;

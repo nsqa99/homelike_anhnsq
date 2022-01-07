@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getOneOrder } from "../../redux/order/order.action";
 import { isEqual } from "lodash";
+import NotificationToast from "../../components/Toast";
 
 const OrderDetails = ({ match: { params }, location }) => {
   const orderId = params?.id;
@@ -22,6 +23,7 @@ const OrderDetails = ({ match: { params }, location }) => {
 
   return (
     <Container>
+      <NotificationToast />
       {!isEqual(order, {}) && <DetailBody order={order} location={location} />}
     </Container>
   );

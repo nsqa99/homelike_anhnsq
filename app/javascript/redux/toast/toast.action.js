@@ -34,3 +34,11 @@ export const resetToast = () => ({
 export const resetToastResult = () => ({
   type: types.RESET_TOAST_SUCCESS
 });
+
+export const removeToast = () => ({
+  type: types.REMOVE_TOAST
+});
+
+export const removeToastResult = () => ({
+  type: types.REMOVE_TOAST_SUCCESS
+});

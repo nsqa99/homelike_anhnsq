@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -26,6 +26,8 @@ import { FlexCentered } from "../../../common/styles";
 import styled from "styled-components";
 import { CustomNavLink } from "../../custom/NavLink";
 import { RouterLink } from "../../custom/RouterLink";
+import { logout } from '../../../redux/auth/auth.action'
+
 // import { auth } from "firebase";
 
 const AvatarDropdown = styled(FlexCentered)`
@@ -38,18 +40,20 @@ const AvatarDropdown = styled(FlexCentered)`
 `;
 
 const Header = () => {
-  // const history = useHistory();
-  // const login = () => {
-  //   if (user) {
-  //     auth().signOut();
-  //     history.push("/login");
-  //   }
-  // };
+  const history = useHistory();
   const [isOpen, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth.data);
 
   const toggle = () => {
     setOpen(!isOpen);
+  };
+
+  const handleSignout = () => {
+    if (authData.isAuthenticated) {
+      dispatch(logout());
+      history.push("/login");
+    }
   };
 
   return (
@@ -86,7 +90,7 @@ const Header = () => {
               <RouterLink to={`/host/${authData.username}`}>
                 <DropdownItem>Account: {authData.username}</DropdownItem>
               </RouterLink>
-            <DropdownItem>Sign out</DropdownItem>
+            <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Nav>

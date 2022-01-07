@@ -12,42 +12,25 @@ const PostWrapper = styled.div`
   margin-top: 30px;
 `;
 
-const RightPanel = ({items}) => {
-  const posts = [
-    {
-      id: 1,
-      content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis lobortis`,
-      likes: 100,
-      shares: 12,
-      user: {
-        username: "nsqa99",
-        user_full_name: "Anh Nguyen Sy Quang",
-      },
-      images: [],
-      created_at: "2021-12-21",
-    },
-  ];
-
+const RightPanel = ({ items }) => {
   return (
-    <PostWrapper>
-      <div styleName="post__title" className="mb-5">
-        Featuring items
-      </div>
-      
-      <div className="d-flex flex-column flex-wrap justify-content-around">
-        {
-          items?.map((item) => {
-            return (
-              <Item key={item.id} item={item} />
-            );
-          })
-        }
-      </div>
-    </PostWrapper>
+    <>
+      {items && items.length > 0 ? (
+        <PostWrapper>
+          <div styleName="post__title" className="mb-5">
+            Featuring apartments
+          </div>
+
+          <div className="d-flex flex-column flex-wrap justify-content-around">
+            {items?.map((item) => {
+              return <Item key={item.id} item={item} />;
+            })}
+          </div>
+        </PostWrapper>
+      ) : (
+        <span className="fs-5 fw-bold">No apartments found</span>
+      )}
+    </>
   );
 };
 

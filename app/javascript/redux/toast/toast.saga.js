@@ -18,10 +18,14 @@ function* createLoadingSaga(props) {
 function* resetToastSaga() {
   yield all([put(resetToastResult())]);
 }
+function* removeToastSaga() {
+  yield all([put(removeToastResult())]);
+}
 
 export default function* rootSaga() {
   yield all([takeEvery(types.CREATE_SUCCESS, createSuccessSaga)]);
   yield all([takeEvery(types.CREATE_FAIL, createFailSaga)]);
   yield all([takeEvery(types.CREATE_LOADING, createLoadingSaga)]);
   yield all([takeEvery(types.RESET_TOAST, resetToastSaga)]);
+  yield all([takeEvery(types.REMOVE_TOAST, removeToastSaga)]);
 }

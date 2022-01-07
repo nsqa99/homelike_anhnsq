@@ -5,6 +5,8 @@ import style from "./style.module.scss";
 import { Button, Col, Container, FormGroup, Input, Label } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/auth/auth.action";
+import NotificationToast from "../../components/Toast";
+import LoginImg from "../../assets/images/login.jpg";
 
 const Login = () => {
   const history = useHistory();
@@ -33,39 +35,49 @@ const Login = () => {
   }, [isAuthenticated, history, username]);
 
   return (
-    <Container styleName="login__container">
-      <FormGroup row>
-        <Label for="exampleEmail" sm={2}>
-          Username
-        </Label>
-        <Col sm={10}>
-          <Input
-            id="exampleEmail"
-            name="email"
-            placeholder="username"
-            type="email"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Label for="examplePassword" sm={2}>
-          Password
-        </Label>
-        <Col sm={10}>
-          <Input
-            id="examplePassword"
-            name="password"
-            placeholder="password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Col>
-        <Button color="danger" className="mt-5" onClick={handleLogin}>
-          Sign in
-        </Button>
-      </FormGroup>
-    </Container>
+    <div styleName="login__wrapper">
+      <Container styleName="login__container">
+        <NotificationToast />
+        <div className="d-flex justify-content-around w-100">
+          <img src={LoginImg} styleName="login__img" />
+          <div styleName="login__credentials" className="ms-auto">
+            <span className="fs-2 fw-bold">Welcome to HomeLike</span>
+            <div className="mt-5">
+              <FormGroup>
+                <Label for="exampleEmail">Username</Label>
+                <Input
+                  id="exampleEmail"
+                  name="email"
+                  placeholder="username"
+                  type="email"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="examplePassword">Password</Label>
+                <Input
+                  id="examplePassword"
+                  name="password"
+                  placeholder="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button
+                  color="danger"
+                  className="mt-4 mb-3 w-100"
+                  onClick={handleLogin}
+                >
+                  Sign in
+                </Button>
+                <span>
+                  Don't have an account? <Link to="/signup">Sign up</Link>{" "}
+                </span>
+              </FormGroup>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </div>
   );
 };
 export default CSSModules(Login, style);

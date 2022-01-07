@@ -12,6 +12,7 @@ import { capitalizeFirstLetter } from "../../utils";
 import { getAllOrderMerchant, makePayout } from "../../redux/order/order.action";
 import { RouterLink } from "../../components/custom/RouterLink";
 import PaymentIcon from '@material-ui/icons/Payment';
+import NotificationToast from "../../components/Toast";
 
 const ImageWrapper = styled.div`
   img {
@@ -48,6 +49,7 @@ const MerchantOrderList = () => {
 
   return (
     <Container className="mt-5">
+      <NotificationToast />
       {!isEmpty(orders.list) ? (
         <>
           <Table responsive hover styleName="order__table">

@@ -19,6 +19,7 @@ import {
 import {
   createLoadingResult,
   createSuccessResult,
+  removeToastResult,
   resetToastResult,
 } from "../toast/toast.action";
 import {
@@ -38,28 +39,46 @@ import types from "./post.type";
 
 function* getAllPostSaga() {
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllPostApi);
     if (res.status === 200) {
-      yield all([put(getAllPostResult(res.data?.data))]);
+      yield all([
+        put(getAllPostResult(res.data?.data)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
     const isSuccess = false;
-    yield put(getAllPostResult(error, isSuccess));
+    yield all([
+      (put(getAllPostResult(error, isSuccess)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult())),
+    ]);
   }
 }
 
 function* getAllPostByUsernameSaga(props) {
   const { data, options } = props.payload;
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllPostByUsernameApi, data, options);
     if (res.status === 200) {
-      yield put(getAllPostByUsernameResult(res.data?.data));
+      yield all([
+        put(getAllPostByUsernameResult(res.data?.data)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
     const isSuccess = false;
-    yield put(getAllPostByUsernameResult(error, isSuccess));
+    yield all([
+      put(getAllPostByUsernameResult(error, isSuccess)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
@@ -118,9 +137,11 @@ function* createPostSaga(props) {
     const res = yield call(createPostApi, username, formData, config);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(createPostResult(response)),
-        put(createSuccessResult("Done")),
-        put(resetToastResult()),]);
+      yield all([
+        put(createPostResult(response)),
+        put(createSuccessResult("Post created")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);

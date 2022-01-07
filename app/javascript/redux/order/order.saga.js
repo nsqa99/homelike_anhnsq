@@ -1,41 +1,84 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { confirmPaymentResult, createOrderResult, destroyOrderResult, getAllOrderMerchantResult, getAllOrderResult, getOneOrderByItemResult, getOneOrderResult, makePayoutResult } from "./order.action";
-import { confirmPaymentApi, createOrderApi, destroyOrderApi, getAllOrderApi, getAllOrderMerchantApi, getOneOrderApi, getOneOrderByItemApi, makePayoutApi } from "./order.api";
+import {
+  confirmPaymentResult,
+  createOrderResult,
+  destroyOrderResult,
+  getAllOrderMerchantResult,
+  getAllOrderResult,
+  getOneOrderByItemResult,
+  getOneOrderResult,
+  makePayoutResult,
+} from "./order.action";
+import {
+  confirmPaymentApi,
+  createOrderApi,
+  destroyOrderApi,
+  getAllOrderApi,
+  getAllOrderMerchantApi,
+  getOneOrderApi,
+  getOneOrderByItemApi,
+  makePayoutApi,
+} from "./order.api";
 import types from "./order.type";
+import {
+  createLoadingResult,
+  createSuccessResult,
+  createFailResult,
+  resetToastResult,
+  removeToastResult,
+} from "../toast/toast.action";
 
 function* getAllOrderSaga(props) {
-  const {username, options} = props.payload;
-  
+  const { username, options } = props.payload;
+
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllOrderApi, username, options);
     if (res.status === 200) {
       const response = res.data;
-      yield all([put(getAllOrderResult(response))]);
+      yield all([
+        put(getAllOrderResult(response)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
-    yield all([put(getAllOrderResult(error, false))]);
+    yield all([
+      put(getAllOrderResult(error, false)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
 function* getAllOrderMerchantSaga(props) {
-  const {username, options} = props.payload;
-  
+  const { username, options } = props.payload;
+
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllOrderMerchantApi, username, options);
     if (res.status === 200) {
       const response = res.data;
-      yield all([put(getAllOrderMerchantResult(response))]);
+      yield all([
+        put(getAllOrderMerchantResult(response)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
-    yield all([put(getAllOrderMerchantResult(error, false))]);
+    yield all([
+      put(getAllOrderMerchantResult(error, false)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
 function* getOneOrderSaga(props) {
-  const {username, orderId} = props.payload;
-  
+  const { username, orderId } = props.payload;
+
   try {
     const res = yield call(getOneOrderApi, username, orderId);
     if (res.status === 200) {
@@ -49,8 +92,8 @@ function* getOneOrderSaga(props) {
 }
 
 function* getOneOrderByItemSaga(props) {
-  const {username, itemId} = props.payload;
-  
+  const { username, itemId } = props.payload;
+
   try {
     const res = yield call(getOneOrderByItemApi, username, itemId);
     if (res.status === 200) {
@@ -64,7 +107,7 @@ function* getOneOrderByItemSaga(props) {
 }
 
 function* createOrderSaga(props) {
-  const {username, data} = props.payload;
+  const { username, data } = props.payload;
   try {
     const res = yield call(createOrderApi, username, data);
     if (res.status === 200) {
@@ -77,7 +120,7 @@ function* createOrderSaga(props) {
 }
 
 function* destroyOrderSaga(props) {
-  const {username, orderId} = props.payload;
+  const { username, orderId } = props.payload;
   try {
     const res = yield call(destroyOrderApi, username, orderId);
     if (res.status === 200) {
@@ -90,31 +133,48 @@ function* destroyOrderSaga(props) {
 }
 
 function* confirmPaymentSaga(props) {
-  const {username, orderId} = props.payload;
+  const { username, orderId } = props.payload;
   try {
+    yield put(createLoadingResult());
     const res = yield call(confirmPaymentApi, username, orderId);
     if (res.status === 200) {
       const response = res.data?.status;
-      console.log(response)
-      yield all([put(confirmPaymentResult(response))]);
+      yield all([
+        put(confirmPaymentResult(response)),
+        put(createSuccessResult("Payment success!")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
-    yield all([put(confirmPaymentResult(error, false))]);
+    yield all([
+      put(confirmPaymentResult(error, false)),
+      put(createFailResult("Payment process failed. Please try again later.")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
 function* makePayoutSaga(props) {
-  const {username, orderId} = props.payload;
+  const { username, orderId } = props.payload;
   try {
+    yield put(createLoadingResult());
     const res = yield call(makePayoutApi, username, orderId);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(makePayoutResult(response))]);
+      yield all([
+        put(makePayoutResult(response)),
+        put(createSuccessResult("Payout success!")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
-    yield all([put(makePayoutResult(error, false))]);
+    yield all([
+      put(makePayoutResult(error, false)),
+      put(createFailResult("Payout process failed. Please try again later.")),
+      put(resetToastResult()),
+    ]);
   }
 }
 

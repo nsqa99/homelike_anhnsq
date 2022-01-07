@@ -12,14 +12,23 @@ const NotificationToast = () => {
   useEffect(() => {
     if (!isEqual(noti, {})) {
       const { message, status } = noti;
-      if (status === "loading") {
-        setToastId(toast.loading("Please wait..."));
-      } else if (status === "success") {
-        toast.success(message, { id: toastId });
-        setToastId(null);
-      } else {
-        toast.error(message, { id: toastId });
-        setToastId(null);
+      switch(status) {
+        case "loading":
+          setToastId(toast.loading("Please wait..."));
+          break;
+        case "success":
+          toast.success(message, { id: toastId });
+          setToastId(null);
+          break;
+        case "fail":
+          toast.error(message, { id: toastId });
+          setToastId(null);
+          break;
+        case "remove":
+          toast.dismiss(toastId);
+          break;
+        default:
+          break;
       }
     }
   }, [noti]);

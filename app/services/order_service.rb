@@ -8,7 +8,7 @@ class OrderService
     false
   end
 
-  def get_list_orders_by_user user, page, page_size, paid
+  def get_list_orders_by_user user, page, page_size, paid=false
     if paid
       user.orders.paid.order(id: :desc).page(page).per(page_size)
     else

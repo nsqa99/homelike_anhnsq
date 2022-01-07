@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils";
 import { getAllOrder } from "../../redux/order/order.action";
 import { RouterLink } from "../../components/custom/RouterLink";
+import NotificationToast from "../../components/Toast";
 
 const ImageWrapper = styled.div`
   img {
@@ -48,6 +49,7 @@ const OrderList = () => {
 
   return (
     <Container className="mt-5">
+      <NotificationToast />
       {!isEmpty(orders.list) ? (
         <>
           <Table responsive hover styleName="order__table">
