@@ -6,6 +6,7 @@ import RightPanel from "./components/RightPanel";
 import { getAllPost } from "../../redux/post/post.action";
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
+import NotificationToast from "../../components/Toast";
 
 const index = () => {
   const postDatas = useSelector((state) => state.posts.list);
@@ -20,6 +21,7 @@ const index = () => {
     <>
       {postDatas && !isEqual(postDatas.list, []) && (
         <Container className="p-3">
+          <NotificationToast />
           <Row className="mt-5">
             <Col
               sm="12"

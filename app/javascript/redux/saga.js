@@ -6,6 +6,7 @@ import reviewSagas from "./review/review.saga";
 import commentSagas from "./comment/comment.saga";
 import postSagas from "./post/post.saga";
 import orderSagas from "./order/order.saga";
+import toastSagas from "./toast/toast.saga";
 
 export default function* rootSaga() {
   yield all([
@@ -16,5 +17,6 @@ export default function* rootSaga() {
     commentSagas(),
     postSagas(),
     orderSagas(),
+    toastSagas(),
   ]);
 }
