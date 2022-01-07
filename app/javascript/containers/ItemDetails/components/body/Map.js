@@ -33,7 +33,7 @@ const MapComponent = ({ apartment }) => {
     // }
     const latitude = apartment.rent_address.latitude;
     const longitude = apartment.rent_address.longitude;
-    const coordinates = [latitude, longitude];
+    let coordinates = [latitude, longitude];
 
     if (!latitude && !longitude) coordinates = HANOI_LAT_LON;
     setLatLon(coordinates);
@@ -62,7 +62,7 @@ const MapComponent = ({ apartment }) => {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {!isEqual(latLon, HANOI_LAT_LON) && (
               <Marker position={latLon} icon={CustomIcon}>
-                <Popup>Hello World</Popup>
+                <Popup>{apartment.title}</Popup>
               </Marker>
             )}
           </MapContainer>

@@ -22,6 +22,7 @@ class Ability
       if actor.merchant?
         can [:update, :destroy], Merchant, user_id: actor.id
         can :manage, Item, merchant_id: actor.merchant.id
+        can [:index_for_merchant, :show], Order, merchant_id: actor.merchant.id
       end
       
       if actor.customer?

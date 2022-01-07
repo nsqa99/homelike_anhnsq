@@ -1,6 +1,6 @@
 class Api::V1::PaymentsController < ApplicationController
   load_and_authorize_resource :order
-  before_action :validate_user
+  before_action :validate_user, only: [:create, :complete]
 
   def create
     order = Order.not_postponed.find(params[:order_id])
@@ -27,14 +27,13 @@ class Api::V1::PaymentsController < ApplicationController
 
   def payout
     order = Order.find(params[:order_id])
-
-    if order.payment
-      result = paypal_service.make_payout_for(order.payment, order.merchant.user.email)
+    if order.payment.try(:paid)
+      result = paypal_service.make_payout_for(order)
       
-      return json_response(result) if result
+      return json_response(order.payout) if result
     end
 
-    json_response([], :bad_request, message: "Payment process failed. Please try again later")
+    json_response([], :bad_request, message: "Payout process failed. Please try again later")
   end
 
   private

@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { confirmPaymentResult, createOrderResult, destroyOrderResult, getAllOrderResult, getOneOrderByItemResult, getOneOrderResult } from "./order.action";
-import { confirmPaymentApi, createOrderApi, destroyOrderApi, getAllOrderApi, getOneOrderApi, getOneOrderByItemApi } from "./order.api";
+import { confirmPaymentResult, createOrderResult, destroyOrderResult, getAllOrderMerchantResult, getAllOrderResult, getOneOrderByItemResult, getOneOrderResult, makePayoutResult } from "./order.action";
+import { confirmPaymentApi, createOrderApi, destroyOrderApi, getAllOrderApi, getAllOrderMerchantApi, getOneOrderApi, getOneOrderByItemApi, makePayoutApi } from "./order.api";
 import types from "./order.type";
 
 function* getAllOrderSaga(props) {
@@ -15,6 +15,21 @@ function* getAllOrderSaga(props) {
   } catch (error) {
     console.log(error);
     yield all([put(getAllOrderResult(error, false))]);
+  }
+}
+
+function* getAllOrderMerchantSaga(props) {
+  const {username, options} = props.payload;
+  
+  try {
+    const res = yield call(getAllOrderMerchantApi, username, options);
+    if (res.status === 200) {
+      const response = res.data;
+      yield all([put(getAllOrderMerchantResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    yield all([put(getAllOrderMerchantResult(error, false))]);
   }
 }
 
@@ -89,11 +104,27 @@ function* confirmPaymentSaga(props) {
   }
 }
 
+function* makePayoutSaga(props) {
+  const {username, orderId} = props.payload;
+  try {
+    const res = yield call(makePayoutApi, username, orderId);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(makePayoutResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    yield all([put(makePayoutResult(error, false))]);
+  }
+}
+
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ORDER, getAllOrderSaga)]);
+  yield all([takeEvery(types.GET_ALL_ORDER_MERCHANT, getAllOrderMerchantSaga)]);
   yield all([takeEvery(types.CREATE_ORDER, createOrderSaga)]);
   yield all([takeEvery(types.DESTROY_ORDER, destroyOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_ORDER, getOneOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_BY_ITEM_ORDER, getOneOrderByItemSaga)]);
   yield all([takeEvery(types.CONFIRM_PAYMENT, confirmPaymentSaga)]);
+  yield all([takeEvery(types.MAKE_PAYOUT, makePayoutSaga)]);
 }

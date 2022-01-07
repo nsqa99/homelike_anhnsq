@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector } from "react-redux";
@@ -34,6 +34,7 @@ const ItemSection = () => {
   const items = useSelector((state) => state.items.list.data);
   const [searchText, setSearchText] = useState("");
   const dispatch = useDispatch();
+  const { query } = useLocation();
 
   const handleSearchTextChange = (e) => {
     setSearchText(e.target.value);
@@ -43,6 +44,7 @@ const ItemSection = () => {
     if (e.key === "Enter") {
       const data = {
         search_text: searchText,
+        fields: ["apartment.rent_address.city", "apartment.rent_address.country", "apartment.rent_address.district"]
       }
       
       dispatch(searchItem(data));
@@ -50,7 +52,15 @@ const ItemSection = () => {
   };
 
   useEffect(() => {
-    dispatch(searchItem(""));
+    if (query) {
+      const data = {
+        search_text: query,
+        fields: ["apartment.rent_address.city", "apartment.rent_address.country", "apartment.rent_address.district"]
+      }
+      dispatch(searchItem(data));
+    } else {
+      dispatch(searchItem(""));
+    }
   }, []);
 
   return (

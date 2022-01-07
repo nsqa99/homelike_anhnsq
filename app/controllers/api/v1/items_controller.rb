@@ -59,7 +59,7 @@ class Api::V1::ItemsController < ApplicationController
     filters = params[:filters] ? default_filter.concat(
       params[:filters].map{|item| JSON.parse(item)}) : default_filter
     
-    sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : [["id", "desc"]]
+    sort = params[:sort] ? params[:sort].map{|item| item.is_a?(Array) ? item : JSON.parse(item)} : search_text.present? ? [] : [["id", "desc"]]
     items, total = item_service.search(search_text, filters, sort, search_fields, page, page_size)
 
     json_response(

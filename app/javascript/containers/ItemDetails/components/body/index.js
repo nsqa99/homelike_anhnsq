@@ -3,7 +3,7 @@ import CSSModules from "react-css-modules";
 import style from "../../styles/body.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import RightPanel from "./RightPanel";
-import _ from "lodash";
+import _, { isEqual } from "lodash";
 
 import {
   Button,
@@ -31,6 +31,9 @@ import {
 } from "../../../../redux/review/review.action";
 import { getOneOrderByItem } from "../../../../redux/order/order.action";
 import Map from "./Map";
+import ItemShareModal from "./ItemShareModal";
+import toast, { Toaster } from "react-hot-toast";
+import { resetShareState } from "../../../../redux/post/post.action";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -48,6 +51,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
   const user = useSelector((state) => state.users.user);
   const listReviews = useSelector((state) => state.reviews);
   const order = useSelector((state) => state.orders.orderItem);
+  const share = useSelector((state) => state.posts.share);
   const [review, setReview] = useState({
     itemId: item.id,
     content: "",
@@ -61,9 +65,18 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
     if (item) {
       dispatch(getOneUser(item.owner.username));
       dispatch(getAllReview(item.id));
-      dispatch(getOneOrderByItem(currentUser, item.id))
+      dispatch(getOneOrderByItem(currentUser, item.id));
     }
   }, []);
+
+  useEffect(() => {
+    if (!isEqual(share, {})) {
+      share.success
+        ? toast.success("Post shared!")
+        : toast.error("An error occured :(");
+      dispatch(resetShareState());
+    }
+  }, [share]);
 
   const handleReview = (e) => {
     dispatch(createReview(review));
@@ -112,9 +125,14 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
     <>
       {!_.isEqual(user.username, "") ? (
         <Row>
+          <Toaster />
           <Col md="12" lg="9" className="mt-4">
-            <div styleName="body__title" className="mb-5">
+            <div
+              styleName="body__title"
+              className="d-flex justify-content-between mb-5"
+            >
               Gallery
+              <ItemShareModal username={currentUser} item={item} />
             </div>
             <CustomSlider>
               <MySlider items={carouselImages} />
@@ -126,13 +144,25 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
               </div>
             </div>
             <Row styleName="body__table">
-              <Col sm="12" md="5" className="d-flex flex-column justify-content-between">
+              <Col
+                sm="12"
+                md="5"
+                className="d-flex flex-column justify-content-between"
+              >
                 <TableDetails item={item} />
                 {isAuthenticated && currentUser !== item.owner.username && (
-                  <ReserveModal item={item} orderItem={order} currentUser={currentUser} />
+                  <ReserveModal
+                    item={item}
+                    orderItem={order}
+                    currentUser={currentUser}
+                  />
                 )}
               </Col>
-              <Col sm="12" md="7" className="d-flex flex-column justify-content-between">
+              <Col
+                sm="12"
+                md="7"
+                className="d-flex flex-column justify-content-between"
+              >
                 <div styleName="body__title">Location</div>
                 <div>
                   <Map apartment={item.apartment} />

@@ -65,53 +65,8 @@ module Searchable
 
       child_should_query = child_query[:bool][:should]
       child_should_query.concat([query_string: { "fields" => search_fields,  "query" =>  search_text}])
-      child_should_query.concat([query_string: { "fields" => search_fields,  "query" =>  "*#{search_text}*"}])
-      # search_fields.each do |field|
-      #   if field.class == String
-          
-      #   else
-      #     child_should_query.concat([
-      #       nested: {
-      #         path: field[:base_key],
-      #         query: {
-      #           bool: {
-      #             must: [
-      #               {query_string: { "default_field" => field[:field],  "query" =>  search_text}},
-      #               {match: {field[:filter_key] => field[:filter_value]}}
-      #             ]
-      #           }
-      #         }
-      #       }
-      #     ])
-      #     child_should_query.concat([
-      #       nested: {
-      #         path: field[:base_key],
-      #         query: {
-      #           bool: {
-      #             must: [
-      #               {query_string: { "default_field" => field[:field],  "query" =>  "*#{search_text}*"}},
-      #               {match: {field[:filter_key] => field[:filter_value]}}
-      #             ]
-      #           }
-      #         }
-      #       }
-      #     ])
-      #     child_should_query.concat([
-      #       nested: {
-      #         path: field[:base_key],
-      #         query: {
-      #           bool: {
-      #             must: [
-      #               {wildcard: { "#{field[:field]}": "*#{ori_search_text}*"}},
-      #               {match: {field[:filter_key] => field[:filter_value]}}
-      #             ]
-      #           }
-      #         }
-      #       }
-      #     ])
-      #   end
-      # end
-
+      child_should_query.concat([query_string: { "fields" => search_fields,  "query" =>  "*#{search_text.strip}*"}])
+      
       and_query = root_query[:bool][:must]
       and_query.concat([child_query])
     end

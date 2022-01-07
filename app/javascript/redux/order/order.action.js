@@ -5,6 +5,11 @@ export const getAllOrder = (username, options = {}) => ({
   payload: { username, options },
 });
 
+export const getAllOrderMerchant = (username, options = {}) => ({
+  type: types.GET_ALL_ORDER_MERCHANT,
+  payload: { username, options },
+});
+
 export const createOrder = (username, data) => ({
   type: types.CREATE_ORDER,
   payload: { username, data },
@@ -30,9 +35,21 @@ export const destroyOrder = (username, orderId) => ({
   payload: { username, orderId },
 });
 
+export const makePayout = (username, orderId) => ({
+  type: types.MAKE_PAYOUT,
+  payload: { username, orderId },
+});
+
 export const getAllOrderResult = (payload, isSuccess = true) => {
   return {
     type: isSuccess ? types.GET_ALL_ORDER_SUCCESS : types.GET_ALL_ORDER_FAILED,
+    payload,
+  };
+};
+
+export const getAllOrderMerchantResult = (payload, isSuccess = true) => {
+  return {
+    type: isSuccess ? types.GET_ALL_ORDER_MERCHANT_SUCCESS : types.GET_ALL_ORDER_MERCHANT_FAILED,
     payload,
   };
 };
@@ -47,6 +64,13 @@ export const getOneOrderResult = (payload, isSuccess = true) => {
 export const confirmPaymentResult = (payload, isSuccess = true) => {
   return {
     type: isSuccess ? types.CONFIRM_PAYMENT_SUCCESS : types.CONFIRM_PAYMENT_FAILED,
+    payload,
+  };
+};
+
+export const makePayoutResult = (payload, isSuccess = true) => {
+  return {
+    type: isSuccess ? types.MAKE_PAYOUT_SUCCESS : types.MAKE_PAYOUT_FAILED,
     payload,
   };
 };

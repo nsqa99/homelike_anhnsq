@@ -14,6 +14,7 @@ import HostLayout from "../components/HostLayout";
 import Item from "./Host/components/item";
 import OrderList from "./OrderList";
 import ItemSearchList from "../containers/ItemSearchList";
+import MerchantOrderList from "./MerchantOrderList";
 
 export default function index() {
   return (
@@ -38,6 +39,7 @@ export default function index() {
           <HostLayout>
             <Switch>
               {/* <Route path="/host/:username/items/:id" component={ItemDetails} /> */}
+              <Route path="/host/:username/orders" component={MerchantOrderList}/>
               <Route path="/host/:username" component={Item} />
             </Switch>
           </HostLayout>

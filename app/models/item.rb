@@ -80,7 +80,7 @@ class Item < ApplicationRecord
       "apartment.rent_address.district"]
     search_text = "#{self.apartment.rent_address.district} #{self.apartment.rent_address.city} #{self.apartment.rent_address.country}"
     sort = [["rate", "desc"]]
-    filter = [{"op" => "not", "field" => "id", "value" => self.id}]
+    filter = [{"op" => "not", "field" => "id", "value" => self.id}, {"op" => "not", "field" => "status", "value" => "deleted"}]
     items, total = Item.build_search(search_text, filter, sort, search_fields, page, page_size)
 
     items.map{|item| item["_source"]}

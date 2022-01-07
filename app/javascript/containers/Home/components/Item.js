@@ -15,7 +15,7 @@ import { formatDate, shortAddress } from "../../../utils";
 const Item = ({ item, style }) => {
   const [displayStart, toggleDisplayStart] = useState(false);
   const [displayEnd, toggleDisplayEnd] = useState(false);
-  
+
   const toggleTooltip = (type) => {
     if (type === "start") {
       toggleDisplayStart(!displayStart);
@@ -23,7 +23,7 @@ const Item = ({ item, style }) => {
       toggleDisplayEnd(!displayEnd);
     }
   };
-  
+
   const detailPath = `/items/${item.id}`;
   const merchantPath = `/social/users/${item.merchant.user.username}`;
 
@@ -49,7 +49,13 @@ const Item = ({ item, style }) => {
       <Link to={detailPath} styleName="item__title">
         {item.apartment.title}
       </Link>
-      <Link to="" styleName="item__location">
+      <Link
+        to={{
+          pathname: "/search",
+          query: shortAddress(item.apartment.rent_address),
+        }}
+        styleName="item__location"
+      >
         <LocationOnIcon styleName="icon__location" />
         {shortAddress(item.apartment.rent_address)}
       </Link>
@@ -102,4 +108,4 @@ const Item = ({ item, style }) => {
   );
 };
 
-export default CSSModules(Item, style, {allowMultiple: true});
+export default CSSModules(Item, style, { allowMultiple: true });

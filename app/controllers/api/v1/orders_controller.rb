@@ -34,7 +34,7 @@ class Api::V1::OrdersController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    orders = order_service.get_list_orders_by_user(@current_user.merchant, page, page_size)
+    orders = order_service.get_list_orders_by_user(@current_user.merchant, page, page_size, true)
 
     json_response(
       serialize(orders, with_children),
