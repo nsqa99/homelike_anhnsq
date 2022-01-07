@@ -5,6 +5,7 @@ const initState = {
   list: {},
   listES: {},
   post: {},
+  share: {}
 };
 
 export default function postReducer(state = initState, action) {
@@ -53,6 +54,33 @@ export default function postReducer(state = initState, action) {
 
     case types.CREATE_POST_FAILED: {
       return state;
+    }
+
+    case types.SHARE_POST_SUCCESS: {
+      return {
+        ...state,
+        share: {
+          ...state.share,
+          success: true
+        },
+      };
+    }
+
+    case types.SHARE_POST_FAILED: {
+      return {
+        ...state,
+        share: {
+          ...state.share,
+          success: false
+        },
+      };
+    }
+
+    case types.RESET_SHARE_STATE_SUCCESS: {
+      return {
+        ...state,
+        share: {},
+      };
     }
 
     case types.LIKE_POST_SUCCESS: {

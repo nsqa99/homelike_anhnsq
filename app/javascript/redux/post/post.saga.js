@@ -10,7 +10,9 @@ import {
   getOnePostResult,
   likePostResult,
   resetPostStateResult,
+  resetShareStateResult,
   searchPostResult,
+  sharePostResult,
   unlikePostResult,
   updatePostResult,
 } from "./post.action";
@@ -88,11 +90,18 @@ function* resetPostSaga() {
   yield all([put(resetPostStateResult())]);
 }
 
+function* resetShareSaga() {
+  yield all([put(resetShareStateResult())]);
+}
+
 function* createPostSaga(props) {
   const { username, data, images } = props.payload;
   const formData = new FormData();
   formData.append('post[content]', data.content);
-  images.map(image => {
+  if (data.item_id) {
+    formData.append('item_ids[]', [data.item_id]);
+  }
+  images?.map(image => {
     formData.append('post[images][]', image);
   })
   const config = {
@@ -107,6 +116,28 @@ function* createPostSaga(props) {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+function* sharePostSaga(props) {
+  const { username, data } = props.payload;
+  const formData = new FormData();
+  formData.append('post[content]', data.content);
+  formData.append('item_ids[]', [data.item_id]);
+  
+  const config = {
+    headers: { "content-type": "multipart/form-data" },
+  };
+
+  try {
+    const res = yield call(createPostApi, username, formData, config);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(sharePostResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    yield all([put(sharePostResult(error, false))]);
   }
 }
 
@@ -172,7 +203,9 @@ export default function* rootSaga() {
   yield all([takeEvery(types.GET_ONE_POST, getOnePostSaga)]);
   yield all([takeEvery(types.SEARCH_POST, searchPostSaga)]);
   yield all([takeEvery(types.RESET_POST_STATE, resetPostSaga)]);
+  yield all([takeEvery(types.RESET_SHARE_STATE, resetShareSaga)]);
   yield all([takeEvery(types.CREATE_POST, createPostSaga)]);
+  yield all([takeEvery(types.SHARE_POST, sharePostSaga)]);
   yield all([takeEvery(types.GET_ALL_POST_BY_USERNAME, getAllPostByUsernameSaga)]);
   yield all([takeEvery(types.DESTROY_POST, destroyPostSaga)]);
   yield all([takeEvery(types.UPDATE_POST, updatePostSaga)]);

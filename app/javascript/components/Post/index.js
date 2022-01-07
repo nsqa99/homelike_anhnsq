@@ -17,6 +17,7 @@ import { isEqual } from "lodash";
 import { Button } from "reactstrap";
 import { likePost, unlikePost } from "../../redux/post/post.action";
 import { useHistory } from "react-router-dom";
+import ItemAttach from "../../containers/ItemDetails/components/ItemAttach";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -112,6 +113,7 @@ const Post = ({
               </div>
             )}
           </div>
+          {post.items && post.items.length > 0 && <ItemAttach item={post.items[0]} />}
           <div className="d-flex mb-3 align-items-center justify-content-between w-100">
             <div className="ms-3 d-flex align-items-center">
               {isLiked ? (

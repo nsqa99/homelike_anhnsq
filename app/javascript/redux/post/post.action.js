@@ -49,6 +49,24 @@ export const createPostResult = (payload) => ({
   payload,
 });
 
+export const sharePost = (username, data) => ({
+  type: types.SHARE_POST,
+  payload: { username, data },
+});
+
+export const sharePostResult = (payload, isSuccess = true) => ({
+  type: isSuccess ? types.SHARE_POST_SUCCESS : types.SHARE_POST_FAILED,
+  payload,
+});
+
+export const resetShareState = () => ({
+  type: types.RESET_SHARE_STATE,
+});
+
+export const resetShareStateResult = () => ({
+  type: types.RESET_SHARE_STATE_SUCCESS,
+});
+
 export const likePost = (username, postId) => ({
   type: types.LIKE_POST,
   payload: { username, postId },
