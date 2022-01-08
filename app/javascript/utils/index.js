@@ -155,6 +155,31 @@ export const appendItemDatas = (data, images) => {
   return formData;
 };
 
+export const appendRegisterDatas = (data, image) => {
+  const {
+    username,
+    email,
+    password,
+    password_confirmation,
+    first_name,
+    last_name,
+    phone_number
+  } = data;
+  const formData = new FormData();
+  formData.append("user[username]", username);
+  formData.append("user[password]", password);
+  formData.append("user[password_confirmation]", password_confirmation);
+  formData.append("user[email]", email);
+  formData.append("user[contact_attributes][phone_number]", phone_number);
+  formData.append("user[full_name_attributes][first_name]", first_name);
+  formData.append("user[full_name_attributes][last_name]", last_name);
+  if (image) {
+    formData.append("user[avatar]", image);
+  }
+
+  return formData;
+}
+
 export const getLatLngApi = async (address) => {
   const datas = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${address}`);
   if (datas.status === 200 && !isEmpty(datas.data)) {

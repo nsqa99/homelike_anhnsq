@@ -39,7 +39,7 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
   const handleSignout = () => {
     if (isAuthenticated) {
       dispatch(logout());
-      history.push("/login");
+      history.push("/signin");
     }
   };
 
@@ -51,7 +51,7 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
 
   return (
     <Navbar color="light" expand={true} light className="sticky-top">
-      <Link to="/" className="navbar-brand">
+      <Link to="/" className="navbar-brand text-danger fw-bold">
         Home Like
       </Link>
       
@@ -94,7 +94,7 @@ const Headers = ({ username, avatar, isAuthenticated }) => {
         </Nav>
       ) : (
         <Nav className="ms-auto" navbar>
-          <CustomNavLink tag={Link} to="/login">
+          <CustomNavLink tag={Link} to="/signin">
             <Button color="danger" styleName="header__btnSwitch">
               <PublicIcon className="me-2" />
               Sign in

@@ -7,7 +7,6 @@ const initState = {
     avatar: Avatar,
   },
   authUser: {
-    avatar: Avatar,
   },
 };
 

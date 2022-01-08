@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
@@ -27,6 +27,7 @@ import styled from "styled-components";
 import { CustomNavLink } from "../../custom/NavLink";
 import { RouterLink } from "../../custom/RouterLink";
 import { logout } from '../../../redux/auth/auth.action'
+import { getOneUser } from "../../../redux/user/user.action";
 
 // import { auth } from "firebase";
 
@@ -44,6 +45,13 @@ const Header = () => {
   const [isOpen, setOpen] = useState(false);
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth.data);
+  const userData = useSelector((state) => state.users.authUser);
+
+  useEffect(() => {
+    if (authData) {
+      dispatch(getOneUser(authData.username, true));
+    }
+  }, []);
 
   const toggle = () => {
     setOpen(!isOpen);
@@ -52,13 +60,13 @@ const Header = () => {
   const handleSignout = () => {
     if (authData.isAuthenticated) {
       dispatch(logout());
-      history.push("/login");
+      history.push("/signin");
     }
   };
 
   return (
     <Navbar color="light" expand={true} light className="sticky-top">
-      <RouterLink to="/" className="navbar-brand">
+      <RouterLink to="/" className="navbar-brand text-danger fw-bold">
         HomeLike
       </RouterLink>
       <RouterLink to={`/host/${authData.username}`} className="navbar-brand">
@@ -84,7 +92,7 @@ const Header = () => {
         <Dropdown isOpen={isOpen} toggle={toggle} nav inNavbar>
           <AvatarDropdown onClick={toggle}>
             <MenuIcon />
-            <Avatar />
+            <Avatar avatar={userData?.avatar} />
           </AvatarDropdown>
           <DropdownMenu styleName="dropdown-menu--right-align">
               <RouterLink to={`/host/${authData.username}`}>

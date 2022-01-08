@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       
       # Auth
       post "auth", to: "authentication#sign_in"
+      post "auth/signup", to: "authentication#sign_up"
       post "auth/refresh", to: "authentication#refresh_tokens"
       
       # Merchant

@@ -46,6 +46,7 @@ dev_customer = User.create!({
     city: "Ha Noi"
   },
   customer_attributes: {},
+  merchant_attributes: {},
   full_name_attributes: {
     first_name: "Anh customer",
     last_name: "NSQ"
@@ -63,6 +64,7 @@ dev_merchant = User.create!({
     district: "Ha Dong",
     city: "Ha Noi"
   },
+  customer_attributes: {},
   merchant_attributes: {},
   full_name_attributes: {
     first_name: "Anh merchant",
@@ -71,5 +73,5 @@ dev_merchant = User.create!({
 })
 
 dev_user.roles.concat([Role.customer, Role.merchant])
-dev_customer.roles.concat([Role.customer])
-dev_merchant.roles.concat([Role.merchant])
+dev_customer.roles.concat([Role.customer, Role.merchant])
+dev_merchant.roles.concat([Role.customer, Role.merchant])

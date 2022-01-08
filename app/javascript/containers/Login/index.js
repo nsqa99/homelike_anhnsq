@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/auth/auth.action";
 import NotificationToast from "../../components/Toast";
 import LoginImg from "../../assets/images/login.jpg";
+import { RouterLink } from "../../components/custom/RouterLink";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const history = useHistory();
@@ -27,6 +29,10 @@ const Login = () => {
   };
 
   useEffect(() => {
+    toast.dismiss();
+  }, []);
+
+  useEffect(() => {
     if (isAuthenticated) {
       setTimeout(() => {
         history.push("/");
@@ -41,7 +47,12 @@ const Login = () => {
         <div className="d-flex justify-content-around w-100">
           <img src={LoginImg} styleName="login__img" />
           <div styleName="login__credentials" className="ms-auto">
-            <span className="fs-2 fw-bold">Welcome to HomeLike</span>
+            <span className="fs-2 fw-bold">
+              Welcome to{" "}
+              <RouterLink to="" className="text-danger">
+                HomeLike
+              </RouterLink>
+            </span>
             <div className="mt-5">
               <FormGroup>
                 <Label for="exampleEmail">Username</Label>
@@ -62,17 +73,17 @@ const Login = () => {
                   type="password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button
-                  color="danger"
-                  className="mt-4 mb-3 w-100"
-                  onClick={handleLogin}
-                >
-                  Sign in
-                </Button>
-                <span>
-                  Don't have an account? <Link to="/signup">Sign up</Link>{" "}
-                </span>
               </FormGroup>
+              <Button
+                color="danger"
+                className="mt-4 mb-3 w-100"
+                onClick={handleLogin}
+              >
+                SIGN IN
+              </Button>
+              <span>
+                Don't have an account? <Link to="/signup">Sign up</Link>{" "}
+              </span>
             </div>
           </div>
         </div>
