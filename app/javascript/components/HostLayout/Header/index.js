@@ -52,13 +52,13 @@ const Header = () => {
   const handleSignout = () => {
     if (authData.isAuthenticated) {
       dispatch(logout());
-      history.push("/login");
+      history.push("/signin");
     }
   };
 
   return (
     <Navbar color="light" expand={true} light className="sticky-top">
-      <RouterLink to="/" className="navbar-brand">
+      <RouterLink to="/" className="navbar-brand text-danger fw-bold">
         HomeLike
       </RouterLink>
       <RouterLink to={`/host/${authData.username}`} className="navbar-brand">

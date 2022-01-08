@@ -65,7 +65,11 @@ const User = ({ username, currentUser }) => {
                     className="d-flex flex-wrap"
                     styleName="user__follow-block"
                   >
-                    <Follow follower={true} user={user} currentUser={currentUser} />
+                    <Follow
+                      follower={true}
+                      user={user}
+                      currentUser={currentUser}
+                    />
                     <Follow user={user} currentUser={currentUser} />
                   </div>
                   {user.username !== currentUser && (
@@ -78,10 +82,13 @@ const User = ({ username, currentUser }) => {
                     </Button>
                   )}
                 </div>
-                <RouterLink to="" styleName="user__location">
-                  <LocationOnIcon styleName="icon__location" />
-                  {user.address && fullAddress(user.address)}
-                </RouterLink>
+                {user.address && (
+                  <RouterLink to="" styleName="user__location">
+                    <LocationOnIcon styleName="icon__location" />
+                    {fullAddress(user.address)}
+                  </RouterLink>
+                )}
+
                 <div styleName="user__contact">
                   <Table borderless size="sm" styleName="">
                     <tbody>

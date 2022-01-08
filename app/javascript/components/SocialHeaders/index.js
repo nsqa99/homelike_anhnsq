@@ -43,7 +43,7 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
   const handleSignout = () => {
     if (isAuthenticated) {
       dispatch(logout());
-      history.push("/login");
+      history.push("/signin");
     }
   };
 
@@ -55,7 +55,7 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
 
   return (
     <Navbar color="light" expand={true} light className="sticky-top">
-      <Link to="/" className="navbar-brand">
+      <Link to="/" className="navbar-brand text-danger fw-bold">
         Home Like
       </Link>
       <InputGroup>
@@ -100,7 +100,7 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
         </Nav>
       ) : (
         <Nav className="ms-auto" navbar>
-          <CustomNavLink tag={Link} to="/login" style={{width: 150}}>
+          <CustomNavLink tag={Link} to="/signin" style={{width: 150}}>
             <Button color="danger" styleName="header__btnSwitch">
               <PublicIcon className="me-2" />
               Sign in

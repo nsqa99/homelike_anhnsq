@@ -5,6 +5,7 @@ import CommonSocialLayout from "../components/CommonSocialLayout";
 import Home from "./Home";
 import ItemDetails from "./ItemDetails";
 import Login from "./Login";
+import Register from "./Register";
 import Feed from "./Feeds";
 import SocialSearchList from "./SocialSearchList";
 import PostDetails from "./PostDetails";
@@ -20,8 +21,11 @@ export default function index() {
   return (
     <Router>
       <Switch>
-        <Route path="/login">
+        <Route path="/signin">
           <Login />
+        </Route>
+        <Route path="/signup">
+          <Register />
         </Route>
 
         <Route path="/social">
