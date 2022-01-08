@@ -42,6 +42,13 @@ $img-size-small: 40px;
       font-size: $text-small;
     }
   }
+  &__username {
+    font-size: $text-small;
+
+    &--small {
+      font-size: $text-xsm;
+    }
+  }
 
   .img-wrapper {
     width: 100%;

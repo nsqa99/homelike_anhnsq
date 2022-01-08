@@ -57,7 +57,7 @@ class User < BaseModel
   def as_indexed_json(options = {})
     as_json(
       only: [:username, :created_at, :status, :email, :following_count, :follower_count],
-      methods: [:user_full_name, :role_titles],
+      methods: [:user_full_name, :role_titles, :list_follower, :avatar_url],
       include: {
         full_name: {
           only: [:first_name, :last_name]
@@ -88,6 +88,10 @@ class User < BaseModel
 
   def avatar_url
     self.avatar.url
+  end
+
+  def list_follower
+    self.followers
   end
 
   private

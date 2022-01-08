@@ -7,17 +7,21 @@ import { RouterLink } from "../custom/RouterLink";
 import { Button, Table } from "reactstrap";
 import { followUser, unfollowUser } from "../../redux/user/user.action";
 
-const UserItem = ({ user, small, follower, following, currentUser }) => {
+const UserItem = ({ user, small, follower, following, currentUser, outsider }) => {
   const detailPath = `/social/users/${user.username}`;
   const listFollowers = user.list_follower;
   const dispatch = useDispatch();
 
   const handleFollow = () => {
-    dispatch(followUser(currentUser, user.username));
+    !follower && !following
+      ? dispatch(followUser(currentUser, user.username, true))
+      : dispatch(followUser(currentUser, user.username));
   };
 
   const handleUnfollow = () => {
-    dispatch(unfollowUser(currentUser, user.username));
+    !follower && !following
+      ? dispatch(unfollowUser(currentUser, user.username, true))
+      : dispatch(unfollowUser(currentUser, user.username));
   };
 
   return (
@@ -29,20 +33,22 @@ const UserItem = ({ user, small, follower, following, currentUser }) => {
             className={`${!small && "flex-lg-row flex-column"} py-3`}
           >
             <RouterLink to={detailPath}>
-              <img
-                src={user.avatar || Avatar}
-                alt={user.id}
-                className="mb-sm-3 mb-0"
-              />
+              <img src={user.avatar_url || Avatar} alt={user.id} />
             </RouterLink>
             <div
               styleName="user__info"
               className={`d-flex ${
                 !small && "flex-lg-row flex-column"
-              } justify-content-between align-items-start`}
+              } justify-content-between align-items-center`}
             >
               <div styleName={`user__full-name${small ? "--small" : ""}`}>
                 <RouterLink to={detailPath}>{user.user_full_name}</RouterLink>
+                <div
+                  styleName={`user__username${small ? "--small" : ""}`}
+                  className="fw-bold"
+                >
+                  {user.username}
+                </div>
                 {follower == null && following == null && (
                   <div styleName="user__follow">
                     <span>{user.follower_count}</span>
@@ -51,7 +57,7 @@ const UserItem = ({ user, small, follower, following, currentUser }) => {
                 )}
               </div>
 
-              {currentUser !== user.username && (
+              {(currentUser !== user.username && !outsider) && (
                 <>
                   {listFollowers.find(
                     (user) => user.username === currentUser
