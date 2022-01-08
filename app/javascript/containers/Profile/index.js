@@ -9,6 +9,7 @@ import RightPanel from "./components/RightPanel";
 import { useDispatch, useSelector } from "react-redux";
 import { searchItem } from "../../redux/item/item.action";
 import { getAllPostByUsername } from "../../redux/post/post.action";
+import NotificationToast from "../../components/Toast";
 
 const Profile = () => {
   const params = useParams();
@@ -36,6 +37,7 @@ const Profile = () => {
 
   return (
     <Container className="p-5">
+      <NotificationToast />
       {authData && (
         <>
           <User username={params.username} currentUser={authData.username} />

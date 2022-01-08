@@ -17,6 +17,12 @@ import {
   updatePostResult,
 } from "./post.action";
 import {
+  createLoadingResult,
+  createSuccessResult,
+  removeToastResult,
+  resetToastResult,
+} from "../toast/toast.action";
+import {
   createPostApi,
   createPostReviewApi,
   destroyPostApi,
@@ -33,28 +39,46 @@ import types from "./post.type";
 
 function* getAllPostSaga() {
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllPostApi);
     if (res.status === 200) {
-      yield put(getAllPostResult(res.data?.data));
+      yield all([
+        put(getAllPostResult(res.data?.data)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
     const isSuccess = false;
-    yield put(getAllPostResult(error, isSuccess));
+    yield all([
+      (put(getAllPostResult(error, isSuccess)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult())),
+    ]);
   }
 }
 
 function* getAllPostByUsernameSaga(props) {
-  const {data, options} = props.payload;
+  const { data, options } = props.payload;
   try {
+    yield put(createLoadingResult());
     const res = yield call(getAllPostByUsernameApi, data, options);
     if (res.status === 200) {
-      yield put(getAllPostByUsernameResult(res.data?.data));
+      yield all([
+        put(getAllPostByUsernameResult(res.data?.data)),
+        put(removeToastResult()),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
     const isSuccess = false;
-    yield put(getAllPostByUsernameResult(error, isSuccess));
+    yield all([
+      put(getAllPostByUsernameResult(error, isSuccess)),
+      put(createFailResult("Error when load resource")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
@@ -74,7 +98,7 @@ function* getOnePostSaga(props) {
 }
 
 function* searchPostSaga(props) {
-  const {params, options} = props.payload;
+  const { params, options } = props.payload;
   try {
     const res = yield call(searchPostApi, params, options);
     if (res.status === 200) {
@@ -97,22 +121,27 @@ function* resetShareSaga() {
 function* createPostSaga(props) {
   const { username, data, images } = props.payload;
   const formData = new FormData();
-  formData.append('post[content]', data.content);
+  formData.append("post[content]", data.content);
   if (data.item_id) {
-    formData.append('item_ids[]', [data.item_id]);
+    formData.append("item_ids[]", [data.item_id]);
   }
-  images?.map(image => {
-    formData.append('post[images][]', image);
-  })
+  images?.map((image) => {
+    formData.append("post[images][]", image);
+  });
   const config = {
     headers: { "content-type": "multipart/form-data" },
   };
 
   try {
+    yield put(createLoadingResult());
     const res = yield call(createPostApi, username, formData, config);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(createPostResult(response))]);
+      yield all([
+        put(createPostResult(response)),
+        put(createSuccessResult("Post created")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
@@ -122,9 +151,9 @@ function* createPostSaga(props) {
 function* sharePostSaga(props) {
   const { username, data } = props.payload;
   const formData = new FormData();
-  formData.append('post[content]', data.content);
-  formData.append('item_ids[]', [data.item_id]);
-  
+  formData.append("post[content]", data.content);
+  formData.append("item_ids[]", [data.item_id]);
+
   const config = {
     headers: { "content-type": "multipart/form-data" },
   };
@@ -142,7 +171,7 @@ function* sharePostSaga(props) {
 }
 
 function* destroyPostSaga(props) {
-  const {username, itemId, isSearch} = props.payload;
+  const { username, itemId, isSearch } = props.payload;
   try {
     const res = yield call(destroyPostApi, username, itemId);
     if (res.status === 200) {
@@ -155,7 +184,7 @@ function* destroyPostSaga(props) {
 }
 
 function* updatePostSaga(props) {
-  const {username, data, itemId, images, isSearch} = props.payload;
+  const { username, data, itemId, images, isSearch } = props.payload;
   const formData = appendPostDatas(data, images);
   const config = {
     headers: { "content-type": "multipart/form-data" },
@@ -172,7 +201,7 @@ function* updatePostSaga(props) {
 }
 
 function* likePostSaga(props) {
-  const {username, postId} = props.payload;
+  const { username, postId } = props.payload;
   try {
     const res = yield call(likePostApi, username, postId);
     if (res.status === 200) {
@@ -185,11 +214,11 @@ function* likePostSaga(props) {
 }
 
 function* unlikePostSaga(props) {
-  const {username, postId} = props.payload;
+  const { username, postId } = props.payload;
   try {
     const res = yield call(unlikePostApi, username, postId);
     if (res.status === 200) {
-      console.log(res)
+      console.log(res);
       const response = res.data;
       yield all([put(unlikePostResult(response))]);
     }
@@ -206,7 +235,9 @@ export default function* rootSaga() {
   yield all([takeEvery(types.RESET_SHARE_STATE, resetShareSaga)]);
   yield all([takeEvery(types.CREATE_POST, createPostSaga)]);
   yield all([takeEvery(types.SHARE_POST, sharePostSaga)]);
-  yield all([takeEvery(types.GET_ALL_POST_BY_USERNAME, getAllPostByUsernameSaga)]);
+  yield all([
+    takeEvery(types.GET_ALL_POST_BY_USERNAME, getAllPostByUsernameSaga),
+  ]);
   yield all([takeEvery(types.DESTROY_POST, destroyPostSaga)]);
   yield all([takeEvery(types.UPDATE_POST, updatePostSaga)]);
   yield all([takeEvery(types.LIKE_POST, likePostSaga)]);

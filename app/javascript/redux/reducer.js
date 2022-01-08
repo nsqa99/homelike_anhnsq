@@ -8,6 +8,7 @@ import reviewReducer from "./review/review.reducer";
 import commentReducer from "./comment/comment.reducer";
 import postReducer from "./post/post.reducer";
 import orderReducer from "./order/order.reducer";
+import toastReducer from "./toast/toast.reducer";
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -16,7 +17,8 @@ const reducers = combineReducers({
   reviews: reviewReducer,
   comments: commentReducer,
   posts: postReducer,
-  orders: orderReducer
+  orders: orderReducer,
+  toasts: toastReducer,
 });
 
 export default reducers;
