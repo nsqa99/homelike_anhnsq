@@ -17,6 +17,7 @@ import {
   getOneUser,
   unfollowUser,
 } from "../../redux/user/user.action";
+import { isEqual } from "lodash";
 
 const User = ({ username, currentUser }) => {
   const user = useSelector((state) => state.users.user);
@@ -46,7 +47,7 @@ const User = ({ username, currentUser }) => {
 
   return (
     <>
-      {user && (
+      {!isEqual(user, {}) && (
         <>
           <div styleName="user" style={{ ...style }}>
             <div

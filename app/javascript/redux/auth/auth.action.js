@@ -6,6 +6,11 @@ export const login = (data) => ({
   payload: { data },
 });
 
+export const register = (data, image) => ({
+  type: types.REGISTER,
+  payload: { data, image },
+});
+
 export const logout = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
@@ -18,6 +23,14 @@ export const logout = () => {
 export const loginResult = (isSuccess) => ({
   type: isSuccess ? types.LOGIN_SUCCESS : types.LOGIN_FAILED,
   result: { isAuthenticated: isSuccess },
+});
+
+export const registerResult = (isSuccess) => ({
+  type: isSuccess ? types.REGISTER_SUCCESS : types.REGISTER_FAILED,
+});
+
+export const resetRegisterRedirect = () => ({
+  type: types.RESET_REGISTER_REDIRECT,
 });
 
 export const setCurrentUser = (username) => {

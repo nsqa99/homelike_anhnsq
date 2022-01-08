@@ -18,7 +18,7 @@ const PostSection = ({ username, posts }) => {
           );
         })
       ) : (
-        <span className="fs-4">No posts found</span>
+        <span className="fs-5 fw-bold ms-3">No posts found</span>
       )}
     </>
   );

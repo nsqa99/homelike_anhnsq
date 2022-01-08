@@ -12,9 +12,8 @@ import {
   Row,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/auth/auth.action";
+import { login, register } from "../../redux/auth/auth.action";
 import NotificationToast from "../../components/Toast";
-import LoginImg from "../../assets/images/login.jpg";
 import { RouterLink } from "../../components/custom/RouterLink";
 import { CustomInput } from "../../components/Form/components";
 import CustomForm from "../../components/Form";
@@ -39,29 +38,20 @@ const AvatarPreview = styled.div`
 
 const Register = () => {
   const history = useHistory();
-  const [usernameForm, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const { isAuthenticated, username } = useSelector((state) => state.auth.data);
+  const { registerRedirect } = useSelector((state) => state.auth.data);
   const dispatch = useDispatch();
-  const loginData = {
-    type: "user",
-    user: {
-      username: usernameForm,
-      password,
-    },
-  };
 
   const [images, setImages] = useState(null);
   const [itemImage, setItemImage] = useState(null);
   const [imageError, setImageError] = useState({});
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (registerRedirect) {
       setTimeout(() => {
-        history.push("/");
+        history.push(registerRedirect);
       }, 1000);
     }
-  }, [isAuthenticated, history, username]);
+  }, [registerRedirect]);
 
   const fields = {
     initValues: {
@@ -98,18 +88,8 @@ const Register = () => {
     },
   };
 
-  const handleFormSubmit = async (data) => {
-    const [latitude, longitude] = latLon;
-    if (latitude && longitude) {
-      data = {
-        ...data,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
-      };
-    }
-    console.log(data);
-    dispatch(createItem(username, data, itemImages));
-    setOpen(false);
+  const handleFormSubmit = (data) => {
+    dispatch(register(data, itemImage));
   };
 
   const handleImageChange = (e) => {
@@ -145,7 +125,6 @@ const Register = () => {
       <Container styleName="login__container">
         <NotificationToast />
         <div className="d-flex flex-column flex-lg-row justify-content-around align-items-center w-100 mb-3">
-          {/* <img src={LoginImg} styleName="login__img" /> */}
           <div styleName="login__credentials" className="ms-auto w-100">
             <span className="fs-2 fw-bold">
               Join{" "}
@@ -156,7 +135,7 @@ const Register = () => {
             <div className="mt-5">
               <CustomForm
                 fields={fields}
-                // handleSubmit={handleFormSubmit}
+                handleSubmit={handleFormSubmit}
                 // images={images}
                 // formRef={formRef}
               >

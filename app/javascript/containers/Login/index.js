@@ -8,6 +8,7 @@ import { login } from "../../redux/auth/auth.action";
 import NotificationToast from "../../components/Toast";
 import LoginImg from "../../assets/images/login.jpg";
 import { RouterLink } from "../../components/custom/RouterLink";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const history = useHistory();
@@ -26,6 +27,10 @@ const Login = () => {
   const handleLogin = () => {
     dispatch(login(loginData));
   };
+
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {

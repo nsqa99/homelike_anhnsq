@@ -45,7 +45,7 @@ const Profile = () => {
             <Col
               xs="12"
               lg="8"
-              className="d-flex flex-column mt-4 order-2 order-lg-1"
+              className="d-flex flex-column order-2 order-lg-1"
             >
               <PostSection
                 username={authData.username}

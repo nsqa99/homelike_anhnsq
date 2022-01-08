@@ -25,4 +25,6 @@ class UserSerializer < ActiveModel::Serializer
       }
     end
   end
+
+  has_one :contact
 end

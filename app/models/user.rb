@@ -33,8 +33,9 @@ class User < BaseModel
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
 
-  accepts_nested_attributes_for :full_name, :address, :customer, :merchant
+  accepts_nested_attributes_for :full_name, :address, :customer, :merchant, :contact
   validates_confirmation_of :password
+  validates :username, uniqueness: true
 
   delegate :first_name, to: :full_name
   delegate :last_name, to: :full_name
