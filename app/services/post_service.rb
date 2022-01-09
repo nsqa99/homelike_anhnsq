@@ -45,7 +45,7 @@ class PostService
   end
 
   def destroy post_id
-    Post.find(post_id)
+    post = Post.find(post_id)
 
     return post if post.destroy
   end

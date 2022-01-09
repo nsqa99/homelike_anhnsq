@@ -28,7 +28,11 @@ class Post < ApplicationRecord
   end
 
   def owner
-    {username: self.user.username, user_full_name: self.user.user_full_name}
+    {
+      username: self.user.username,
+      user_full_name: self.user.user_full_name,
+      avatar_url: self.user.avatar_url
+    }
   end
 
   def like_users
@@ -45,10 +49,6 @@ class Post < ApplicationRecord
 
   after_save {
     __elasticsearch__.index_document
-  }
-
-  after_destroy {
-    __elasticsearch__.delete_document
   }
 
   def as_indexed_json(options = {})

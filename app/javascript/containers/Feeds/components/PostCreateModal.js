@@ -90,7 +90,7 @@ const PostCreateModal = ({ username }) => {
     },
     validations: {
       content: Yup.string()
-        .max(300, "Must be at most 300 characters")
+        .max(1000, "Must be at most 1000 characters")
         .required("Required"),
     },
   };

@@ -21,6 +21,7 @@ const PostSection = ({ username, posts }) => {
               post={post}
               style={{ width: "80%", margin: "0 auto 30px" }}
               isLiked={isLiked}
+              currentUser={username}
             />
           );
         })

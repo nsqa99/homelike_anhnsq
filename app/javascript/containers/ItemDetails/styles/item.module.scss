@@ -7,11 +7,16 @@ $left-margin: 20px;
   display: flex;
   width: 100%;
   background-color: white;
-  margin: 20px 0;
+  margin: 0;
+  margin-bottom: 20px;
   z-index: 1;
   border-radius: $border-radius-base;
   box-shadow: 1px 1px 5px 1px rgba(82, 80, 80, 0.2);
   background: #aeaeae15;
+
+  &__inModal {
+    margin-top: 20px;
+  }
 
   .img-wrapper {
     width: $img-width;
