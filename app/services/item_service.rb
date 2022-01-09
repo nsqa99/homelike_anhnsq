@@ -23,6 +23,9 @@ class ItemService
 
   def update item_id, params
     item = Item.approved.find(item_id)
+    if item.apartment.apartment_images.attached? && !params[:apartment_attributes][:apartment_images]
+      params[:apartment_attributes][:apartment_images] = item.apartment.apartment_images.map(&:blob)
+    end
 
     return item if item.update(params)
     false

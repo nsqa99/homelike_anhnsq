@@ -3,7 +3,7 @@ import CurrencyFormat from "react-currency-format";
 import { Button, Container, Input, Table } from "reactstrap";
 import { formatDate, fullAddress } from "../../../../utils";
 import CreateModal from "./ActionModal/CreateModal";
-import DefaultAvatar from "../../../../constants/images/DefaultAvatar.png";
+import DefaultImage from "../../../../constants/images/DefaultImage.png";
 import styled from "styled-components";
 import CustomPagination from "../../../../components/Pagination";
 import { isEmpty } from "lodash";
@@ -118,7 +118,7 @@ const Item = () => {
                             <img
                               className="rounded"
                               src={
-                                item.apartment.image_urls[0] || DefaultAvatar
+                                item.apartment.image_urls[0] || DefaultImage
                               }
                             />
                           </ImageWrapper>
@@ -204,7 +204,7 @@ const Item = () => {
                         <ImageWrapper>
                           <img
                             className="rounded"
-                            src={item.apartment.image_urls[0] || DefaultAvatar}
+                            src={item.apartment.image_urls[0] || DefaultImage}
                           />
                         </ImageWrapper>
                       </td>
