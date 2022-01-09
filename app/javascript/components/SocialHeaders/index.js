@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import CSSModules from "react-css-modules";
 import styles from "./style.module.scss";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -26,6 +26,7 @@ import styled from "styled-components";
 import { CustomNavLink } from "../custom/NavLink";
 import { RouterLink } from "../custom/RouterLink";
 import { logout } from "../../redux/auth/auth.action";
+import { searchUser } from "../../redux/user/user.action";
 // import { auth } from "firebase";
 
 const AvatarDropdown = styled(FlexCentered)`
@@ -39,6 +40,7 @@ const AvatarDropdown = styled(FlexCentered)`
 
 const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
   const history = useHistory();
+  const location = useLocation();
   const dispatch = useDispatch();
   const handleSignout = () => {
     if (isAuthenticated) {
@@ -48,9 +50,29 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
   };
 
   const [isOpen, setOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const toggle = () => {
     setOpen(!isOpen);
+  };
+
+  const handleSearchTextChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      
+      const data = {
+        search_text: searchText,
+      };
+
+      if (location.pathname !== "/social/search") {
+        history.push("/social/search", { query: searchText });
+      } else {
+        dispatch(searchUser(data));
+      }
+    }
   };
 
   return (
@@ -63,6 +85,9 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
           type="text"
           placeholder="Find friends around"
           styleName="header__search"
+          value={searchText}
+          onChange={handleSearchTextChange}
+          onKeyDown={handleKeyDown}
         />
 
         <InputGroupText>
@@ -100,7 +125,7 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
         </Nav>
       ) : (
         <Nav className="ms-auto" navbar>
-          <CustomNavLink tag={Link} to="/signin" style={{width: 150}}>
+          <CustomNavLink tag={Link} to="/signin" style={{ width: 150 }}>
             <Button color="danger" styleName="header__btnSwitch">
               <PublicIcon className="me-2" />
               Sign in

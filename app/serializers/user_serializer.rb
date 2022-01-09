@@ -5,7 +5,7 @@ class UserSerializer < ActiveModel::Serializer
   def follower_users
     object.followers.map do |follower|
       {
-        id: follower.id, avatar: follower.avatar_url,
+        id: follower.id, avatar_url: follower.avatar_url,
         username: follower.username,
         user_full_name: follower.user_full_name,
         list_follower: follower.followers,
@@ -17,7 +17,7 @@ class UserSerializer < ActiveModel::Serializer
   def following_users
     object.following.map do |following|
       {
-        id: following.id, avatar: following.avatar_url,
+        id: following.id, avatar_url: following.avatar_url,
         username: following.username,
         user_full_name: following.user_full_name,
         list_follower: following.followers,

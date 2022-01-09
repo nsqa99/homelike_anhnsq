@@ -1,7 +1,7 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
-import { followUserResult, getOneUserResult, unfollowUserResult } from "./user.action";
-import { followUserApi, getOneUserApi, unfollowUserApi } from "./user.api";
+import { followUserResult, getOneUserResult, searchUserResult, unfollowUserResult } from "./user.action";
+import { followUserApi, getOneUserApi, searchUserApi, unfollowUserApi } from "./user.api";
 import types from "./user.type";
 
 function* getOneUserSaga(props) {
@@ -16,6 +16,20 @@ function* getOneUserSaga(props) {
     console.log(error);
     const isSuccess = false;
     yield put(getOneUserResult(error, isSuccess));
+  }
+}
+function* searchUserSaga(props) {
+  const { data } = props.payload;
+  try {
+    const res = yield call(searchUserApi, data);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(searchUserResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    const isSuccess = false;
+    yield put(searchUserResult(error, isSuccess));
   }
 }
 
@@ -37,12 +51,12 @@ function* getAuthUserSaga(props) {
 }
 
 function* followUserSaga(props) {
-  const { follower, followed } = props.payload;
+  const { follower, followed, onSearch } = props.payload;
   try {
     const res = yield call(followUserApi, follower, followed);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(followUserResult(response))]);
+      yield all([put(followUserResult(response, true, onSearch))]);
     }
   } catch (error) {
     console.log(error);
@@ -52,12 +66,12 @@ function* followUserSaga(props) {
 }
 
 function* unfollowUserSaga(props) {
-  const { unfollower, unfollowed } = props.payload;
+  const { unfollower, unfollowed, onSearch } = props.payload;
   try {
     const res = yield call(unfollowUserApi, unfollower, unfollowed);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(unfollowUserResult(response))]);
+      yield all([put(unfollowUserResult(response, true, onSearch))]);
     }
   } catch (error) {
     console.log(error);
@@ -68,6 +82,7 @@ function* unfollowUserSaga(props) {
 
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ONE_USER, getOneUserSaga)]);
+  yield all([takeEvery(types.SEARCH_USER, searchUserSaga)]);
   yield all([takeEvery(types.GET_ONE_USER_AUTH, getAuthUserSaga)]);
   yield all([takeEvery(types.FOLLOW_USER, followUserSaga)]);
   yield all([takeEvery(types.UNFOLLOW_USER, unfollowUserSaga)]);

@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   authorize_resource
   skip_before_action :authenticate_request_token, only: [:show, :search]
-  skip_authorize_resource only: [:show]
+  skip_authorize_resource only: [:show, :search]
 
   def index
     page = params[:page] || DEFAULT_PAGE
@@ -43,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
 
   def search
     page = params[:page] || DEFAULT_PAGE
-    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
+    page_size = params[:page_size] || 25
     
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]

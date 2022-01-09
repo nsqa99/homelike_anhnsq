@@ -3,11 +3,8 @@ import Avatar from "../../constants/images/Avatar.png";
 import _ from "lodash";
 
 const initState = {
-  user: {
-    avatar: Avatar,
-  },
-  authUser: {
-  },
+  user: {},
+  authUser: {},
 };
 
 export default function userReducer(state = initState, action) {
@@ -41,9 +38,21 @@ export default function userReducer(state = initState, action) {
     case types.GET_ONE_USER_AUTH_FAILED: {
       return state;
     }
+    case types.SEARCH_USER_SUCCESS: {
+      const data = action.payload;
+      return {
+        ...state,
+        listES: data,
+      };
+    }
+
+    case types.SEARCH_USER_FAILED: {
+      return state;
+    }
 
     case types.FOLLOW_USER_SUCCESS: {
       const data = action.payload;
+      console.log(data);
       const displayUser = state.user;
       let response = state;
       if (data.followed.username === displayUser.username) {
@@ -73,6 +82,18 @@ export default function userReducer(state = initState, action) {
 
                   return user;
                 }),
+                following_count: displayUser.following_count + 1,
+                following_users: [
+                  {
+                    id: data.followed.id,
+                    avatar_url: data.followed.avatar_url,
+                    username: data.followed.username,
+                    user_full_name: data.followed.user_full_name,
+                    list_follower: data.followed.follower_users,
+                    list_following: data.followed.following_users,
+                  },
+                  ...displayUser.following_users,
+                ],
               },
             }
           : {
@@ -92,6 +113,36 @@ export default function userReducer(state = initState, action) {
 
       return response;
     }
+    case types.FOLLOW_USER_ON_SEARCH_SUCCESS: {
+      const data = action.payload;
+      return {
+        ...state,
+        listES: state.listES.map((user) => {
+          if (user.username === data.followed.username) {
+            user.follower_count = data.followed.follower_count;
+            user.list_follower = [...user.list_follower, data.follower];
+          }
+
+          return user;
+        }),
+      };
+    }
+    case types.UNFOLLOW_USER_ON_SEARCH_SUCCESS: {
+      const data = action.payload;
+      return {
+        ...state,
+        listES: state.listES.map((user) => {
+          if (user.username === data.unfollowed.username) {
+            user.follower_count = data.unfollowed.follower_count;
+            user.list_follower = user.list_follower.filter(
+              (user_item) => user_item.username !== data.unfollower.username
+            );
+          }
+
+          return user;
+        }),
+      };
+    }
 
     case types.FOLLOW_USER_FAILED: {
       return state;
@@ -102,7 +153,7 @@ export default function userReducer(state = initState, action) {
       const displayUser = state.user;
       let response = state;
 
-      if (data.unfollowed.username === displayUser.username) {
+      if (data.unfollowed.username === displayUser.username) { // when visit other profile
         response = {
           ...state,
           user: {
@@ -113,45 +164,26 @@ export default function userReducer(state = initState, action) {
             ),
           },
         };
-      } else {
-        const insideFollower =
-          displayUser.follower_users.find(
-            (user) => user.username === data.unfollowed.username
-          ) != null;
+      } else { // inside own profile
+        response = {
+          ...state,
+          user: {
+            ...displayUser,
+            follower_users: displayUser.follower_users.map((user) => { // remove follower of unfollowed one in follower tab
+              if (user.username === data.unfollowed.username) {
+                user.list_follower = user.list_follower.filter(
+                  (flw) => flw.id !== data.unfollower.id
+                );
+              }
 
-        response = insideFollower
-          ? {
-              ...state,
-              user: {
-                ...displayUser,
-                follower_users: displayUser.follower_users.map((user) => {
-                  if (user.username === data.unfollowed.username) {
-                    user.list_follower = user.list_follower.filter(
-                      (flw) => {
-                        return flw.id !== data.unfollower.id
-                      }
-                    );
-                  }
-
-                  return user;
-                }),
-              },
-            }
-          : {
-              ...state,
-              user: {
-                ...displayUser,
-                following_users: displayUser.following_users.map((user) => {
-                  if (user.username === data.unfollowed.username) {
-                    user.list_follower = user.list_follower.filter(
-                      (flw) => flw.id !== data.unfollower.id
-                    );
-                  }
-
-                  return user;
-                }),
-              },
-            };
+              return user;
+            }),
+            following_count: displayUser.following_count - 1,
+            following_users: displayUser.following_users.filter(
+              (flw_user) => flw_user.id !== data.unfollowed.id
+            ),
+          },
+        };
       }
 
       return response;

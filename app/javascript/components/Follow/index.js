@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CSSModules from "react-css-modules";
 import style from "./style.module.scss";
 import {
@@ -26,13 +26,20 @@ const CustomModal = styled(Modal)`
 
 const Follow = ({ user, follower, currentUser }) => {
   const [open, setOpen] = useState(false);
+  const [isOutsider, setOutSider] = useState(false);
   const toggleModal = () => {
-    const count = follower ? user.follower_count : user.following_count
-    if (count > 0) setOpen(!open);
+    const count = follower ? user.follower_count : user.following_count;
+    setOpen(!open);
   };
 
-  const list = follower ? user.follower_users : user.following_users
-  
+  const list = follower ? user.follower_users : user.following_users;
+
+  useEffect(() => {
+    if (user && currentUser) {
+      setOutSider(user.username !== currentUser);
+    }
+  }, [user, currentUser]);
+
   return (
     <>
       <div styleName="follow" onClick={toggleModal}>
@@ -44,16 +51,22 @@ const Follow = ({ user, follower, currentUser }) => {
           {follower ? "Followers" : "Following"}
         </ModalHeader>
         <CustomModalBody>
-          {list && list.map((follow) => (
-            <UserItem
-              key={follow.id}
-              user={follow}
-              small
-              follower={follower}
-              following={!follower}
-              currentUser={currentUser}
-            />
-          ))}
+          {list &&
+            (list.length > 0 ? (
+              list.map((follow) => (
+                <UserItem
+                  key={follow.id}
+                  user={follow}
+                  small
+                  follower={follower}
+                  following={!follower}
+                  currentUser={currentUser}
+                  outsider={isOutsider}
+                />
+              ))
+            ) : (
+              <div className="fs-5 fw-bold text-center">No results</div>
+            ))}
         </CustomModalBody>
       </CustomModal>
     </>
