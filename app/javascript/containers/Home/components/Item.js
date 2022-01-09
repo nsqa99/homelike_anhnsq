@@ -13,6 +13,7 @@ import CurrencyFormat from "react-currency-format";
 import { formatDate, shortAddress } from "../../../utils";
 
 const Item = ({ item, style }) => {
+  console.log(item)
   const [displayStart, toggleDisplayStart] = useState(false);
   const [displayEnd, toggleDisplayEnd] = useState(false);
 

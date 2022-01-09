@@ -314,14 +314,14 @@ const UpdateModal = ({
                     name="startDate"
                     id="startDate"
                     label="Start Date"
-                    min={item.initial_start_date?.split("T")[0]}
+                    min={new Date().toISOString().split("T")[0]}
                     type="date"
                   />
                   <CustomInput
                     name="endDate"
                     id="endDate"
                     label="End Date"
-                    min={item.initial_end_date?.split("T")[0]}
+                    min={new Date().toISOString().split("T")[0]}
                     type="date"
                   />
                   <CustomInput

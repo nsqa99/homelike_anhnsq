@@ -5,7 +5,7 @@ import PostSection from "./components/PostSection";
 import RightPanel from "./components/RightPanel";
 import { getAllPost } from "../../redux/post/post.action";
 import { useDispatch, useSelector } from "react-redux";
-import { isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import NotificationToast from "../../components/Toast";
 
 const index = () => {
@@ -19,7 +19,7 @@ const index = () => {
 
   return (
     <>
-      {postDatas && !isEqual(postDatas.list, []) && (
+      {postDatas && !isEmpty(postDatas.list) && (
         <Container className="p-3">
           <NotificationToast />
           <Row className="mt-5">

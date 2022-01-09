@@ -20,7 +20,7 @@ import RightPanel from "./RightPanel";
 import { RouterLink } from "../../../components/custom/RouterLink";
 import UserItem from "../../../components/UserItem";
 import { useDispatch } from "react-redux";
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { searchItem } from "../../../redux/item/item.action";
 import Item from "./ItemSearch";
 
@@ -44,9 +44,13 @@ const ItemSection = () => {
     if (e.key === "Enter") {
       const data = {
         search_text: searchText,
-        fields: ["apartment.rent_address.city", "apartment.rent_address.country", "apartment.rent_address.district"]
-      }
-      
+        fields: [
+          "apartment.rent_address.city",
+          "apartment.rent_address.country",
+          "apartment.rent_address.district",
+        ],
+      };
+
       dispatch(searchItem(data));
     }
   };
@@ -55,8 +59,12 @@ const ItemSection = () => {
     if (query) {
       const data = {
         search_text: query,
-        fields: ["apartment.rent_address.city", "apartment.rent_address.country", "apartment.rent_address.district"]
-      }
+        fields: [
+          "apartment.rent_address.city",
+          "apartment.rent_address.country",
+          "apartment.rent_address.district",
+        ],
+      };
       dispatch(searchItem(data));
     } else {
       dispatch(searchItem(""));
@@ -92,7 +100,7 @@ const ItemSection = () => {
                 return <Item item={item} key={item.id} />;
               })
             ) : (
-              <span className="fs-5 fw-bold">No result</span>
+              <span className="fs-5 ms-3 fw-bold">No result</span>
             )}
           </div>
         </Col>

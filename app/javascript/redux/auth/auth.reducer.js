@@ -40,9 +40,9 @@ export default function authReducer(state = initState, action) {
         }
       }
     }
-    case types.LOGOUT: {
-      return { ...state, data: initState.data };
-    }
+    // case types.LOGOUT: {
+    //   return { ...state, data: initState.data };
+    // }
 
     default:
       return state;

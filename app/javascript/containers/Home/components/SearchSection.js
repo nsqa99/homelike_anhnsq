@@ -150,8 +150,8 @@ const SearchSection = () => {
   }, [filters.sort]);
 
   return (
-    <Row className="mt-5" styleName="search-section__wrapper">
-      <Label for="search_text" styleName="color--red">
+    <Row styleName="search-section__wrapper">
+      <Label for="search_text" styleName="color--red" className="mt-5">
         Where?
       </Label>
       <div className="d-flex">

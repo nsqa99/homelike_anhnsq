@@ -9,6 +9,7 @@ import commentReducer from "./comment/comment.reducer";
 import postReducer from "./post/post.reducer";
 import orderReducer from "./order/order.reducer";
 import toastReducer from "./toast/toast.reducer";
+import types from "./auth/auth.type";
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -21,4 +22,11 @@ const reducers = combineReducers({
   toasts: toastReducer,
 });
 
-export default reducers;
+const rootReducer = (state, action) => {
+  if (action.type === types.LOGOUT) {
+    return reducers(undefined, action);
+  }
+  return reducers(state, action);
+};
+
+export default rootReducer;

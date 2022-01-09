@@ -38,7 +38,7 @@ const OrderList = () => {
   // };
 
   const handleViewModal = (id) => {
-    history.push(`/users/${authData.username}/orders/${id}`)
+    history.push(`/users/${authData.username}/orders/${id}`);
   };
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const OrderList = () => {
               {orders.list.map((order) => {
                 let item = order.item;
                 let apartment = item.apartment;
-                let itemDetailPath = `/items/${item.id}`
+                let itemDetailPath = `/items/${item.id}`;
 
                 return (
                   <>
@@ -99,7 +99,11 @@ const OrderList = () => {
                       <td>
                         <Badge
                           color={
-                            order.status === "pending" ? "warning" : "success"
+                            order.status === "pending"
+                              ? "warning"
+                              : order.status === "paid"
+                              ? "success"
+                              : "danger"
                           }
                           pill
                         >
@@ -115,7 +119,7 @@ const OrderList = () => {
                           >
                             Details
                           </Button>
-                          {order.status === "pending" && (
+                          {/* {order.status === "pending" && (
                             <Button
                               color="danger"
                               className="me-2"
@@ -123,7 +127,7 @@ const OrderList = () => {
                             >
                               Cancel
                             </Button>
-                          )}
+                          )} */}
                         </div>
                       </td>
                     </tr>

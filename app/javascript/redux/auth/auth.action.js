@@ -1,5 +1,6 @@
 // import { CreateAccount } from "./email.api";
 import types from "./auth.type";
+import storage from "redux-persist/lib/storage";
 
 export const login = (data) => ({
   type: types.LOGIN,
@@ -14,6 +15,7 @@ export const register = (data, image) => ({
 export const logout = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
+  storage.removeItem("persist:root");
 
   return {
     type: types.LOGOUT,

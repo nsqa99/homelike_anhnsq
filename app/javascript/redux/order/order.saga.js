@@ -18,6 +18,7 @@ import {
   getOneOrderApi,
   getOneOrderByItemApi,
   makePayoutApi,
+  updateOrderApi,
 } from "./order.api";
 import types from "./order.type";
 import {
@@ -119,6 +120,28 @@ function* createOrderSaga(props) {
   }
 }
 
+function* updateOrderSaga(props) {
+  const { username, orderId, data } = props.payload;
+  try {
+    yield put(createLoadingResult());
+    const res = yield call(updateOrderApi, username, orderId, data);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([
+        put(createOrderResult(response)),
+        put(createSuccessResult("Updated")),
+        put(resetToastResult()),
+      ]);
+    }
+  } catch (error) {
+    console.log(error);
+    yield all([
+      put(createFailResult("Error")),
+      put(resetToastResult()),
+    ]);
+  }
+}
+
 function* destroyOrderSaga(props) {
   const { username, orderId } = props.payload;
   try {
@@ -182,6 +205,7 @@ export default function* rootSaga() {
   yield all([takeEvery(types.GET_ALL_ORDER, getAllOrderSaga)]);
   yield all([takeEvery(types.GET_ALL_ORDER_MERCHANT, getAllOrderMerchantSaga)]);
   yield all([takeEvery(types.CREATE_ORDER, createOrderSaga)]);
+  yield all([takeEvery(types.UPDATE_ORDER, updateOrderSaga)]);
   yield all([takeEvery(types.DESTROY_ORDER, destroyOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_ORDER, getOneOrderSaga)]);
   yield all([takeEvery(types.GET_ONE_BY_ITEM_ORDER, getOneOrderByItemSaga)]);

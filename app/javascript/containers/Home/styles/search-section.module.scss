@@ -1,5 +1,18 @@
 @import '../../../assets/styles/variables';
 
+
+body {
+  background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0.93),
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 1)
+    ),
+    url('../../../assets/images/background.jpeg');
+}
+
 .search-icon {
   color: $theme_color;
 }
@@ -33,7 +46,6 @@
 
 .search-section__wrapper {
   margin: 0 auto;
-  margin-top: 100px;
   width: 50%;
   align-items: center;
   flex-wrap: wrap;
