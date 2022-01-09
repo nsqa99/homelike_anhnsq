@@ -17,6 +17,7 @@ import {
 import DeleteModal from "./ActionModal/DeleteModal";
 import UpdateModal from "./ActionModal/UpdateModal";
 import ViewModal from "./ActionModal/ViewModal";
+import NotificationToast from "../../../../components/Toast";
 
 const ImageWrapper = styled.div`
   img {
@@ -80,6 +81,7 @@ const Item = () => {
 
   return (
     <Container className="mt-5">
+      <NotificationToast />
       <div className="d-flex justify-content-between align-items-center mb-2">
         <Input
           style={{ width: "30%" }}
