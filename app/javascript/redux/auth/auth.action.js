@@ -22,9 +22,9 @@ export const logout = () => {
   };
 };
 
-export const loginResult = (isSuccess) => ({
+export const loginResult = (isSuccess, isAdmin = false) => ({
   type: isSuccess ? types.LOGIN_SUCCESS : types.LOGIN_FAILED,
-  result: { isAuthenticated: isSuccess },
+  result: { isAuthenticated: isSuccess, isAdmin },
 });
 
 export const registerResult = (isSuccess) => ({
@@ -38,6 +38,12 @@ export const resetRegisterRedirect = () => ({
 export const setCurrentUser = (username) => {
   return {
     type: types.SET_CURRENT_USER,
+    result: username,
+  };
+};
+export const setCurrentAdmin = (username) => {
+  return {
+    type: types.SET_CURRENT_ADMIN,
     result: username,
   };
 };

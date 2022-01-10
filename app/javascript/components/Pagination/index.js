@@ -25,7 +25,8 @@ const CustomPagination = ({ totalPages, currentPage, fn, ...props }) => {
   }, [options]);
 
   return (
-    <Pagination aria-label="Page navigation" size="sm">
+    <div className="mb-2">
+      <Pagination aria-label="Page navigation" size="sm">
       <PaginationItem disabled={currentPage == 1}>
         <PaginationLink first onClick={(e) => handleChangePage(e, 1)} />
       </PaginationItem>
@@ -54,6 +55,7 @@ const CustomPagination = ({ totalPages, currentPage, fn, ...props }) => {
         <PaginationLink onClick={(e) => handleChangePage(e, totalPages)} last />
       </PaginationItem>
     </Pagination>
+    </div>
   );
 };
 

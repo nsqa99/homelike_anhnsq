@@ -16,8 +16,15 @@ import Item from "./Host/components/item";
 import OrderList from "./OrderList";
 import ItemSearchList from "../containers/ItemSearchList";
 import MerchantOrderList from "./MerchantOrderList";
+import AdminLayout from "../components/AdminLayout";
+import LoginAdmin from "./LoginAdmin";
+import { useSelector } from "react-redux";
+import UserRoute from "./UserRoute";
+import UserList from "../components/admin/UserList";
 
 export default function index() {
+  const authData = useSelector((state) => state.auth.data);
+
   return (
     <Router>
       <Switch>
@@ -48,6 +55,16 @@ export default function index() {
             </Switch>
           </HostLayout>
         </Route>
+        <Route path="/admin">
+          <Route path="/admin/signin">
+            <LoginAdmin />
+          </Route>
+          <AdminLayout>
+            <Switch>
+              <Route path="/admin" component={UserList} />
+            </Switch>
+          </AdminLayout>
+        </Route>
 
         <CommonLayout>
           <Switch>
@@ -68,9 +85,9 @@ export default function index() {
               component={ItemDetails}
             />
 
-            <Route path="/">
+            <UserRoute path="/" isAdmin={authData?.isAdmin}>
               <Home />
-            </Route>
+            </UserRoute>
           </Switch>
         </CommonLayout>
       </Switch>

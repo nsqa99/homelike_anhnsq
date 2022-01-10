@@ -1,7 +1,7 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import types from "./auth.type";
 import { loginApi, registerApi } from "./auth.api";
-import { loginResult, registerResult, resetRegisterRedirect, setCurrentUser } from "./auth.action";
+import { loginResult, registerResult, resetRegisterRedirect, setCurrentAdmin, setCurrentUser } from "./auth.action";
 import {
   createLoadingResult,
   createSuccessResult,
@@ -21,8 +21,8 @@ function* loginSaga(props) {
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("refresh_token", response.refresh_token);
       yield all([
-        put(loginResult(true)),
-        put(setCurrentUser(data.user.username)),
+        loginUserOrAdmin(data),
+        put(setCurrentUser(data.user?.username || data.admin?.username)),
         put(createSuccessResult("Success")),
         put(resetToastResult()),
       ]);
@@ -37,6 +37,23 @@ function* loginSaga(props) {
     ]);
   }
 }
+
+// const setUserOrAdmin = (data) => {
+//   if (data.user) {
+//     return put(setCurrentUser(data.user.username));
+//   } else if (data.admin) {
+//     return put(setCurrentAdmin(data.admin.username));
+//   } 
+// }
+
+const loginUserOrAdmin = (data) => {
+  if (data.user) {
+    return put(loginResult(true));
+  } else if (data.admin) {
+    return put(loginResult(true, true));
+  } 
+}
+
 function* registerSaga(props) {
   const { data, image } = props.payload;
   try {

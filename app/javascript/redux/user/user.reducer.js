@@ -153,7 +153,8 @@ export default function userReducer(state = initState, action) {
       const displayUser = state.user;
       let response = state;
 
-      if (data.unfollowed.username === displayUser.username) { // when visit other profile
+      if (data.unfollowed.username === displayUser.username) {
+        // when visit other profile
         response = {
           ...state,
           user: {
@@ -164,12 +165,14 @@ export default function userReducer(state = initState, action) {
             ),
           },
         };
-      } else { // inside own profile
+      } else {
+        // inside own profile
         response = {
           ...state,
           user: {
             ...displayUser,
-            follower_users: displayUser.follower_users.map((user) => { // remove follower of unfollowed one in follower tab
+            follower_users: displayUser.follower_users.map((user) => {
+              // remove follower of unfollowed one in follower tab
               if (user.username === data.unfollowed.username) {
                 user.list_follower = user.list_follower.filter(
                   (flw) => flw.id !== data.unfollower.id
@@ -190,6 +193,28 @@ export default function userReducer(state = initState, action) {
     }
 
     case types.UNFOLLOW_USER_FAILED: {
+      return state;
+    }
+
+    case types.DESTROY_USER_SUCCESS: {
+      const data = action.payload;
+
+      return {
+        ...state,
+        listES: {
+          ...state.listES,
+          data: state.listES.data.map((u) => {
+            if (u.id === data.id) {
+              return data;
+            }
+  
+            return u;
+          }),
+        }
+      };
+    }
+
+    case types.DESTROY_USER_FAILED: {
       return state;
     }
 

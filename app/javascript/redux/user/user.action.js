@@ -5,9 +5,18 @@ export const getOneUser = (data, isAuth = false) => ({
   type: isAuth ? types.GET_ONE_USER_AUTH : types.GET_ONE_USER,
   payload: { data },
 });
-export const searchUser = (data) => ({
+export const searchUser = (data, options) => ({
   type: types.SEARCH_USER,
+  payload: { data, options },
+});
+export const deleteUser = (data) => ({
+  type: types.DESTROY_USER,
   payload: { data },
+});
+
+export const deleteUserResult = (payload, isSuccess = true) => ({
+  type: isSuccess ? types.DESTROY_USER_SUCCESS : types.DESTROY_USER_FAILED,
+  payload,
 });
 
 export const getOneUserResult = (

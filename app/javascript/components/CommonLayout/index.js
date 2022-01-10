@@ -9,10 +9,10 @@ const CommonLayout = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (authData) {
+    if (authData && !authData.isAdmin) {
       dispatch(getOneUser(authData.username, true));
     }
-  }, []);
+  }, [authData]);
   
   return (
     <div className="">

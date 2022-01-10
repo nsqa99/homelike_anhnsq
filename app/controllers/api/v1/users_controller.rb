@@ -54,8 +54,14 @@ class Api::V1::UsersController < ApplicationController
     
     json_response(
       serialize(user_decorator.transform_list(users)),
-      paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
+      pagination: paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
     )
+  end
+
+  def destroy
+    user = user_service.destroy(params[:id])
+
+    json_response(user["_source"])
   end
 
   private

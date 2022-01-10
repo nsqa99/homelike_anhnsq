@@ -1,7 +1,7 @@
 import Header from "./Header";
 import React from "react";
 
-const HostLayout = ({ children }) => {
+const AdminLayout = ({ children }) => {
   return (
     <div className="pb-3">
       <Header />
@@ -10,4 +10,4 @@ const HostLayout = ({ children }) => {
   );
 };
 
-export default HostLayout;
+export default AdminLayout;
