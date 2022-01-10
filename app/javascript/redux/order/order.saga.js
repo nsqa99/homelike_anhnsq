@@ -161,9 +161,8 @@ function* confirmPaymentSaga(props) {
     yield put(createLoadingResult());
     const res = yield call(confirmPaymentApi, username, orderId);
     if (res.status === 200) {
-      const response = res.data?.status;
       yield all([
-        put(confirmPaymentResult(response)),
+        put(confirmPaymentResult("paid")),
         put(createSuccessResult("Payment success!")),
         put(resetToastResult()),
       ]);

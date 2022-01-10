@@ -163,7 +163,7 @@ const ReserveModal = ({ currentUser, item, orderItem }) => {
           <DatePickerWrapper>
             <DatePicker
               selectsRange={true}
-              minDate={new Date()}
+              minDate={new Date(item.initial_start_date).getTime() < new Date().getTime() ? new Date() : new Date(item.initial_start_date)}
               maxDate={new Date(item.initial_end_date)}
               startDate={startDate}
               endDate={endDate}

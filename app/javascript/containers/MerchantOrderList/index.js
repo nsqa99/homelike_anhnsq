@@ -121,7 +121,7 @@ const MerchantOrderList = () => {
                               className="me-2"
                               onClick={(e) => handlePayout(order.id)}
                             >
-                              Get Payout
+                              Payout
                             </Button>
                           )}
                         </div>
