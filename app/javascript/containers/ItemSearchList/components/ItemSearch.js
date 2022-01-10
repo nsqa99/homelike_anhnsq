@@ -44,10 +44,10 @@ const Item = ({ item, style }) => {
           <Link to={detailPath} styleName="item__title">
             {item.apartment.title}
           </Link>
-          <Link to="" styleName="item__location">
+          <div>
             <LocationOnIcon styleName="icon__location" />
             {shortAddress(item.apartment.rent_address)}
-          </Link>
+          </div>
 
           <div>
             <strong>
