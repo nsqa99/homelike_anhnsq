@@ -84,7 +84,7 @@ const MapComponent = ({ latLon, setLatLon }) => {
             icon={CustomIcon}
             onClick={(e) => handleClick(e)}
           >
-            <Popup>{"Hello"}</Popup>
+            <Popup>{"You are here"}</Popup>
           </Marker>
         )}
         <Markers />

@@ -47,6 +47,6 @@ class Order < ApplicationRecord
   def rent_with_available_dates?
     checking_range = (self.start_rent_date.to_date..self.end_rent_date.to_date).to_a
     
-    (checking_range & self.item.available_dates).size == checking_range.size
+    (checking_range & self.item.available_dates(self)).size == checking_range.size
   end
 end

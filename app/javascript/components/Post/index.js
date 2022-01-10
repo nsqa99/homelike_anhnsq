@@ -18,6 +18,12 @@ import { Button } from "reactstrap";
 import { likePost, unlikePost } from "../../redux/post/post.action";
 import { useHistory } from "react-router-dom";
 import ItemAttach from "../../containers/ItemDetails/components/ItemAttach";
+import Avatar from "../../constants/images/Avatar.png";
+import { formatDateTime } from "../../utils";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import EditModal from "./modals/EditModal";
+import DeleteModal from "./modals/DeleteModal";
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -39,13 +45,17 @@ const Post = ({
   imageSize,
   profile,
   isLiked,
+  currentUser,
 }) => {
   const [displayLong, toggleDisplayLong] = useState(false);
+  const [editOpen, setEdit] = useState(false);
   const handleReadMore = () => {
     toggleDisplayLong(!displayLong);
   };
+  const toggleEditModal = () => {
+    setEdit(!editOpen);
+  }
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const handleLikeClick = () => {
     if (isLiked) {
@@ -72,6 +82,29 @@ const Post = ({
           style={{ ...style }}
           className={rightPanel ? "mb-4" : ""}
         >
+          <div className="d-flex align-items-center">
+            <RouterLink to={ownerPath}>
+              <img
+                src={post.owner.avatar_url || Avatar}
+                className="rounded-circle"
+                styleName="post__avatar"
+              />
+            </RouterLink>
+            <div>
+              <RouterLink to={ownerPath}>
+                <div styleName="post__user">{post.owner?.user_full_name}</div>
+              </RouterLink>
+              <div styleName="post__created">
+                {post.created_at && formatDateTime(post.created_at)}
+              </div>
+            </div>
+            {post.owner.username === currentUser && (
+              <div className="d-flex align-items-center ms-auto me-2">
+                <EditModal post={post} username={currentUser} />
+                <DeleteModal postId={post.id} username={currentUser} />
+              </div>
+            )}
+          </div>
           {carouselImages?.length > 0 && (
             <div styleName="img-wrapper">
               {!detail ? (
@@ -113,8 +146,10 @@ const Post = ({
               </div>
             )}
           </div>
-          {post.items && post.items.length > 0 && <ItemAttach item={post.items[0]} />}
-          <div className="d-flex mb-3 align-items-center justify-content-between w-100">
+          {post.items && post.items.length > 0 && (
+            <ItemAttach item={post.items[0]} />
+          )}
+          <div className="d-flex align-items-center mb-3 justify-content-between w-100">
             <div className="ms-3 d-flex align-items-center">
               {isLiked ? (
                 <FavoriteIcon
@@ -138,33 +173,18 @@ const Post = ({
               {/* <ShareIcon className="ms-2" styleName="icon" />
                 <span styleName="post__likeShare">{post.shares}</span> */}
             </div>
-            {!rightPanel && post.content?.length > 200 && (
-              <div
-                styleName="post__details"
-                className={detail ? "d-none" : "me-3"}
-                onClick={handleReadMore}
-              >
-                {displayLong ? "Minimize" : "Read more"}
-              </div>
-            )}
           </div>
 
-          <div
+          {/* <div
             className="d-flex align-items-center w-100 flex-wrap"
             styleName="post__create"
           >
-            <CalendarTodayIcon styleName="icon__calendar" className="" />
-            {post.created_at && formatDate(post.created_at)}
-            <RouterLink to={ownerPath} styleName="post__user">
-              <PersonIcon styleName="icon__user" />
-              {`${post.owner?.user_full_name}`}
-            </RouterLink>
             {profile && (
               <Button color="danger" outline className="ms-auto me-4">
                 Remove
               </Button>
             )}
-          </div>
+          </div> */}
         </div>
       ) : (
         "Not found"

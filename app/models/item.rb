@@ -60,9 +60,10 @@ class Item < ApplicationRecord
     )
   end
 
-  def available_dates
+  def available_dates update_order = nil
     availables = (initial_start_date.to_date..initial_end_date.to_date).to_a
-    orders.each do |order|
+    orders.not_postponed.each do |order|
+      next if order.id == update_order.try(:id)
       availables -= (order.start_rent_date.to_date..order.end_rent_date.to_date).to_a
     end
 

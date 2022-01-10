@@ -17,6 +17,7 @@ import {
   updatePostResult,
 } from "./post.action";
 import {
+  createFailResult,
   createLoadingResult,
   createSuccessResult,
   removeToastResult,
@@ -145,6 +146,10 @@ function* createPostSaga(props) {
     }
   } catch (error) {
     console.log(error);
+    yield all([
+      put(createFailResult("Error occured")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
@@ -173,30 +178,55 @@ function* sharePostSaga(props) {
 function* destroyPostSaga(props) {
   const { username, itemId, isSearch } = props.payload;
   try {
+    yield put(createLoadingResult());
     const res = yield call(destroyPostApi, username, itemId);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(destroyPostResult(response, isSearch))]);
+      yield all([
+        put(destroyPostResult(response, isSearch)),
+        put(createSuccessResult("Deleted")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
+    yield all([
+      put(createFailResult("Error occured")),
+      put(resetToastResult()),
+    ]);
   }
 }
 
 function* updatePostSaga(props) {
   const { username, data, itemId, images, isSearch } = props.payload;
-  const formData = appendPostDatas(data, images);
+  const formData = new FormData();
+  formData.append("post[content]", data.content);
+  if (data.item_id) {
+    formData.append("item_ids[]", [data.item_id]);
+  }
+  images?.map((image) => {
+    formData.append("post[images][]", image);
+  });
   const config = {
     headers: { "content-type": "multipart/form-data" },
   };
   try {
+    yield put(createLoadingResult());
     const res = yield call(updatePostApi, username, itemId, formData, config);
     if (res.status === 200) {
       const response = res.data?.data;
-      yield all([put(updatePostResult(response, isSearch))]);
+      yield all([
+        put(updatePostResult(response, isSearch)),
+        put(createSuccessResult("Updated")),
+        put(resetToastResult()),
+      ]);
     }
   } catch (error) {
     console.log(error);
+    yield all([
+      put(createFailResult("Error occured")),
+      put(resetToastResult()),
+    ]);
   }
 }
 

@@ -1,11 +1,11 @@
 import types from "./post.type";
-import _ from "lodash";
+import _, { isEqual } from "lodash";
 
 const initState = {
   list: {},
   listES: {},
   post: {},
-  share: {}
+  share: {},
 };
 
 export default function postReducer(state = initState, action) {
@@ -61,7 +61,7 @@ export default function postReducer(state = initState, action) {
         ...state,
         share: {
           ...state.share,
-          success: true
+          success: true,
         },
       };
     }
@@ -71,7 +71,7 @@ export default function postReducer(state = initState, action) {
         ...state,
         share: {
           ...state.share,
-          success: false
+          success: false,
         },
       };
     }
@@ -138,35 +138,17 @@ export default function postReducer(state = initState, action) {
     }
 
     case types.DESTROY_POST_SUCCESS: {
-      const { data, isSearch } = action.payload;
-      const pagination = isSearch
-        ? state.list.pagination
-        : state.list.pagination;
-      const newPagin = {
-        total_entries: pagination.total_entries - 1,
-        total_pages: Math.ceil(
-          parseFloat(pagination.total_entries - 1) /
-            parseFloat(pagination.page_size)
-        ),
-      };
-      const newData = {
-        list: {
-          ...state.list,
-          data: state.list.data.filter((post) => post.id !== data.id),
-          pagination: { ...state.list.pagination, ...newPagin },
-        },
-
-        list: {
-          ...state.list,
-          data: state.list.data.filter((post) => post.id !== data.id),
-          pagination: { ...state.list.pagination, ...newPagin },
-        },
-        isSearch: isSearch,
-      };
-
       return {
         ...state,
-        ...newData,
+        list: {
+          ...state.list,
+          list: state.list.list.filter((post) => {
+            return post.id !== action.payload.data.id;
+          }),
+        },
+        post: {
+          deleted: true
+        }
       };
     }
 
@@ -175,46 +157,21 @@ export default function postReducer(state = initState, action) {
     }
 
     case types.UPDATE_POST_SUCCESS: {
-      const { data, isSearch } = action.payload;
-      const pagination = isSearch
-        ? state.list.pagination
-        : state.list.pagination;
-      const newPagin = {
-        total_entries: pagination.total_entries + 1,
-        total_pages: Math.ceil(
-          parseFloat(pagination.total_entries + 1) /
-            parseFloat(pagination.page_size)
-        ),
-      };
-      const newData = {
-        list: {
-          ...state.list,
-          // data: [data, ...state.list.data],
-          data: state.list.data?.map((elem) => {
-            if (elem.id === data.id) {
-              elem = data;
-            }
-            return elem;
-          }),
-          pagination: { ...state.list.pagination, ...newPagin },
-        },
-
-        list: {
-          ...state.list,
-          data: state.list.data?.map((elem) => {
-            if (elem.id === data.id) {
-              elem = data;
-            }
-            return elem;
-          }),
-          pagination: { ...state.list.pagination, ...newPagin },
-        },
-        isSearch: isSearch,
-      };
-
       return {
         ...state,
-        ...newData,
+        list: {
+          ...state.list,
+          list: state.list.list
+            ? state.list.list.map((post) => {
+                if (post.id === action.payload.data.id) {
+                  return action.payload.data;
+                }
+
+                return post;
+              })
+            : state.list,
+        },
+        post: !isEqual(state.post, {}) ? action.payload.data : state.post,
       };
     }
 

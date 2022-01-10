@@ -37,6 +37,12 @@ export const createOrderApi = async (username, data) => {
     data
   );
 };
+export const updateOrderApi = async (username, orderId, data) => {
+  return await AuthorizedAxios.put(
+    `${CUSTOMER_ENDPOINT}/${username}/orders/${orderId}`,
+    data
+  );
+};
 
 export const checkoutApi = async (username, orderId) => {
   return await AuthorizedAxios.post(

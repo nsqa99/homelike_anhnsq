@@ -1,0 +1,13 @@
+@import '../../../assets/styles/variables';
+
+.modal {
+  &__btn {
+    &--reserve {
+      background: $theme_color;
+      border-radius: 6px;
+      border: none;
+      padding: 10px 35px;
+      margin-top: 20px;
+    }
+  }
+}

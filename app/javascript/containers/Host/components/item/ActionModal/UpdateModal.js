@@ -19,12 +19,18 @@ import {
 import CustomForm from "../../../../../components/Form";
 import {
   getBlobUrl,
+  getLatLngApi,
   isValidImageSize,
   isValidImageType,
 } from "../../../../../utils";
 import { useDispatch } from "react-redux";
 import { createItem, updateItem } from "../../../../../redux/item/item.action";
 import { includes, isEmpty, isEqual } from "lodash";
+import MapComponent from "../Map";
+import { useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { HANOI_LAT_LON } from "../../../../../common/constant";
+import { FillerWrapper } from "../../../../../components/LoadingFiller";
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -73,14 +79,27 @@ const UpdateModal = ({
   const [imageError, setImageError] = useState({});
   const [item, setItem] = useState({});
   const dispatch = useDispatch();
+  const formRef = useRef(null);
+  const [validAddress, setValid] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [latLon, setLatLon] = useState(null);
 
   const handleFormSubmit = (data) => {
     console.log(itemImages);
+    const [latitude, longitude] = latLon;
+    if (latitude && longitude) {
+      data = {
+        ...data,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      };
+    }
     dispatch(updateItem(username, itemId, data, itemImages, isSearch));
     setOpen(false);
   };
 
   useEffect(() => {
+    setLatLon(null);
     if (!isEmpty(items)) {
       setItem(items.data.find((item) => item.id === itemId) || {});
     }
@@ -88,18 +107,34 @@ const UpdateModal = ({
 
   useEffect(() => {
     if (!isEqual(item, {})) {
-      setImages([
-        { key: item.apartment.image_urls, url: item.apartment.image_urls },
+      setImages(
+        item.apartment.image_urls.map((url) => ({
+          key: url,
+          url,
+        }))
+      );
+      setLatLon([
+        item.apartment.rent_address.latitude,
+        item.apartment.rent_address.longitude,
       ]);
     }
   }, [item]);
 
   const toggleModal = () => {
     setOpen(!isOpen);
-    setImages([
-      { key: item.apartment.image_urls, url: item.apartment.image_urls },
-    ]);
+    setImages(
+      item.apartment.image_urls.map((url) => ({
+        key: url,
+        url,
+      }))
+    );
     setImageError({});
+    if (isEqual(latLon, HANOI_LAT_LON)) {
+      setLatLon([
+        item.apartment.rent_address.latitude,
+        item.apartment.rent_address.longitude,
+      ]);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -130,6 +165,37 @@ const UpdateModal = ({
     }
   };
 
+  const handleVerifyAddress = async () => {
+    const data = formRef.current.values;
+    if (data.street && data.district && data.city && data.country) {
+      const address = [
+        data.street,
+        data.district,
+        data.city,
+        data.country,
+      ].join(",");
+      const toastId = toast.loading("Verifying...");
+      setLoading(true);
+      const response = await getLatLngApi(address);
+      if (response) {
+        toast.success("All done! Check it on map", { id: toastId });
+        setLatLon([response.lat, response.lon]);
+        setValid(true);
+        setLoading(false);
+      } else {
+        toast.error("Address cannot be resolved :(", { id: toastId });
+        setLatLon(HANOI_LAT_LON);
+        setValid(false);
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleAddressChange = (e) => {
+    formRef.current.handleBlur(e);
+    handleVerifyAddress();
+  };
+
   const fields = {
     initValues: {
       title: item.apartment?.title,
@@ -141,6 +207,7 @@ const UpdateModal = ({
       extra_fee_each_person: item.apartment?.extra_fee_each_person,
       startDate: item.initial_start_date?.split("T")[0],
       endDate: item.initial_end_date?.split("T")[0],
+      street: item.apartment?.rent_address.street,
       homeNumber: item.apartment?.rent_address.home_number,
       district: item.apartment?.rent_address.district,
       city: item.apartment?.rent_address.city,
@@ -164,9 +231,7 @@ const UpdateModal = ({
       extra_fee_each_person: Yup.number()
         .required("Required")
         .min(1, "Must be greater than 0"),
-      startDate: Yup.date()
-        .required("Required")
-        .min(new Date(), "Must be greater than 0"),
+      startDate: Yup.date().required("Required"),
       endDate: Yup.date().required("Required"),
       homeNumber: Yup.string().required("Required"),
       district: Yup.string().required("Required"),
@@ -177,103 +242,133 @@ const UpdateModal = ({
 
   return (
     <>
-      <CustomModal isOpen={isOpen} toggle={toggleModal}>
-        <ModalHeader>Create apartment</ModalHeader>
-        <CustomModalBody>
-          <CustomForm
-            fields={fields}
-            handleSubmit={handleFormSubmit}
-            images={images}
-          >
-            <Row className="p-2">
-              <Col xs="12" md="6">
-                <CustomInput name="title" id="title" label="Title" />
-                <CustomInput
-                  name="description"
-                  id="description"
-                  label="Description"
-                  type="textarea"
-                  rows="5"
-                  defaultValue="5"
-                />
-                <CustomInput
-                  name="price"
-                  id="price"
-                  label="Price"
-                  type="number"
-                />
-                <CustomInput name="size" id="size" label="Size" type="number" />
-                <CustomInput
-                  name="initial_allowance"
-                  id="initial_allowance"
-                  label="Customer initial allow"
-                  type="number"
-                />
-                <CustomInput
-                  name="max_allowance"
-                  id="max_allowance"
-                  label="Max customer allow"
-                  type="number"
-                />
-                <CustomInput
-                  name="extra_fee_each_person"
-                  id="extra_fee_each_person"
-                  label="Each person exceed fee"
-                  type="number"
-                />
-              </Col>
-              <Col xs="12" md="6">
-                <CustomInput
-                  name="startDate"
-                  id="startDate"
-                  label="Start Date"
-                  min={new Date().toISOString().split("T")[0]}
-                  type="date"
-                />
-                <CustomInput
-                  name="endDate"
-                  id="endDate"
-                  label="End Date"
-                  min={new Date().toISOString().split("T")[0]}
-                  type="date"
-                />
-                <CustomInput
-                  name="homeNumber"
-                  id="homeNumber"
-                  label="Home Number"
-                />
-                <CustomInput name="street" id="street" label="Street" />
-                <CustomInput name="district" id="district" label="District" />
-                <CustomInput name="city" id="city" label="City" />
-                <CustomInput name="country" id="country" label="Country" />
-                <CustomInput
-                  name="images"
-                  id="images"
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  multiple
-                  onChange={(e) => handleImageChange(e)}
-                  imageValidator={imageError}
-                />
-                <CustomImagePreview>
-                  {images.map(({ key, url }) => (
-                    <img key={key} src={url} />
-                  ))}
-                </CustomImagePreview>
-              </Col>
-            </Row>
+      {!isEqual(item, {}) && latLon != null && (
+        <CustomModal isOpen={isOpen} toggle={toggleModal}>
+          {loading && <FillerWrapper />}
+          <Toaster />
+          <ModalHeader>Update apartment</ModalHeader>
+          <CustomModalBody>
+            <CustomForm
+              fields={fields}
+              handleSubmit={handleFormSubmit}
+              images={images}
+              formRef={formRef}
+            >
+              <Row className="p-2">
+                <Col xs="12" md="6">
+                  <CustomInput name="title" id="title" label="Title" />
+                  <CustomInput
+                    name="description"
+                    id="description"
+                    label="Description"
+                    type="textarea"
+                    rows="5"
+                  />
+                  <CustomInput
+                    name="price"
+                    id="price"
+                    label="Price"
+                    type="number"
+                  />
+                  <CustomInput
+                    name="size"
+                    id="size"
+                    label="Size"
+                    type="number"
+                  />
+                  <CustomInput
+                    name="initial_allowance"
+                    id="initial_allowance"
+                    label="Customer initial allow"
+                    type="number"
+                  />
+                  <CustomInput
+                    name="max_allowance"
+                    id="max_allowance"
+                    label="Max customer allow"
+                    type="number"
+                  />
+                  <CustomInput
+                    name="extra_fee_each_person"
+                    id="extra_fee_each_person"
+                    label="Each person exceed fee"
+                    type="number"
+                  />
+                  <CustomInput
+                    name="images"
+                    id="images"
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    multiple
+                    onChange={(e) => handleImageChange(e)}
+                    imageValidator={imageError}
+                  />
+                  <CustomImagePreview>
+                    {images.map(({ key, url }) => (
+                      <img key={key} src={url} />
+                    ))}
+                  </CustomImagePreview>
+                </Col>
+                <Col xs="12" md="6">
+                  <CustomInput
+                    name="startDate"
+                    id="startDate"
+                    label="Start Date"
+                    min={new Date().toISOString().split("T")[0]}
+                    type="date"
+                  />
+                  <CustomInput
+                    name="endDate"
+                    id="endDate"
+                    label="End Date"
+                    min={new Date().toISOString().split("T")[0]}
+                    type="date"
+                  />
+                  <CustomInput
+                    name="homeNumber"
+                    id="homeNumber"
+                    label="Home Number"
+                  />
+                  <CustomInput
+                    name="street"
+                    id="street"
+                    label="Street"
+                    onBlur={(e) => handleAddressChange(e)}
+                  />
+                  <CustomInput
+                    name="district"
+                    id="district"
+                    label="District"
+                    onBlur={(e) => handleAddressChange(e)}
+                  />
+                  <CustomInput
+                    name="city"
+                    id="city"
+                    label="City"
+                    onBlur={(e) => handleAddressChange(e)}
+                  />
+                  <CustomInput
+                    name="country"
+                    id="country"
+                    label="Country"
+                    onBlur={(e) => handleAddressChange(e)}
+                  />
+                  <MapComponent latLon={latLon} setLatLon={setLatLon} />
+                </Col>
+              </Row>
 
-            <div className="mt-4 d-flex justify-content-end">
-              <Button color="primary" type="submit">
-                Save
-              </Button>
-              <Button onClick={toggleModal} className="ms-2">
-                Cancel
-              </Button>
-            </div>
-          </CustomForm>
-        </CustomModalBody>
-      </CustomModal>
+              <div className="mt-4 d-flex justify-content-end">
+                <Button color="primary" type="submit" disabled={!validAddress}>
+                  Save
+                </Button>
+                <Button onClick={toggleModal} className="ms-2">
+                  Cancel
+                </Button>
+              </div>
+            </CustomForm>
+          </CustomModalBody>
+        </CustomModal>
+      )}
     </>
   );
 };

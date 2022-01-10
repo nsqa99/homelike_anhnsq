@@ -25,6 +25,7 @@ import {
   getAllComment,
 } from "../../../../redux/comment/comment.action";
 import { useHistory } from "react-router-dom";
+import { resetPostState } from "../../../../redux/post/post.action";
 
 const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   const listComments = useSelector((state) => state.comments);
@@ -37,7 +38,7 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  
+
   const handleGoBack = () => {
     history.goBack();
   };
@@ -50,7 +51,10 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   }, []);
 
   useEffect(() => {
-    if (post) {
+    if (post.deleted) {
+      dispatch(resetPostState());
+      history.push("/social");
+    } else {
       const found = post.like_users.find(
         (user) => user.username === currentUser
       );
@@ -70,96 +74,104 @@ const DetailBody = ({ isAuthenticated, currentUser, post, location }) => {
   };
 
   return (
-    <Row>
-      <Col
-        md="12"
-        lg="9"
-        className="mt-4 d-flex flex-column align-items-center"
-      >
-        <div styleName="body__title" className="mb-5 align-self-start">
-          <div
-            onClick={handleGoBack}
-            className="d-flex align-items-center w-100 justify-content-start"
-            styleName="post__create"
-            style={{ cursor: "pointer" }}
+    <>
+      {!post.deleted && (
+        <Row>
+          <Col
+            md="12"
+            lg="9"
+            className="mt-4 d-flex flex-column align-items-center"
           >
-            <ArrowBackIosIcon styleName="icon__back" />
-            Back
-          </div>
-        </div>
-        <Post
-          post={post}
-          detail={true}
-          imageSize="400px"
-          style={{ width: "80%" }}
-          isLiked={isLiked}
-        />
-
-        <Card styleName="body__merchant">
-          <CardBody>
-            {isAuthenticated ? (
-              <>
-                {"Comments"}
-                <Input
-                  id="comment"
-                  name="comment"
-                  type="textarea"
-                  placeholder="Write down your comment"
-                  className="mt-3"
-                  rows="5"
-                  onChange={handleContentChange}
-                  value={content}
-                />
-                <Button
-                  color="danger"
-                  className="mt-3 mb-5"
-                  onClick={handleComment}
-                >
-                  Post
-                </Button>{" "}
-                <hr />
-              </>
-            ) : (
-              <div className="fs-6 mt-2 fw-bold fst-italic">
-                Sign in and drop some comments
+            <div styleName="body__title" className="mb-5 align-self-start">
+              <div
+                onClick={handleGoBack}
+                className="d-flex align-items-center w-100 justify-content-start"
+                styleName="post__create"
+                style={{ cursor: "pointer" }}
+              >
+                <ArrowBackIosIcon styleName="icon__back" />
+                Back
               </div>
-            )}
+            </div>
+            <Post
+              post={post}
+              detail={true}
+              imageSize="400px"
+              style={{ width: "80%" }}
+              isLiked={isLiked}
+              currentUser={currentUser}
+            />
 
-            {listComments.list?.length > 0 ? (
-              <>
-                {listComments.list
-                  .slice(0)
-                  .reverse()
-                  .map((comment) => {
-                    const isOwner =
-                      isAuthenticated && comment.owner.username === currentUser;
-                    return (
-                      <Comment
-                        key={comment.id}
-                        comment={comment}
-                        isOwner={isOwner}
-                      />
-                    );
-                  })}
-                <CustomPagination
-                  totalPages={listComments.pagination.total_pages}
-                  currentPage={listComments.pagination.page}
-                  fn={(options) => dispatch(getAllComment(post.id, options))}
-                />
-              </>
-            ) : (
-              <div className="fs-6 mt-2 fw-bold fst-italic mt-5 mb-4 w-100 text-center">
-                No comment
-              </div>
-            )}
-          </CardBody>
-        </Card>
-      </Col>
+            <Card styleName="body__merchant">
+              <CardBody>
+                {isAuthenticated ? (
+                  <>
+                    {"Comments"}
+                    <Input
+                      id="comment"
+                      name="comment"
+                      type="textarea"
+                      placeholder="Write down your comment"
+                      className="mt-3"
+                      rows="5"
+                      onChange={handleContentChange}
+                      value={content}
+                    />
+                    <Button
+                      color="danger"
+                      className="mt-3 mb-5"
+                      onClick={handleComment}
+                    >
+                      Post
+                    </Button>{" "}
+                    <hr />
+                  </>
+                ) : (
+                  <div className="fs-6 mt-2 fw-bold fst-italic">
+                    Sign in and drop some comments
+                  </div>
+                )}
 
-      <Col md="12" lg="3" className="pl-3">
-        {/* <RightPanel /> */}
-      </Col>
-    </Row>
+                {listComments.list?.length > 0 ? (
+                  <>
+                    {listComments.list
+                      .slice(0)
+                      .reverse()
+                      .map((comment) => {
+                        const isOwner =
+                          isAuthenticated &&
+                          comment.owner.username === currentUser;
+                        return (
+                          <Comment
+                            key={comment.id}
+                            comment={comment}
+                            isOwner={isOwner}
+                          />
+                        );
+                      })}
+                    <CustomPagination
+                      totalPages={listComments.pagination.total_pages}
+                      currentPage={listComments.pagination.page}
+                      fn={(options) =>
+                        dispatch(getAllComment(post.id, options))
+                      }
+                    />
+                  </>
+                ) : (
+                  <div className="fs-6 mt-2 fw-bold fst-italic mt-5 mb-4 w-100 text-center">
+                    No comment
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col md="12" lg="3" className="pl-3">
+            {/* <RightPanel /> */}
+          </Col>
+        </Row>
+      )}
+    </>
   );
 };
 export default CSSModules(DetailBody, style);

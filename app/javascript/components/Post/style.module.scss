@@ -1,12 +1,12 @@
 @import "../../assets/styles/variables";
 $img-width: 80%;
 $img-height: 230px;
+$avatar-height: 40px;
 $left-margin: 20px;
 
 .post {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: flex-end;
   // max-height: 600px;
   min-width: 100px;
@@ -20,6 +20,16 @@ $left-margin: 20px;
   &--no-margin {
     margin: 0;
     margin-bottom: 15px;
+  }
+
+  &__avatar {
+    width: $avatar-height;
+    height: $avatar-height;
+    margin: 15px;
+  }
+
+  &__created {
+    font-size: 13px;
   }
 
   .img-wrapper {
@@ -43,16 +53,21 @@ $left-margin: 20px;
   .icon {
     cursor: pointer;
 
-    &__user {
-      font-size: 15px;
-      margin-left: $left-margin;
-      margin-right: 5px;
+    &__edit {
+      &:hover {
+        color: #1e45c5;
+      }
+      font-size: 20px;
     }
-    &__calendar {
-      font-size: 15px;
-      margin-left: $left-margin;
-      margin-right: 5px;
+
+    &__delete {
+      &:hover {
+        color: $theme_color;
+      }
+      font-size: 20px;
     }
+
+    transition: color 0.15s ease-in-out;
   }
 
   &__likeShare {
@@ -61,7 +76,7 @@ $left-margin: 20px;
   }
 
   &__info {
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
     align-self: flex-start;
     font-size: $text-small;
     padding: 10px 15px;
@@ -73,6 +88,11 @@ $left-margin: 20px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  &__user {
+    cursor: pointer;
+    font-weight: bold;
   }
 
   &__user:hover {
@@ -94,7 +114,7 @@ $left-margin: 20px;
     color: $theme_color;
     font-weight: 700;
     font-size: $text-small;
-    padding: 10px;
+    // padding: 10px;
   }
 
   &__create {

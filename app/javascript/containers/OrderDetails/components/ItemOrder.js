@@ -11,6 +11,10 @@ import { useDispatch } from "react-redux";
 import { confirmPayment } from "../../../redux/order/order.action";
 import { useParams } from "react-router-dom";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import BlockIcon from "@material-ui/icons/Block";
+import EditIcon from "@material-ui/icons/Edit";
+import EditModal from "./modals/EditModal";
+import DeleteModal from "./modals/DeleteModal";
 
 const ItemOrder = ({ order }) => {
   const dispatch = useDispatch();
@@ -51,6 +55,19 @@ const ItemOrder = ({ order }) => {
             <div>Host: {order.item.owner.fullname}</div>
           </RouterLink>
         </div>
+        {order.status !== "postponed" && (
+          <div className="ms-auto">
+            <EditModal
+              item={order.item}
+              order={order}
+              currentUser={order.item.owner.username}
+            />
+            <DeleteModal
+              username={order.item.owner.username}
+              orderId={order.id}
+            />
+          </div>
+        )}
       </div>
       <hr />
       <div className="mt-md-5">
@@ -113,20 +130,22 @@ const ItemOrder = ({ order }) => {
           </Col>
         </Row>
         {order.status === "pending" ? (
-          <PayPalScriptProvider
-            options={{
-              "client-id":
-                "AcKoypG2QWeNbx2UE29l5yb-mDiRHZEVr0mRE6fNj6iSLHaYgM-xVuPmlgP1N6I6R5qGkDlhttupIFKU",
-              locale: "en_US",
-            }}
-          >
-            <PayPalButtons
-              style={{ layout: "horizontal" }}
-              createOrder={handleCheckout}
-              onApprove={handleConfirmPayment}
-            />
-          </PayPalScriptProvider>
-        ) : (
+          <div className="w-100 text-center">
+            <PayPalScriptProvider
+              options={{
+                "client-id":
+                  "AcKoypG2QWeNbx2UE29l5yb-mDiRHZEVr0mRE6fNj6iSLHaYgM-xVuPmlgP1N6I6R5qGkDlhttupIFKU",
+                locale: "en_US",
+              }}
+            >
+              <PayPalButtons
+                style={{ layout: "horizontal" }}
+                createOrder={handleCheckout}
+                onApprove={handleConfirmPayment}
+              />
+            </PayPalScriptProvider>
+          </div>
+        ) : order.status === "paid" ? (
           <Button
             color="success"
             className="w-100 d-flex align-items-center justify-content-center"
@@ -135,6 +154,16 @@ const ItemOrder = ({ order }) => {
           >
             <CheckCircleIcon className="text-white me-3" />
             Paid
+          </Button>
+        ) : (
+          <Button
+            color="danger"
+            className="w-100 d-flex align-items-center justify-content-center"
+            size="lg"
+            disabled
+          >
+            <BlockIcon />
+            Canceled
           </Button>
         )}
       </div>

@@ -44,6 +44,15 @@ export default function orderReducer(state = initState, action) {
         },
       };
     }
+    case types.UPDATE_ORDER_SUCCESS: {
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          ...action.payload,
+        },
+      };
+    }
 
     case types.GET_ONE_ORDER_SUCCESS: {
       return {
@@ -108,22 +117,15 @@ export default function orderReducer(state = initState, action) {
       return state;
     }
 
-    // case types.DESTROY_ORDER_SUCCESS: {
-    //   const pagination = state.pagination;
-    //   const newPagin = {
-    //     total_entries: pagination.total_entries - 1,
-    //     total_pages: Math.ceil(
-    //       parseFloat(pagination.total_entries - 1) /
-    //         parseFloat(pagination.page_size)
-    //     ),
-    //   };
-
-    //   return {
-    //     ...state,
-    //     list: state.list.filter((ORDER) => !_.isEqual(ORDER, action.payload)),
-    //     pagination: {...pagination, ...newPagin}
-    //   };
-    // }
+    case types.DESTROY_ORDER_SUCCESS: {
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          ...action.payload,
+        },
+      };
+    }
 
     default:
       return state;

@@ -62,7 +62,6 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      
       const data = {
         search_text: searchText,
       };
@@ -117,7 +116,9 @@ const SocialHeaders = ({ username, avatar, isAuthenticated }) => {
               <RouterLink to={`/social/users/${username}`}>
                 <DropdownItem>Account: {username}</DropdownItem>
               </RouterLink>
-              <DropdownItem>Orders</DropdownItem>
+              <RouterLink to={`/users/${username}/orders`}>
+                <DropdownItem>Orders</DropdownItem>
+              </RouterLink>
               <DropdownItem divider />
               <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
             </DropdownMenu>

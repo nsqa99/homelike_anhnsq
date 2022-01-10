@@ -99,7 +99,7 @@ const ItemShareModal = ({ username, item }) => {
               placeholder="Share your opinion"
               rows="10"
             />
-            <ItemAttach item={item} />
+            <ItemAttach item={item} style="item__inModal" />
 
             <div className="mt-4 d-flex justify-content-end">
               <Button color="primary" type="submit">

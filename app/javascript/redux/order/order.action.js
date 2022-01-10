@@ -15,6 +15,11 @@ export const createOrder = (username, data) => ({
   payload: { username, data },
 });
 
+export const updateOrder = (username, orderId, data) => ({
+  type: types.UPDATE_ORDER,
+  payload: { username, orderId, data },
+});
+
 export const getOneOrder = (username, orderId) => ({
   type: types.GET_ONE_ORDER,
   payload: { username, orderId },
@@ -86,6 +91,10 @@ export const getOneOrderByItemResult = (payload, isSuccess = true) => {
 
 export const createOrderResult = (payload) => ({
   type: types.CREATE_ORDER_SUCCESS,
+  payload,
+});
+export const updateOrderResult = (payload) => ({
+  type: types.UPDATE_ORDER_SUCCESS,
   payload,
 });
 

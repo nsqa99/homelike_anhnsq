@@ -16,10 +16,7 @@ export const capitalizeFirstLetter = (string) => {
 }
 
 export const formatDateTime = (datetime) => {
-  const parts = datetime.split("T");
-  let date = parts[0].split("-");
-  let time = parts[1].split(".")[0];
-  return `${date.slice(0).reverse().join(".")}, ${time}`;
+  return moment(datetime).local().format("DD.MM.YYYY, HH:mm:ss");
 };
 
 export const calculateDateDiff = (startDate, endDate) => {

@@ -43,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
 
   def search
     page = params[:page] || DEFAULT_PAGE
-    page_size = params[:page_size] || 25
+    page_size = params[:page_size] || DEFAULT_PAGE_SIZE
     
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]

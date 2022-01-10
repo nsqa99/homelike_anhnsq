@@ -191,8 +191,7 @@ const CreateModal = ({ username }) => {
         .required("Required")
         .min(1, "Must be greater than 0"),
       startDate: Yup.date()
-        .required("Required")
-        .min(new Date(), "Must be greater than 0"),
+        .required("Required"),
       endDate: Yup.date().required("Required"),
       homeNumber: Yup.string().required("Required"),
       district: Yup.string().required("Required"),
