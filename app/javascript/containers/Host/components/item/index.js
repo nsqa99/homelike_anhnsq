@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CurrencyFormat from "react-currency-format";
-import { Button, Container, Input, Table } from "reactstrap";
+import { Badge, Button, Container, Input, Table } from "reactstrap";
 import { formatDate, fullAddress } from "../../../../utils";
 import CreateModal from "./ActionModal/CreateModal";
 import DefaultImage from "../../../../constants/images/DefaultImage.png";
@@ -18,6 +18,9 @@ import DeleteModal from "./ActionModal/DeleteModal";
 import UpdateModal from "./ActionModal/UpdateModal";
 import ViewModal from "./ActionModal/ViewModal";
 import NotificationToast from "../../../../components/Toast";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const ImageWrapper = styled.div`
   img {
@@ -106,7 +109,8 @@ const Item = () => {
                   <th>Start Date</th>
                   <th>End Date</th>
                   <th>Price</th>
-                  <th style={{ width: "25%" }}></th>
+                  <th style={{ width: "10%" }}>Tags</th>
+                  <th style={{ width: "15%" }}></th>
                 </tr>
                 {items.data.map((item) => {
                   let apartment = item.apartment;
@@ -119,9 +123,7 @@ const Item = () => {
                           <ImageWrapper>
                             <img
                               className="rounded"
-                              src={
-                                item.apartment.image_urls[0] || DefaultImage
-                              }
+                              src={item.apartment.image_urls[0] || DefaultImage}
                             />
                           </ImageWrapper>
                         </td>
@@ -139,27 +141,34 @@ const Item = () => {
                           />
                         </td>
                         <td>
+                          {item.tags.map((tag) => (
+                            <div>
+                              <Badge color="dark">{tag.title}</Badge>
+                            </div>
+                          ))}
+                        </td>
+                        <td>
                           <div className="d-flex align-items-start justify-content-end">
-                            <Button
-                              color="warning"
-                              className="me-2"
-                              onClick={(e) => handleViewModal(item.id)}
-                            >
-                              View
-                            </Button>
                             <Button
                               color="primary"
                               className="me-2"
+                              onClick={(e) => handleViewModal(item.id)}
+                            >
+                              <VisibilityIcon />
+                            </Button>
+                            <Button
+                              color="warning"
+                              className="me-2"
                               onClick={(e) => handleUpdateModal(item.id)}
                             >
-                              Edit
+                              <EditIcon />
                             </Button>
                             <Button
                               color="danger"
                               className="me-2"
                               onClick={(e) => handleDeleteModal(item.id)}
                             >
-                              Delete
+                              <DeleteIcon />
                             </Button>
                           </div>
                         </td>
@@ -192,8 +201,8 @@ const Item = () => {
                 <th style={{ width: "15%" }}>Address</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Price</th>
-                <th style={{ width: "25%" }}></th>
+                <th style={{ width: "10%" }}>Tags</th>
+                <th style={{ width: "15%" }}></th>
               </tr>
               {searchItems.data.map((item) => {
                 let apartment = item.apartment;
@@ -224,27 +233,34 @@ const Item = () => {
                         />
                       </td>
                       <td>
+                        {item.tags.map((tag) => (
+                          <div>
+                            <Badge color="dark">{tag.title}</Badge>
+                          </div>
+                        ))}
+                      </td>
+                      <td>
                         <div className="d-flex align-items-start justify-content-end">
-                          <Button
-                            color="warning"
-                            className="me-2"
-                            onClick={(e) => handleViewModal(item.id)}
-                          >
-                            View
-                          </Button>
                           <Button
                             color="primary"
                             className="me-2"
+                            onClick={(e) => handleViewModal(item.id)}
+                          >
+                            <VisibilityIcon />
+                          </Button>
+                          <Button
+                            color="warning"
+                            className="me-2"
                             onClick={(e) => handleUpdateModal(item.id)}
                           >
-                            Edit
+                            <EditIcon />
                           </Button>
                           <Button
                             color="danger"
                             className="me-2"
                             onClick={(e) => handleDeleteModal(item.id)}
                           >
-                            Delete
+                            <DeleteIcon />
                           </Button>
                         </div>
                       </td>

@@ -27,7 +27,12 @@ class ItemService
   end
 
   def update item_id, params
+    exist_tags = params[:tags_attributes].select{|attribute| attribute[:id].present?}.map{|a| a[:id]}
+    params[:tags_attributes] = params[:tags_attributes].select{|attribute| attribute[:id].nil?}
+    
     item = Item.approved.find(item_id)
+    tags = exist_tags.map{|tid| Tag.find(tid)}
+    item.tags = tags unless tags.empty?
     if item.apartment.apartment_images.attached? && !params[:apartment_attributes][:apartment_images]
       params[:apartment_attributes][:apartment_images] = item.apartment.apartment_images.map(&:blob)
     end

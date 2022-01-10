@@ -1,5 +1,6 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { appendItemDatas } from "../../utils";
+import { getAllTag } from "../tag/tag.action";
 import {
   createLoadingResult,
   createSuccessResult,
@@ -148,6 +149,7 @@ function* updateItemSaga(props) {
         put(updateItemResult(response, isSearch)),
         put(createSuccessResult("Updated!")),
         put(resetToastResult()),
+        put(getAllTag()),
       ]);
     }
   } catch (error) {

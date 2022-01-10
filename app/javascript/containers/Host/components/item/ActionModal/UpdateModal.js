@@ -4,6 +4,7 @@ import {
   Button,
   Col,
   Input,
+  Label,
   Modal,
   ModalBody,
   ModalFooter,
@@ -23,14 +24,16 @@ import {
   isValidImageSize,
   isValidImageType,
 } from "../../../../../utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createItem, updateItem } from "../../../../../redux/item/item.action";
 import { includes, isEmpty, isEqual } from "lodash";
 import MapComponent from "../Map";
 import { useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HANOI_LAT_LON } from "../../../../../common/constant";
+import CreatableSelect from "react-select/creatable";
 import { FillerWrapper } from "../../../../../components/LoadingFiller";
+import { getAllTag } from "../../../../../redux/tag/tag.action";
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -83,6 +86,10 @@ const UpdateModal = ({
   const [validAddress, setValid] = useState(true);
   const [loading, setLoading] = useState(false);
   const [latLon, setLatLon] = useState(null);
+  const [tagDatas, setTags] = useState([]);
+  const [initTags, setInitTags] = useState([]);
+  const tags = useSelector((state) => state.tags.list);
+  console.log(tags)
 
   const handleFormSubmit = (data) => {
     console.log(itemImages);
@@ -94,8 +101,26 @@ const UpdateModal = ({
         longitude: parseFloat(longitude),
       };
     }
+    data = {
+      ...data,
+      tags: tagDatas
+    }
     dispatch(updateItem(username, itemId, data, itemImages, isSearch));
+    // dispatch(getAllTag());
     setOpen(false);
+  };
+
+  const handleChange = (value) => {
+    setInitTags(value);
+    setTags(
+      value.map((val) => {
+        if (val.id) {
+          return { id: val.id, title: val.value };
+        }
+
+        return { title: val.value };
+      })
+    );
   };
 
   useEffect(() => {
@@ -117,6 +142,13 @@ const UpdateModal = ({
         item.apartment.rent_address.latitude,
         item.apartment.rent_address.longitude,
       ]);
+      setInitTags(item.tags.map((val) => {
+        if (val.id) {
+          return { id: val.id, value: val.title, label: val.title };
+        }
+
+        return { value: val.title, label: val.title };
+      }));
     }
   }, [item]);
 
@@ -294,6 +326,18 @@ const UpdateModal = ({
                     label="Each person exceed fee"
                     type="number"
                   />
+                  <Label className="mt-2">Tags</Label>
+                  <CreatableSelect
+                    isMulti
+                    onChange={handleChange}
+                    options={tags?.map((tag) => ({
+                      value: tag.title,
+                      label: tag.title,
+                      id: tag.id,
+                    }))}
+                    value={initTags}
+                  />
+                  <Label className="mt-2">Images</Label>
                   <CustomInput
                     name="images"
                     id="images"
