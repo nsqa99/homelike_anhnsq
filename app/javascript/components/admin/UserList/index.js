@@ -13,6 +13,7 @@ import NotificationToast from "../../../components/Toast";
 import BlockIcon from "@material-ui/icons/Block";
 import { searchUser } from "../../../redux/user/user.action";
 import DeleteModal from "../modals/DeleteModal";
+import toast from "react-hot-toast";
 
 const ImageWrapper = styled.div`
   img {
@@ -51,6 +52,7 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(searchUser(searchText));
+    toast.dismiss();
   }, []);
 
   return (

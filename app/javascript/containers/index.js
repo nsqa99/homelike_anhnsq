@@ -21,6 +21,7 @@ import LoginAdmin from "./LoginAdmin";
 import { useSelector } from "react-redux";
 import UserRoute from "./UserRoute";
 import UserList from "../components/admin/UserList";
+import PrivateAdminRoute from "./PrivateAdminRoute";
 
 export default function index() {
   const authData = useSelector((state) => state.auth.data);
@@ -33,6 +34,9 @@ export default function index() {
         </Route>
         <Route path="/signup">
           <Register />
+        </Route>
+        <Route path="/admin/signin">
+          <LoginAdmin />
         </Route>
 
         <Route path="/social">
@@ -50,21 +54,25 @@ export default function index() {
           <HostLayout>
             <Switch>
               {/* <Route path="/host/:username/items/:id" component={ItemDetails} /> */}
-              <Route path="/host/:username/orders" component={MerchantOrderList}/>
+              <Route
+                path="/host/:username/orders"
+                component={MerchantOrderList}
+              />
               <Route path="/host/:username" component={Item} />
             </Switch>
           </HostLayout>
         </Route>
-        <Route path="/admin">
-          <Route path="/admin/signin">
-            <LoginAdmin />
-          </Route>
+        <PrivateAdminRoute
+          path="/admin"
+          isAdmin={authData?.isAdmin}
+          isAuthenticated={authData?.isAuthenticated}
+        >
           <AdminLayout>
             <Switch>
               <Route path="/admin" component={UserList} />
             </Switch>
           </AdminLayout>
-        </Route>
+        </PrivateAdminRoute>
 
         <CommonLayout>
           <Switch>
@@ -76,14 +84,8 @@ export default function index() {
               path="/users/:username/orders/:id"
               component={OrderDetails}
             />
-            <Route
-              path="/users/:username/orders"
-              component={OrderList}
-            />
-            <Route
-              path="/items/:id"
-              component={ItemDetails}
-            />
+            <Route path="/users/:username/orders" component={OrderList} />
+            <Route path="/items/:id" component={ItemDetails} />
 
             <UserRoute path="/" isAdmin={authData?.isAdmin}>
               <Home />
