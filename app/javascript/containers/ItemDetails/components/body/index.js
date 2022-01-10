@@ -34,6 +34,7 @@ import Map from "./Map";
 import ItemShareModal from "./ItemShareModal";
 import toast, { Toaster } from "react-hot-toast";
 import { resetShareState } from "../../../../redux/post/post.action";
+import Avatar from '../../../../constants/images/Avatar.png'
 
 const CustomSlider = styled.div`
   .slick-list {
@@ -172,7 +173,7 @@ const DetailBody = ({ item, isAuthenticated, currentUser }) => {
             <Card styleName="body__merchant">
               <CardBody>
                 <div className="d-flex align-items-center mb-2">
-                  <img src={user.avatar} styleName="body__merchant--avatar" />
+                  <img src={user.avatar_url || Avatar} styleName="body__merchant--avatar" />
                   <CardTitle tag="h5" className="ms-2 mb-0">
                     {user.user_full_name}
                   </CardTitle>

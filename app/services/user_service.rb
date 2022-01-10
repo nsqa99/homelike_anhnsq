@@ -45,4 +45,12 @@ class UserService
   def search search_text, filters, sort, search_fields, page, page_size
     User.build_search(search_text, filters, sort, search_fields, page, page_size)
   end
+  
+  def destroy id
+    user = User.active.find(id)
+    user.update_attribute(:status, 1) # Deleted = 1
+    
+    client = User.__elasticsearch__.client
+    client.get({ index: User.index_name, id: user.id })
+  end
 end

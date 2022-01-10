@@ -40,6 +40,8 @@ class User < BaseModel
   delegate :first_name, to: :full_name
   delegate :last_name, to: :full_name
 
+  scope :active, -> { where(status: 0)}
+
   DEFAULT_ROLES.each do |role|
     define_method "#{role}?" do
       self.roles.pluck(:title).include?(role)
@@ -47,16 +49,16 @@ class User < BaseModel
   end
 
   after_save {
-    unless status_deleted?
-      __elasticsearch__.index_document
-    else
-      __elasticsearch__.delete_document(refresh: true)
-    end
+    __elasticsearch__.index_document
+    # unless status_deleted?
+    # else
+    #   __elasticsearch__.delete_document(refresh: true)
+    # end
   }
 
   def as_indexed_json(options = {})
     as_json(
-      only: [:username, :created_at, :status, :email, :following_count, :follower_count],
+      only: [:id, :username, :created_at, :status, :email, :following_count, :follower_count],
       methods: [:user_full_name, :role_titles, :list_follower, :avatar_url],
       include: {
         full_name: {

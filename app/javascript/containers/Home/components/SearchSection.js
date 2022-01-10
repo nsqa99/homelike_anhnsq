@@ -190,7 +190,7 @@ const SearchSection = () => {
         </div>
       </div>
 
-      <Col md="10" className="mt-3">
+      <Col md="12" className="mt-3 mb-3">
         <OptionWrapper id="toggler">
           <AddIcon className="me-2" styleName="color--red text-small" />
           More options

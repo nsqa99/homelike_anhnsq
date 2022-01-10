@@ -31,6 +31,9 @@ export default function authReducer(state = initState, action) {
     case types.SET_CURRENT_USER: {
       return { ...state, data: { ...state.data, username: action.result } };
     }
+    case types.SET_CURRENT_ADMIN: {
+      return { ...state, data: { ...state.data, admin: action.result } };
+    }
     case types.RESET_REGISTER_REDIRECT: {
       return {
         ...state,

@@ -48,6 +48,7 @@ const ItemSection = () => {
           "apartment.rent_address.city",
           "apartment.rent_address.country",
           "apartment.rent_address.district",
+          "apartment.rent_address.street",
         ],
       };
 
@@ -63,8 +64,10 @@ const ItemSection = () => {
           "apartment.rent_address.city",
           "apartment.rent_address.country",
           "apartment.rent_address.district",
+          "apartment.rent_address.street",
         ],
       };
+      setSearchText(query)
       dispatch(searchItem(data));
     } else {
       dispatch(searchItem(""));

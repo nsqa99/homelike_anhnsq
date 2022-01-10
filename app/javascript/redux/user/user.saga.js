@@ -1,7 +1,7 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
-import { followUserResult, getOneUserResult, searchUserResult, unfollowUserResult } from "./user.action";
-import { followUserApi, getOneUserApi, searchUserApi, unfollowUserApi } from "./user.api";
+import { deleteUserResult, followUserResult, getOneUserResult, searchUserResult, unfollowUserResult } from "./user.action";
+import { destroyUserApi, followUserApi, getOneUserApi, searchUserApi, unfollowUserApi } from "./user.api";
 import types from "./user.type";
 
 function* getOneUserSaga(props) {
@@ -19,11 +19,11 @@ function* getOneUserSaga(props) {
   }
 }
 function* searchUserSaga(props) {
-  const { data } = props.payload;
+  const { data, options } = props.payload;
   try {
-    const res = yield call(searchUserApi, data);
+    const res = yield call(searchUserApi, data, options);
     if (res.status === 200) {
-      const response = res.data?.data;
+      const response = res.data;
       yield all([put(searchUserResult(response))]);
     }
   } catch (error) {
@@ -79,6 +79,20 @@ function* unfollowUserSaga(props) {
     yield put(unfollowUserResult(error, isSuccess));
   }
 }
+function* destroyUserSaga(props) {
+  const { data } = props.payload;
+  try {
+    const res = yield call(destroyUserApi, data);
+    if (res.status === 200) {
+      const response = res.data?.data;
+      yield all([put(deleteUserResult(response))]);
+    }
+  } catch (error) {
+    console.log(error);
+    const isSuccess = false;
+    yield put(deleteUserResult(error, isSuccess));
+  }
+}
 
 export default function* rootSaga() {
   yield all([takeEvery(types.GET_ONE_USER, getOneUserSaga)]);
@@ -86,4 +100,5 @@ export default function* rootSaga() {
   yield all([takeEvery(types.GET_ONE_USER_AUTH, getAuthUserSaga)]);
   yield all([takeEvery(types.FOLLOW_USER, followUserSaga)]);
   yield all([takeEvery(types.UNFOLLOW_USER, unfollowUserSaga)]);
+  yield all([takeEvery(types.DESTROY_USER, destroyUserSaga)]);
 }

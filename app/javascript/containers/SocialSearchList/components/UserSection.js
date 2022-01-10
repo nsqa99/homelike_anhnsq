@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const UserSection = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users.listES);
+  const users = useSelector((state) => state.users.listES.data);
   const authData = useSelector((state) => state.auth.data);
   const { state: { query } } = useLocation();
   useEffect(() => {

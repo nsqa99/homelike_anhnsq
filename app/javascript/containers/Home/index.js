@@ -7,7 +7,6 @@ import ItemSection from "./components/ItemSection";
 import background from "../../assets/images/background.jpeg";
 
 const TopBodyWrapper = styled.div`
-  height: 30vh;
   background: linear-gradient(
       to right,
       rgba(255, 255, 255, 1),
