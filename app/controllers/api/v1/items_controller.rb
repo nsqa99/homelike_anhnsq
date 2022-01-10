@@ -76,8 +76,7 @@ class Api::V1::ItemsController < ApplicationController
         :initial_allowance, :max_allowance, :extra_fee_each_person,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], apartments_facilities_attributes: [:quality, :quantity, :facility_id],
-        apartment_images: []
-      ]
+        apartment_images: [] ], tags_attributes: [:id, :title]
     )
   end
   
@@ -87,8 +86,7 @@ class Api::V1::ItemsController < ApplicationController
         :initial_allowance, :max_allowance, :extra_fee_each_person, :item_id,
         rent_address_attributes: [:home_number, :street, :ward, :district, :city, :country,
           :latitude, :longitude], apartments_facilities_attributes: [:id, :quality, :quantity, :facility_id],
-          apartment_images: []
-      ]
+          apartment_images: [] ], tags_attributes: [:id, :title]
     )
   end
 
@@ -97,7 +95,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def with_children
-    ["apartment", "apartment.rent_address", "apartment.facilities", "apartment.apartments_facilities"]
+    ["apartment", "tags", "apartment.rent_address", "apartment.facilities", "apartment.apartments_facilities"]
   end
 
   def all_search_fields

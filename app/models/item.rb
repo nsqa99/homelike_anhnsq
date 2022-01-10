@@ -11,12 +11,13 @@ class Item < ApplicationRecord
 
   belongs_to :merchant
   has_one :apartment, dependent: :destroy
-  has_and_belongs_to_many :tags
+  has_many :items_tags
+  has_many :tags, through: :items_tags
   has_and_belongs_to_many :posts
   has_many :orders
   has_many :reviews, dependent: :destroy
 
-  accepts_nested_attributes_for :apartment
+  accepts_nested_attributes_for :apartment, :tags
 
   before_destroy :delete_items_tags_association, :delete_items_posts_association
 

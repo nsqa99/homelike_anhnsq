@@ -1,6 +1,11 @@
 class ItemService
   def create merchant, params
+    exist_tags = params[:tags_attributes].select{|attribute| attribute[:id].present?}.map{|a| a[:id]}
+    params[:tags_attributes] = params[:tags_attributes].select{|attribute| attribute[:id].nil?}
+
+    tags = exist_tags.map{|tid| Tag.find(tid)}
     item = merchant.items.build(params)
+    item.tags.concat(tags) unless tags.empty?
 
     return item if item.save
     false

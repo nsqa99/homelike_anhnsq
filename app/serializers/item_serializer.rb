@@ -3,6 +3,7 @@ class ItemSerializer < ActiveModel::Serializer
     :similar_items, :reviews, :description, :disabled_dates
 
   has_one :apartment
+  has_many :tags
 
   def owner
     user = object.merchant.user

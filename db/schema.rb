@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_06_035101) do
+ActiveRecord::Schema.define(version: 2022_01_10_165549) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -166,9 +166,8 @@ ActiveRecord::Schema.define(version: 2022_01_06_035101) do
   end
 
   create_table "items_tags", id: false, charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "item_id", null: false
     t.bigint "tag_id", null: false
-    t.index ["item_id", "tag_id"], name: "index_items_tags_on_item_id_and_tag_id", unique: true
+    t.bigint "item_id", null: false
   end
 
   create_table "likes", charset: "utf8mb4", force: :cascade do |t|
@@ -309,9 +308,9 @@ ActiveRecord::Schema.define(version: 2022_01_06_035101) do
 
   create_table "tags", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
-    t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["title"], name: "index_tags_on_title", unique: true
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
