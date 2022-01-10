@@ -8,7 +8,7 @@ class Api::V1::ItemsController < ApplicationController
     item = item_service.create(@current_user.merchant, new_item_params)
     
     if item
-      json_response(serialize(item, with_children))
+      json_response(item["_source"])
     else
       json_response([], :bad_request, message: item.errors.full_messages.to_sentence)
     end
@@ -18,11 +18,14 @@ class Api::V1::ItemsController < ApplicationController
     page = params[:page] || DEFAULT_PAGE
     page_size = params[:page_size] || DEFAULT_PAGE_SIZE
 
-    items = item_service.get_list_items_by_merchant(@current_user.merchant, page, page_size)
+    filters = [{"field" => "status", "value" => "approved"},
+      {"field" => "merchant.user.username", "value" => @current_user.merchant.user.username}]
+
+    items, total = item_service.search("", filters, [["id", "desc"]], [], page, page_size)
 
     json_response(
-      serialize(items, with_children),
-      pagination: paginate(page, page_size, items.total_pages, items.total_count)
+      serialize(item_decorator.transform_list(items)),
+      pagination: paginate(page, page_size, (total.to_f / page_size.to_f).ceil, total)
     )
   end
 
@@ -36,7 +39,7 @@ class Api::V1::ItemsController < ApplicationController
     item = item_service.update(params[:id], update_item_params)
 
     if item
-      json_response(serialize(item, with_children))
+      json_response(item["_source"])
     else
       json_response([], :bad_request, message: item.errors.full_messages.to_sentence)
     end

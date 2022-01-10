@@ -48,7 +48,7 @@ class Api::V1::UsersController < ApplicationController
     search_fields = params[:fields] || all_search_fields
     search_text = params[:search_text]
     filters = params[:filters]
-    sort = params[:sort]
+    sort = params[:sort] || [["id", "desc"]]
     
     users, total = user_service.search(search_text, filters, sort, search_fields, page, page_size)
     

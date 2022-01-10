@@ -41,7 +41,7 @@ class Item < ApplicationRecord
           }
         },
         tags: {
-          only: [:title, :type]
+          only: [:id, :title]
         },
         apartment: {
           only: [:title, :size, :initial_quantity, :initial_allowance, :max_allowance,

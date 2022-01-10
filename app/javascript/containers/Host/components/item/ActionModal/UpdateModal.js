@@ -89,10 +89,8 @@ const UpdateModal = ({
   const [tagDatas, setTags] = useState([]);
   const [initTags, setInitTags] = useState([]);
   const tags = useSelector((state) => state.tags.list);
-  console.log(tags)
 
   const handleFormSubmit = (data) => {
-    console.log(itemImages);
     const [latitude, longitude] = latLon;
     if (latitude && longitude) {
       data = {
@@ -105,6 +103,7 @@ const UpdateModal = ({
       ...data,
       tags: tagDatas
     }
+    console.log(tagDatas)
     dispatch(updateItem(username, itemId, data, itemImages, isSearch));
     // dispatch(getAllTag());
     setOpen(false);
@@ -149,6 +148,13 @@ const UpdateModal = ({
 
         return { value: val.title, label: val.title };
       }));
+      setTags(item.tags.map((val) => {
+        if (val.id) {
+          return { id: val.id, value: val.title, label: val.title };
+        }
+
+        return { value: val.title, label: val.title };
+      }))
     }
   }, [item]);
 

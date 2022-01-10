@@ -18,7 +18,7 @@ export default function itemReducer(state = initState, action) {
     }
 
     case types.GET_ALL_ITEM_BY_USERNAME_SUCCESS: {
-      return { ...state, listNotES: action.payload };
+      return { ...state, list: action.payload };
     }
 
     case types.GET_ALL_ITEM_BY_USERNAME_FAILED: {
@@ -44,9 +44,9 @@ export default function itemReducer(state = initState, action) {
     case types.CREATE_ITEM_SUCCESS: {
       return {
         ...state,
-        listNotES: {
-          ...state.listNotES,
-          data: [action.payload, ...state.listNotES.data],
+        list: {
+          ...state.list,
+          data: [action.payload, ...state.list.data],
         },
       };
     }
@@ -57,9 +57,7 @@ export default function itemReducer(state = initState, action) {
 
     case types.DESTROY_ITEM_SUCCESS: {
       const { data, isSearch } = action.payload;
-      const pagination = isSearch
-        ? state.list.pagination
-        : state.listNotES.pagination;
+      const pagination = state.list.pagination
       const newPagin = {
         total_entries: pagination.total_entries - 1,
         total_pages: Math.ceil(
@@ -94,9 +92,7 @@ export default function itemReducer(state = initState, action) {
 
     case types.UPDATE_ITEM_SUCCESS: {
       const { data, isSearch } = action.payload;
-      const pagination = isSearch
-        ? state.list.pagination
-        : state.listNotES.pagination;
+      const pagination = state.list.pagination;
       const newPagin = {
         total_entries: pagination.total_entries + 1,
         total_pages: Math.ceil(

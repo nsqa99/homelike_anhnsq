@@ -68,13 +68,7 @@ const Item = () => {
 
   const handleSearch = (e) => {
     if (e.key === "Enter") {
-      if (searchText === "") {
-        setIsSearch(false);
-      } else {
-        setIsSearch(true);
-
-        dispatch(searchItem(filters));
-      }
+      dispatch(searchItem(filters));
     }
   };
 
@@ -95,101 +89,7 @@ const Item = () => {
         />
         <CreateModal username={username} />
       </div>
-      {!isSearch ? (
-        !isEmpty(items.data) ? (
-          <>
-            <Table responsive hover styleName="item__table">
-              <tbody>
-                <tr>
-                  <th>ID</th>
-                  <th></th>
-                  <th>Title</th>
-                  <th style={{ width: "15%" }}>Description</th>
-                  <th style={{ width: "15%" }}>Address</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Price</th>
-                  <th style={{ width: "10%" }}>Tags</th>
-                  <th style={{ width: "15%" }}></th>
-                </tr>
-                {items.data.map((item) => {
-                  let apartment = item.apartment;
-
-                  return (
-                    <>
-                      <tr>
-                        <td>{item.id}</td>
-                        <td>
-                          <ImageWrapper>
-                            <img
-                              className="rounded"
-                              src={item.apartment.image_urls[0] || DefaultImage}
-                            />
-                          </ImageWrapper>
-                        </td>
-                        <td>{apartment.title}</td>
-                        <td>{item.description}</td>
-                        <td>{fullAddress(apartment.rent_address)}</td>
-                        <td>{formatDate(item.initial_start_date)}</td>
-                        <td>{formatDate(item.initial_end_date)}</td>
-                        <td>
-                          <CurrencyFormat
-                            value={item.price}
-                            displayType={"text"}
-                            thousandSeparator={true}
-                            prefix={"$"}
-                          />
-                        </td>
-                        <td>
-                          {item.tags.map((tag) => (
-                            <div>
-                              <Badge color="dark">{tag.title}</Badge>
-                            </div>
-                          ))}
-                        </td>
-                        <td>
-                          <div className="d-flex align-items-start justify-content-end">
-                            <Button
-                              color="primary"
-                              className="me-2"
-                              onClick={(e) => handleViewModal(item.id)}
-                            >
-                              <VisibilityIcon />
-                            </Button>
-                            <Button
-                              color="warning"
-                              className="me-2"
-                              onClick={(e) => handleUpdateModal(item.id)}
-                            >
-                              <EditIcon />
-                            </Button>
-                            <Button
-                              color="danger"
-                              className="me-2"
-                              onClick={(e) => handleDeleteModal(item.id)}
-                            >
-                              <DeleteIcon />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
-              </tbody>
-            </Table>
-            <CustomPagination
-              totalPages={items.pagination.total_pages}
-              currentPage={items.pagination.page}
-              fn={(options) =>
-                dispatch(getAllItemsByUsername(username, options))
-              }
-            />
-          </>
-        ) : (
-          <span className="fs-5 fw-bold">No apartments found</span>
-        )
-      ) : !isEmpty(searchItems.data) ? (
+      { !isEmpty(searchItems.data) ? (
         <>
           <Table responsive hover styleName="item__table">
             <tbody>
@@ -201,6 +101,7 @@ const Item = () => {
                 <th style={{ width: "15%" }}>Address</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Price</th>
                 <th style={{ width: "10%" }}>Tags</th>
                 <th style={{ width: "15%" }}></th>
               </tr>
@@ -289,7 +190,7 @@ const Item = () => {
 
       <UpdateModal
         username={username}
-        items={items}
+        items={searchItems}
         itemId={selectedItem}
         isOpen={updateModalOpen}
         setOpen={setUpdateModalOpen}
@@ -297,7 +198,7 @@ const Item = () => {
       />
 
       <ViewModal
-        items={items}
+        items={searchItems}
         itemId={selectedItem}
         isOpen={viewModalOpen}
         setOpen={setViewModalOpen}

@@ -148,13 +148,17 @@ export const appendItemDatas = (data, images) => {
       data.street
     );
   }
-  data.tags.map((tag) => {
-    if (tag.id) {
-      formData.append("item[tags_attributes][][id]", tag.id);
-    }
+  if (data.tags.length > 0) {
+    data.tags.map((tag) => {
+      if (tag.id) {
+        formData.append("item[tags_attributes][][id]", tag.id);
+      }
 
-    formData.append("item[tags_attributes][][title]", tag.title);
-  });
+      formData.append("item[tags_attributes][][title]", tag.title);
+    });
+  } else {
+    formData.append("item[tags_attributes][]", []);
+  }
 
   return formData;
 };
