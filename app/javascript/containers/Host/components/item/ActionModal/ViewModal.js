@@ -81,9 +81,12 @@ const ViewModal = ({ username, items, itemId, isOpen, setOpen, isSearch }) => {
 
   useEffect(() => {
     if (!isEqual(item, {})) {
-      setImages([
-        { key: item.apartment.image_urls, url: item.apartment.image_urls },
-      ]);
+      setImages(
+        item.apartment.image_urls.map((url) => ({
+          key: url,
+          url,
+        }))
+      );
     }
   }, [item]);
 

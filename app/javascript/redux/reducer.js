@@ -10,6 +10,7 @@ import postReducer from "./post/post.reducer";
 import orderReducer from "./order/order.reducer";
 import toastReducer from "./toast/toast.reducer";
 import types from "./auth/auth.type";
+import tagReducer from "./tag/tag.reducer";
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   posts: postReducer,
   orders: orderReducer,
   toasts: toastReducer,
+  tags: tagReducer
 });
 
 const rootReducer = (state, action) => {

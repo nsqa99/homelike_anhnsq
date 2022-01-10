@@ -13,7 +13,7 @@ export const convertToUTC = (date) => {
 
 export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
 export const formatDateTime = (datetime) => {
   return moment(datetime).local().format("DD.MM.YYYY, HH:mm:ss");
@@ -148,6 +148,13 @@ export const appendItemDatas = (data, images) => {
       data.street
     );
   }
+  data.tags.map((tag) => {
+    if (tag.id) {
+      formData.append("item[tags_attributes][][id]", tag.id);
+    }
+
+    formData.append("item[tags_attributes][][title]", tag.title);
+  });
 
   return formData;
 };
@@ -160,7 +167,7 @@ export const appendRegisterDatas = (data, image) => {
     password_confirmation,
     first_name,
     last_name,
-    phone_number
+    phone_number,
   } = data;
   const formData = new FormData();
   formData.append("user[username]", username);
@@ -175,14 +182,16 @@ export const appendRegisterDatas = (data, image) => {
   }
 
   return formData;
-}
+};
 
 export const getLatLngApi = async (address) => {
-  const datas = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${address}`);
+  const datas = await axios.get(
+    `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${address}`
+  );
   if (datas.status === 200 && !isEmpty(datas.data)) {
     return {
       lat: datas.data[0].lat,
-      lon: datas.data[0].lon
-    }
+      lon: datas.data[0].lon,
+    };
   }
-}
+};

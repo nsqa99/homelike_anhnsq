@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import {
   Button,
   Col,
   Input,
+  Label,
   Modal,
   ModalBody,
   ModalFooter,
@@ -23,13 +24,17 @@ import {
   isValidImageSize,
   isValidImageType,
 } from "../../../../../utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createItem } from "../../../../../redux/item/item.action";
 import MapComponent from "../Map";
-import { add, debounce, isEqual, throttle } from "lodash";
+import { add, debounce, isEmpty, isEqual, throttle } from "lodash";
 import { HANOI_LAT_LON } from "../../../../../common/constant";
 import toast, { Toaster } from "react-hot-toast";
 import { FillerWrapper } from "../../../../../components/LoadingFiller";
+import CreatableSelect from "react-select/creatable";
+import { getAllTag } from "../../../../../redux/tag/tag.action";
+import { createFailResult } from "../../../../../redux/toast/toast.action";
+// import { ActionMeta, OnChangeValue } from 'react-select';
 
 const CustomModalBody = styled(ModalBody)`
   overflow-y: auto;
@@ -73,8 +78,28 @@ const CreateModal = ({ username }) => {
   const [latLon, setLatLon] = useState(HANOI_LAT_LON);
   const [itemImages, setItemImages] = useState([]);
   const [imageError, setImageError] = useState({});
+  const tags = useSelector((state) => state.tags.list);
+  const [tagDatas, setTags] = useState([]);
   const dispatch = useDispatch();
   const formRef = useRef(null);
+
+  useEffect(() => {
+    if (!tags) {
+      dispatch(getAllTag());
+    }
+  }, []);
+
+  const handleChange = (value) => {
+    setTags(
+      value.map((val) => {
+        if (val.id) {
+          return { id: val.id, title: val.value };
+        }
+
+        return { title: val.value };
+      })
+    );
+  };
 
   const handleFormSubmit = async (data) => {
     const [latitude, longitude] = latLon;
@@ -84,6 +109,10 @@ const CreateModal = ({ username }) => {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
       };
+    }
+    data = {
+      ...data,
+      tags: tagDatas
     }
     console.log(data);
     dispatch(createItem(username, data, itemImages));
@@ -190,8 +219,7 @@ const CreateModal = ({ username }) => {
       extra_fee_each_person: Yup.number()
         .required("Required")
         .min(1, "Must be greater than 0"),
-      startDate: Yup.date()
-        .required("Required"),
+      startDate: Yup.date().required("Required"),
       endDate: Yup.date().required("Required"),
       homeNumber: Yup.string().required("Required"),
       district: Yup.string().required("Required"),
@@ -252,6 +280,17 @@ const CreateModal = ({ username }) => {
                   label="Each person exceed fee"
                   type="number"
                 />
+                <Label className="mt-2">Tags</Label>
+                <CreatableSelect
+                  isMulti
+                  onChange={handleChange}
+                  options={tags?.map((tag) => ({
+                    value: tag.title,
+                    label: tag.title,
+                    id: tag.id,
+                  }))}
+                />
+                <Label className="mt-2">Images</Label>
                 <CustomInput
                   name="images"
                   id="images"
