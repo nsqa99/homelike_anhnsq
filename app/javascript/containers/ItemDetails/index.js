@@ -27,6 +27,7 @@ const ItemDetails = ({ match: { params } }) => {
             price={item?.price}
             title={item?.apartment.title}
             address={item && shortAddress(item?.apartment.rent_address)}
+            tags={item.tags}
           />
           <DetailBody
             item={item}

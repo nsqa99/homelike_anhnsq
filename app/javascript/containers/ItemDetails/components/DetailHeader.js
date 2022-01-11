@@ -5,9 +5,9 @@ import style from "../styles/header.module.scss";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Button, Col, Row } from "reactstrap";
+import { Badge, Button, Col, Row } from "reactstrap";
 
-const DetailHeader = ({ id, price, title, address }) => {
+const DetailHeader = ({ id, price, title, address, tags }) => {
   return (
     <Row className="mt-3 p-3">
       <Col sm="12" md="6">
@@ -36,6 +36,11 @@ const DetailHeader = ({ id, price, title, address }) => {
           <strong>ID:</strong> {id}
         </div>
       </Col>
+      <div className="w-100">
+        {tags.map((tag) => (
+          <Badge color="dark" className="mx-1">{tag.title}</Badge>
+        ))}
+      </div>
       <hr className="mt-3" />
     </Row>
   );

@@ -7,7 +7,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import PersonIcon from "@material-ui/icons/Person";
 import { useDispatch } from "react-redux";
-import { Col, Row, Tooltip } from "reactstrap";
+import { Badge, Col, Row, Tooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 import { formatDate, shortAddress } from "../../../utils";
@@ -99,6 +99,13 @@ const Item = ({ item, style }) => {
             .map((_, index) => (
               <StarIcon key={index} styleName="icon__fa"></StarIcon>
             ))}
+        </div>
+        <div className="p-2">
+          {item.tags.map((tag) => (
+            <div>
+              <Badge color="dark">{tag.title}</Badge>
+            </div>
+          ))}
         </div>
       </div>
       <Link to={detailPath} styleName="item__details">
