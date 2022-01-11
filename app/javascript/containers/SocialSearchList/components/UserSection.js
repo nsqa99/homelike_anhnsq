@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const UserSection = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users.listES.data);
+  const users = useSelector((state) => state.users.listES);
   const authData = useSelector((state) => state.auth.data);
   const { state: { query } } = useLocation();
   useEffect(() => {
@@ -37,8 +37,8 @@ const UserSection = () => {
     <Container fluid styleName="user__container">
       <Container>
         <Wrapper>
-          {users && (users.length > 0 ? (
-            users.map((user) => {
+          {users && (users.data?.length > 0 ? (
+            users.data.map((user) => {
               if (user.username === authData.username) {
                 return null;
               }

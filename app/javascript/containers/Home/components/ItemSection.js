@@ -90,6 +90,7 @@ const ItemSection = () => {
                 onChange={handleChange}
                 className="basic-multi-select"
                 classNamePrefix="select"
+                placeholder="Filter by tags"
                 styles={{
                   // Fixes the overlapping problem of the component
                   menu: provided => ({ ...provided, zIndex: 9999 })

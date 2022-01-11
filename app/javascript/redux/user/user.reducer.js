@@ -117,30 +117,35 @@ export default function userReducer(state = initState, action) {
       const data = action.payload;
       return {
         ...state,
-        listES: state.listES.map((user) => {
-          if (user.username === data.followed.username) {
-            user.follower_count = data.followed.follower_count;
-            user.list_follower = [...user.list_follower, data.follower];
-          }
-
-          return user;
-        }),
+        listES: {
+          ...state.listES,
+          data: state.listES.data.map((user) => {
+            if (user.username === data.followed.username) {
+              user.follower_count = data.followed.follower_count;
+              user.list_follower = [...user.list_follower, data.follower];
+            }
+  
+            return user;
+          }),
+        }
       };
     }
     case types.UNFOLLOW_USER_ON_SEARCH_SUCCESS: {
       const data = action.payload;
       return {
         ...state,
-        listES: state.listES.map((user) => {
-          if (user.username === data.unfollowed.username) {
-            user.follower_count = data.unfollowed.follower_count;
-            user.list_follower = user.list_follower.filter(
-              (user_item) => user_item.username !== data.unfollower.username
-            );
-          }
-
-          return user;
-        }),
+        listES: {
+          ...state.listES,
+          data: state.listES.data.map((user) => {
+            if (user.username === data.unfollowed.username) {
+              user.follower_count = data.unfollowed.follower_count;
+              user.list_follower = user.list_follower.filter(
+                (user_item) => user_item.username !== data.unfollower.username
+              );
+            }
+            return user;
+          }),
+        },
       };
     }
 
@@ -207,10 +212,10 @@ export default function userReducer(state = initState, action) {
             if (u.id === data.id) {
               return data;
             }
-  
+
             return u;
           }),
-        }
+        },
       };
     }
 

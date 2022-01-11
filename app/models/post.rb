@@ -31,7 +31,8 @@ class Post < ApplicationRecord
     {
       username: self.user.username,
       user_full_name: self.user.user_full_name,
-      avatar_url: self.user.avatar_url
+      avatar_url: self.user.avatar_url,
+      list_follower: self.user.list_follower.pluck(:username)
     }
   end
 

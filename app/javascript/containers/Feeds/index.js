@@ -5,7 +5,7 @@ import PostSection from "./components/PostSection";
 import RightPanel from "./components/RightPanel";
 import { getAllPost } from "../../redux/post/post.action";
 import { useDispatch, useSelector } from "react-redux";
-import { isEmpty, isEqual } from "lodash";
+import { includes, isEmpty, isEqual } from "lodash";
 import NotificationToast from "../../components/Toast";
 
 const index = () => {
@@ -38,7 +38,11 @@ const index = () => {
               )}
               <PostSection
                 username={authData.username}
-                posts={postDatas.list}
+                posts={postDatas.list.filter(
+                  (post) =>
+                    includes(post.owner.list_follower, authData.username) ||
+                    post.owner.username === authData.username
+                )}
               />
             </Col>
             <Col sm="6" md="5" lg="4">

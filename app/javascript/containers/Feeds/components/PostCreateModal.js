@@ -101,7 +101,7 @@ const PostCreateModal = ({ username }) => {
         color="danger"
         outline
         onClick={toggleModal}
-        className="m-auto mb-5"
+        className="mb-5"
       >
         <AddIcon />
         Add new post
